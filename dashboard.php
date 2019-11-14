@@ -1,3 +1,13 @@
+<?php
+    session_start();
+
+    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+        header("location: login.php");
+        exit;
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +31,7 @@
         <a class="nav-link" href="#">Student Check In</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Log Out</a>
+        <a class="nav-link" href="logout.php">Log Out</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Reports</a>
