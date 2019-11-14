@@ -34,6 +34,9 @@
         <a class="nav-link" href="logout.php">Log Out</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="change_password.php">Change password</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="#">Reports</a>
       </li>    
     </ul>  
