@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 14, 2019 at 09:24 PM
+-- Generation Time: Nov 15, 2019 at 01:07 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -82,8 +82,16 @@ CREATE TABLE `members` (
   `PrayerRequest` varchar(512) DEFAULT NULL,
   `OptEmail` tinyint(1) NOT NULL,
   `OptText` tinyint(1) NOT NULL,
-  `GroupID` int(11) NOT NULL
+  `GroupID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `members`
+--
+
+INSERT INTO `members` (`MemberID`, `FirstName`, `LastName`, `EmailAddress`, `HomeAddress`, `PhoneNumber`, `PhotoPath`, `PrayerRequest`, `OptEmail`, `OptText`, `GroupID`) VALUES
+(7, 'Tucker', 'Dooley', 'tucker.dooley1234@gmail.com', '635 green ridge dr.', '3173662930', NULL, NULL, 0, 1, NULL),
+(9, 'Tucker', 'Dooley', 'tucker.dooley1234@gmail.com', '635 green ridge dr.', '911', NULL, 'csci 450 grade', 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -194,7 +202,7 @@ ALTER TABLE `life_groups`
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `nights_of_worship`
