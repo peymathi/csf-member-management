@@ -11,6 +11,4 @@ if($link === false){
 }else{
     echo "Connected to DB";//remove later
 }
-
-
 ?>

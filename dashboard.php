@@ -16,7 +16,7 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="#">Student Check In</a>
+        <a class="nav-link" href="checkin.php">Student Check In</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="logout.php">Log Out</a>
