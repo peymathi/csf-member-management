@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 15, 2019 at 01:07 AM
--- Server version: 10.1.35-MariaDB
--- PHP Version: 7.2.9
+-- Generation Time: Nov 17, 2019 at 08:37 PM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.3.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,34 +25,28 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admins`
---
-
-CREATE TABLE `admins` (
-  `id` int(11) NOT NULL,
-  `firstname` varchar(255) NOT NULL,
-  `lastname` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `admins`
---
-
-INSERT INTO `admins` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
-(1, 'Andrew', 'Hodges', 'dooleytucker@gmail.com', '$2y$10$YH65lexZq4qeawNkCmKdy.O0OPBtIKH6XLO4BJqVRfeOILEzlQsbC');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `groups`
 --
 
+DROP TABLE IF EXISTS `groups`;
 CREATE TABLE `groups` (
   `GroupID` int(11) NOT NULL,
   `GroupName` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `groups`
+--
+
+INSERT INTO `groups` (`GroupID`, `GroupName`) VALUES
+(1, 'Freshman'),
+(2, 'Sophomore'),
+(3, 'Junior'),
+(4, 'Senior'),
+(5, 'Graduate'),
+(6, 'Alumni'),
+(7, 'Staff'),
+(8, 'Other');
 
 -- --------------------------------------------------------
 
@@ -60,6 +54,7 @@ CREATE TABLE `groups` (
 -- Table structure for table `life_groups`
 --
 
+DROP TABLE IF EXISTS `life_groups`;
 CREATE TABLE `life_groups` (
   `LifeGroupID` int(11) NOT NULL,
   `LifeGroupName` varchar(256) NOT NULL
@@ -71,6 +66,7 @@ CREATE TABLE `life_groups` (
 -- Table structure for table `members`
 --
 
+DROP TABLE IF EXISTS `members`;
 CREATE TABLE `members` (
   `MemberID` int(11) NOT NULL,
   `FirstName` varchar(256) NOT NULL,
@@ -82,16 +78,8 @@ CREATE TABLE `members` (
   `PrayerRequest` varchar(512) DEFAULT NULL,
   `OptEmail` tinyint(1) NOT NULL,
   `OptText` tinyint(1) NOT NULL,
-  `GroupID` int(11) DEFAULT NULL
+  `GroupID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `members`
---
-
-INSERT INTO `members` (`MemberID`, `FirstName`, `LastName`, `EmailAddress`, `HomeAddress`, `PhoneNumber`, `PhotoPath`, `PrayerRequest`, `OptEmail`, `OptText`, `GroupID`) VALUES
-(7, 'Tucker', 'Dooley', 'tucker.dooley1234@gmail.com', '635 green ridge dr.', '3173662930', NULL, NULL, 0, 1, NULL),
-(9, 'Tucker', 'Dooley', 'tucker.dooley1234@gmail.com', '635 green ridge dr.', '911', NULL, 'csci 450 grade', 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -99,6 +87,7 @@ INSERT INTO `members` (`MemberID`, `FirstName`, `LastName`, `EmailAddress`, `Hom
 -- Table structure for table `member_life_group_junction`
 --
 
+DROP TABLE IF EXISTS `member_life_group_junction`;
 CREATE TABLE `member_life_group_junction` (
   `MemberID` int(11) NOT NULL,
   `LifeGroupID` int(11) NOT NULL
@@ -110,6 +99,7 @@ CREATE TABLE `member_life_group_junction` (
 -- Table structure for table `member_night_junction`
 --
 
+DROP TABLE IF EXISTS `member_night_junction`;
 CREATE TABLE `member_night_junction` (
   `MemberID` int(11) NOT NULL,
   `NightID` int(11) NOT NULL
@@ -121,6 +111,7 @@ CREATE TABLE `member_night_junction` (
 -- Table structure for table `nights_of_worship`
 --
 
+DROP TABLE IF EXISTS `nights_of_worship`;
 CREATE TABLE `nights_of_worship` (
   `NightID` int(11) NOT NULL,
   `NightDate` date NOT NULL
@@ -129,12 +120,6 @@ CREATE TABLE `nights_of_worship` (
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `admins`
---
-ALTER TABLE `admins`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `groups`
@@ -181,16 +166,10 @@ ALTER TABLE `nights_of_worship`
 --
 
 --
--- AUTO_INCREMENT for table `admins`
---
-ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `GroupID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `GroupID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `life_groups`
@@ -202,7 +181,7 @@ ALTER TABLE `life_groups`
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `nights_of_worship`
