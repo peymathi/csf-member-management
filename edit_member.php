@@ -19,6 +19,9 @@ $opt_email = 0;//default 0 = no
 $home_address = "";
 $prayer_request = "";
 
+$opt_email_checked="";
+$opt_phone_checked="";
+
 $first_name_error = "";
 $last_name_error = "";
 $email_error = "";
@@ -30,7 +33,61 @@ $home_address_error = "";
 
 $any_error = "";
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login page
+//temporary for testing
+$_SESSION["edit_member_id"] = "9";
+//
+
+if(isset($_SESSION["edit_member_id"])){
+	
+	$edit_member_id = $_SESSION["edit_member_id"];
+
+	$sql = "SELECT FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText FROM members WHERE MemberID = $edit_member_id";
+
+	$result = mysqli_query($link, $sql);
+	if($result){
+
+		while ($row = mysqli_fetch_array($result)) { 
+				
+			$first_name = $row['FirstName'];
+			$last_name = $row['LastName'];
+			$email = $row['EmailAddress'];
+			$phone_number = $row['PhoneNumber'];
+			//$graduation_date = $row['name'];
+			//$major = $row['name'];
+			//$life_group_id = $row['name'];
+			$opt_phone = $row['OptText'];//default 0 = no
+
+			if($opt_phone == "1"){
+				$opt_phone_checked="checked";
+			}
+
+			$opt_email = $row['OptEmail'];//default 0 = no
+
+			if($opt_email == "1"){
+				$opt_email_checked="checked";
+			}
+
+			$home_address = $row['HomeAddress'];
+			$prayer_request = $row['PrayerRequest'];
+			
+		} 
+
+	}else{
+		echo $link->error;
+	}
+
+
+}else{//no user to edit
+	header("location: dashboard.php");
+}
+
+
+
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
+
+
+
 	
 	if(empty(trim($_POST["email"]))){
 		$email_error = "Must enter email.";
@@ -116,38 +173,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 	 
 
 	if(empty($any_error)){
-		$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText) VALUES (?,?,?,?,?,?,?,?)";
-		//$sql = "SELECT id, email, password FROM admins WHERE email = ?";
-		//$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, OptEmail, OptText, GroupID) VALUES (?,?,?,?,?,?,?,?)";
-
-		if($stmt = mysqli_prepare($link, $sql)){
-			// Bind variables to the prepared statement as parameters
-			mysqli_stmt_bind_param($stmt, "ssssssii", $param_first_name, $param_last_name, $param_email, $param_home_address, $param_phone_number, $param_prayer_request, $param_opt_phone, $param_opt_email);//, $param_group_id);
-			
-			$param_first_name = $first_name;
-			$param_last_name = $last_name;
-			$param_email = $email;
-			$param_home_address = $home_address;
-			$param_phone_number = $phone_number;
-			$param_opt_phone = $opt_phone;
-			$param_opt_email = $opt_email;
-			$param_prayer_request = $prayer_request;
-			//$param_group_id = 1;//not wekin rn
-			
-			// Attempt to execute the prepared statement
-			if(mysqli_stmt_execute($stmt)){
-				echo "User successfully entered.";
-				//header("location: dashboard.php");
-			} else{
-				echo mysqli_error($link);
-				echo "\nOops! Something went wrong. Please try again later.";
-			}
+		//$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText) VALUES (?,?,?,?,?,?,?,?)";
+		
+		$sql = "UPDATE members set FirstName='$first_name', LastName='$last_name', EmailAddress='$email', HomeAddress='$home_address', PhoneNumber='$phone_number', PrayerRequest='$prayer_request', OptEmail='$opt_email', OptText='$opt_phone' WHERE MemberID=$edit_member_id";
+		
+		$result = mysqli_query($link, $sql);
+		if($result){
+			header("location: checkin.php");
+		}else{
+			echo $link->error;
 		}
 		
-		mysqli_stmt_close($stmt);
+		
 	}
-	
-	mysqli_close($link);
 }
 
 
@@ -167,49 +205,49 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 			<form action="" method="post" class="needs-validation" novalidate>
 			  <div class="form-group">
 				<label for="email">Email:</label>
-				<input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+				<input type="email" class="form-control" id="email" value="<?php echo $email; ?>" placeholder="Enter email" name="email" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $email_error; ?></span>
 			  </div>
 			  <div class="form-group">
 				<label for="first_name">First Name:</label>
-				<input type="text" class="form-control" id="first_name" placeholder="Enter first name" name="first_name" required>
+				<input type="text" class="form-control" id="first_name" value="<?php echo $first_name; ?>" placeholder="Enter first name" name="first_name" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $first_name_error; ?></span>
 			  </div>
 			  <div class="form-group">
 				<label for="last_name">Last Name:</label>
-				<input type="text" class="form-control" id="last_name" placeholder="Enter last name" name="last_name" required>
+				<input type="text" class="form-control" id="last_name" value="<?php echo $last_name; ?>" placeholder="Enter last name" name="last_name" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $last_name_error; ?></span>
 			  </div>
 			  <div class="form-group">
 				<label for="phone_number">Phone Number:</label>
-				<input type="text" class="form-control" id="phone_number" placeholder="Enter phone number" name="phone_number" required>
+				<input type="text" class="form-control" id="phone_number" value="<?php echo $phone_number; ?>" placeholder="Enter phone number" name="phone_number" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $phone_number_error; ?></span>
 			  </div>
 			  <div class="form-group">
 				<label for="major">Major:</label>
-				<input type="text" class="form-control" id="major" placeholder="Enter major" name="major" required>
+				<input type="text" class="form-control" id="major" value="<?php echo $major; ?>" placeholder="Enter major" name="major" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $major_error; ?></span>
 			  </div>
 			  <div class="form-group">
 				<label for="graduation_date">Graduation Date:</label>
-				<input type="text" class="form-control" id="graduation_date" placeholder="Enter graduation date" name="graduation_date" required>
+				<input type="text" class="form-control" id="graduation_date" value="<?php echo $graduation_date; ?>" placeholder="Enter graduation date" name="graduation_date" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $graduation_date_error; ?></span>
 			  </div>
 			  <div class="form-group">
 				<label for="life_group_id">Life Group:</label>
-				<input type="number" class="form-control" id="life_group_id" placeholder="Enter life group id" name="life_group_id" required>
+				<input type="number" class="form-control" id="life_group_id" value="<?php echo $life_group_id; ?>" placeholder="Enter life group id" name="life_group_id" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $life_group_error; ?></span>
@@ -217,7 +255,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 
 			  <div class="form-group">
 				<label for="home_address">Home Address:</label>
-				<input type="text" class="form-control" id="home_address" placeholder="Enter home address" name="home_address" required>
+				<input type="text" class="form-control" id="home_address" value="<?php echo $home_address; ?>" placeholder="Enter home address" name="home_address" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $home_address_error; ?></span>
@@ -225,25 +263,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 
 			  <div class="form-group">
 				<label for="prayer_request">Prayer Request:</label>
-				<input type="text" class="form-control" id="prayer_request" placeholder="Enter prayer request" name="prayer_request">
+				<input type="text" class="form-control" id="prayer_request" value="<?php echo $prayer_request; ?>" placeholder="Enter prayer request" name="prayer_request">
 			  </div>
 
 				<div class="form-group form-check">
 					<label class="form-check-label">
-						<input class="form-check-input" type="checkbox" value="1" name="opt_phone">Opt in for text notifications.
+						<input class="form-check-input" type="checkbox" value="1" name="opt_phone" <?php echo $opt_phone_checked; ?>>Opt in for text notifications.
 					</label>
 				</div>
 
 				<div class="form-group form-check">
 					<label class="form-check-label">
-						<input class="form-check-input" type="checkbox" value="1" name="opt_email">Opt in for email notifications.
+						<input class="form-check-input" type="checkbox" value="1" name="opt_email" <?php echo $opt_email_checked; ?>>Opt in for email notifications.
 					</label>
 				</div>
-			  <button type="submit" class="btn btn-primary">Register</button>
+			  <button type="submit" class="btn btn-primary">Update</button>
 			</form>
 		</div>
 	</div>
-	<script src="register.js"></script>
+	<script src="edit_member.js"></script>
 </div>
 </body>
 </html>
