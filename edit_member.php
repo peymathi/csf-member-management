@@ -13,7 +13,7 @@ $email = "";
 $phone_number = "";
 $graduation_date = "";
 $major = "";
-$life_group_id = "";
+$life_group_id = null;
 $opt_phone = 0;//default 0 = no
 $opt_email = 0;//default 0 = no
 $home_address = "";
@@ -34,14 +34,14 @@ $home_address_error = "";
 $any_error = "";
 
 //temporary for testing
-$_SESSION["edit_member_id"] = "9";
+$_SESSION["edit_member_id"] = "12";
 //
 
 if(isset($_SESSION["edit_member_id"])){
 	
 	$edit_member_id = $_SESSION["edit_member_id"];
 
-	$sql = "SELECT FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText FROM members WHERE MemberID = $edit_member_id";
+	$sql = "SELECT FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText, GroupID FROM members WHERE MemberID = $edit_member_id";
 
 	$result = mysqli_query($link, $sql);
 	if($result){
@@ -54,7 +54,7 @@ if(isset($_SESSION["edit_member_id"])){
 			$phone_number = $row['PhoneNumber'];
 			//$graduation_date = $row['name'];
 			//$major = $row['name'];
-			//$life_group_id = $row['name'];
+			$life_group_id = $row['GroupID'];
 			$opt_phone = $row['OptText'];//default 0 = no
 
 			if($opt_phone == "1"){
@@ -126,7 +126,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 	}
 
 	if(empty(trim($_POST["life_group_id"]))){
-		$life_group_error = "Must enter life group.";
+		//$life_group_error = "Must enter life group.";
+		$life_group_id = null;
 	} else {
 		$life_group_id = trim($_POST["life_group_id"]);
 	}
@@ -245,13 +246,40 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $graduation_date_error; ?></span>
 			  </div>
+			  
+
 			  <div class="form-group">
-				<label for="life_group_id">Life Group:</label>
-				<input type="number" class="form-control" id="life_group_id" value="<?php echo $life_group_id; ?>" placeholder="Enter life group id" name="life_group_id" required>
-				<div class="valid-feedback">Valid.</div>
-				<div class="invalid-feedback">Please fill out this field.</div>
-				<span class="help-block"><?php echo $life_group_error; ?></span>
-			  </div>
+				<label for="life_group_id">Group:</label>
+					<select name="life_group_id" class="custom-select">
+						<option <?php if($life_group_id==null){echo "selected";}?>>None</option>
+						
+						<?php
+
+							$sql = "SELECT * FROM groups WHERE GroupID > 0";
+
+							$result = mysqli_query($link, $sql);
+							if($result){
+
+								while ($row = mysqli_fetch_array($result)) { 
+									$isSelected = "";
+									echo $row['GroupID'] . " = " . $life_group_id;
+									if($row['GroupID'] == $life_group_id){
+										$isSelected = "selected";
+									}
+
+									echo "<option value=".$row['GroupID']." $isSelected>".$row['GroupName']."</option>";
+									
+								} 
+
+							}else{
+								echo $link->error;
+							}
+						?>
+					</select>
+				</div>
+
+
+
 
 			  <div class="form-group">
 				<label for="home_address">Home Address:</label>
