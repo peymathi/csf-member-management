@@ -116,13 +116,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 	 
 
 	if(empty($any_error)){
-		$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText) VALUES (?,?,?,?,?,?,?,?)";
+		$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText, GroupID) VALUES (?,?,?,?,?,?,?,?,?)";
 		//$sql = "SELECT id, email, password FROM admins WHERE email = ?";
 		//$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, OptEmail, OptText, GroupID) VALUES (?,?,?,?,?,?,?,?)";
 
 		if($stmt = mysqli_prepare($link, $sql)){
 			// Bind variables to the prepared statement as parameters
-			mysqli_stmt_bind_param($stmt, "ssssssii", $param_first_name, $param_last_name, $param_email, $param_home_address, $param_phone_number, $param_prayer_request, $param_opt_phone, $param_opt_email);//, $param_group_id);
+			mysqli_stmt_bind_param($stmt, "ssssssiii", $param_first_name, $param_last_name, $param_email, $param_home_address, $param_phone_number, $param_prayer_request, $param_opt_phone, $param_opt_email,$param_group_id);//, $param_group_id);
 			
 			$param_first_name = $first_name;
 			$param_last_name = $last_name;
@@ -132,7 +132,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 			$param_opt_phone = $opt_phone;
 			$param_opt_email = $opt_email;
 			$param_prayer_request = $prayer_request;
-			//$param_group_id = 1;//not wekin rn
+
+			if($life_group_id == "None"){
+				$life_group_id = null;
+			}
+
+			$param_group_id = $life_group_id;//not wekin rn
 			
 			// Attempt to execute the prepared statement
 			if(mysqli_stmt_execute($stmt)){
@@ -207,13 +212,46 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $graduation_date_error; ?></span>
 			  </div>
-			  <div class="form-group">
+			  
+				<div class="form-group">
 				<label for="life_group_id">Life Group:</label>
-				<input type="number" class="form-control" id="life_group_id" placeholder="Enter life group id" name="life_group_id" required>
-				<div class="valid-feedback">Valid.</div>
-				<div class="invalid-feedback">Please fill out this field.</div>
-				<span class="help-block"><?php echo $life_group_error; ?></span>
-			  </div>
+					<select name="life_group_id" class="custom-select">
+						<option selected>None</option>
+						
+
+
+						<?php
+
+							$sql = "SELECT * FROM groups WHERE GroupID > 0";
+
+							$result = mysqli_query($link, $sql);
+							if($result){
+
+								while ($row = mysqli_fetch_array($result)) { 
+									
+									echo "<option value=".$row['GroupID'].">".$row['GroupName']."</option>";
+									
+								} 
+
+							}else{
+								echo $link->error;
+							}
+
+
+
+
+
+						?>
+
+
+
+
+					</select>
+				</div>
+
+
+
+
 
 			  <div class="form-group">
 				<label for="home_address">Home Address:</label>
