@@ -90,7 +90,9 @@ function randomPassword() {
 	</div>
 	<div class="row mt-2">
 		<div class="col">
-			<button type="submit" href="login.php" class="btn btn-secondary">Back To Log In</button>
+			<a href="login.php">
+				<button type="submit" class="btn btn-secondary">Back To Log In</button>
+			</a>
 		</div>
 	</div>
 	<script src="forgot_password.js"></script>

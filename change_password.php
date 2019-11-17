@@ -92,7 +92,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	</div>
 	<div class="row mt-2">
 		<div class="col">
-			<button type="submit" class="btn btn-secondary">Back</button>
+            <a href="dashboard.php">
+			    <button type="submit" class="btn btn-secondary">Back</button>
+            </a>
 		</div>
 	</div>
 	<script src="change_password.js"></script>
