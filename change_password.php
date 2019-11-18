@@ -4,8 +4,6 @@ include 'header.php';
 include "phpUtil/sessionVerification.php";
 session_verify();
 
-require_once "config.php";
-
 $new_password = $confirm_password = "";
 $new_password_error = $confirm_password_error = "";
 
