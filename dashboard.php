@@ -1,10 +1,7 @@
 <?php
     include 'header.php';
-
-    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-        header("location: login.php");
-        exit;
-    }
+    include "phpUtil/sessionVerification.php";
+    session_verify();
 
 ?>
 <body>
@@ -26,15 +23,15 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Reports</a>
-      </li>    
-    </ul>  
+      </li>
+    </ul>
 </nav>
 
 <div class="container" style="margin-top:30px">
   <div class="row">
-    
+
     <div class="col">
-	
+
 		<table class="table">
 			<thead class="thead-dark">
 			  <tr>
@@ -61,8 +58,8 @@
 			  </tr>
 			</tbody>
 		  </table>
-	
-	
+
+
      </div>
   </div>
 </div>

@@ -1,5 +1,7 @@
-<?php 
+<?php
 include 'header.php';
+include "phpUtil/sessionVerification.php";
+session_verify();
 ?>
 
 <body>

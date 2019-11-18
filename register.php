@@ -1,10 +1,8 @@
-<?php 
+<?php
 include 'header.php';
 
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-	header("location: login.php");
-	exit;
-}
+include "phpUtil/sessionVerification.php";
+session_verify();
 
 require_once "config.php";
 $first_name = "";
@@ -31,7 +29,7 @@ $home_address_error = "";
 $any_error = "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login page
-	
+
 	if(empty(trim($_POST["email"]))){
 		$email_error = "Must enter email.";
 	} else {
@@ -113,7 +111,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 	}
 
 	//INSERT INTO `members`(`FirstName`, `LastName`, `EmailAddress`, `HomeAddress`, `PhoneNumber`, `OptEmail`, `OptText`, `GroupID`) VALUES ([value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9])
-	 
+
 
 	if(empty($any_error)){
 		$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText, GroupID) VALUES (?,?,?,?,?,?,?,?,?)";
@@ -123,7 +121,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 		if($stmt = mysqli_prepare($link, $sql)){
 			// Bind variables to the prepared statement as parameters
 			mysqli_stmt_bind_param($stmt, "ssssssiii", $param_first_name, $param_last_name, $param_email, $param_home_address, $param_phone_number, $param_prayer_request, $param_opt_phone, $param_opt_email,$param_group_id);//, $param_group_id);
-			
+
 			$param_first_name = $first_name;
 			$param_last_name = $last_name;
 			$param_email = $email;
@@ -138,7 +136,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 			}
 
 			$param_group_id = $life_group_id;//not wekin rn
-			
+
 			// Attempt to execute the prepared statement
 			if(mysqli_stmt_execute($stmt)){
 				echo "User successfully entered.";
@@ -148,10 +146,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 				echo "\nOops! Something went wrong. Please try again later.";
 			}
 		}
-		
+
 		mysqli_stmt_close($stmt);
 	}
-	
+
 	mysqli_close($link);
 }
 
@@ -212,12 +210,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $graduation_date_error; ?></span>
 			  </div>
-			  
+
 				<div class="form-group">
 				<label for="life_group_id">Group:</label>
 					<select name="life_group_id" class="custom-select">
 						<option selected>None</option>
-						
+
 
 
 						<?php
@@ -227,11 +225,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 							$result = mysqli_query($link, $sql);
 							if($result){
 
-								while ($row = mysqli_fetch_array($result)) { 
-									
+								while ($row = mysqli_fetch_array($result)) {
+
 									echo "<option value=".$row['GroupID'].">".$row['GroupName']."</option>";
-									
-								} 
+
+								}
 
 							}else{
 								echo $link->error;

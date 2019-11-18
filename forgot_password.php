@@ -1,10 +1,6 @@
-<?php 
+<?php
 include 'header.php';
 
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-	header("location: dashboard.php");
-	exit;
-}
 
 require_once "config.php";
 
@@ -24,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		//$sql = "SELECT id, email, password FROM admins WHERE email = ?";
 
 		$sql = "UPDATE admins SET password = ? WHERE email = ?";
-        
+
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "ss", $param_password, $param_email);
@@ -32,25 +28,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			$newpassword = randomPassword();//unhashed
 			$param_password = password_hash($newpassword, PASSWORD_DEFAULT);
 			$param_email = $email;
-			
+
 			if(mysqli_stmt_execute($stmt)){
-				
+
 				echo $newpassword;
 				$to = $email;
 				$subject = "Password Reset";
                 $txt = "Your new password is : $newpassword";
                 $headers = "From: test@test.com";
                 mail($to,$subject,$txt,$headers);
-				
+
 			} else{
 				//echo "Oops! Something went wrong. Please try again later.";
 			}
 			echo "An email was sent if there is a user with that email.";
 		}
-		
+
 		mysqli_stmt_close($stmt);
 	}
-	
+
 	mysqli_close($link);
 }
 

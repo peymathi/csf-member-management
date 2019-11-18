@@ -1,10 +1,8 @@
-<?php 
+<?php
 include 'header.php';
+include "phpUtil/sessionVerification.php";
+session_verify();
 
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-	header("location: login.php");
-	exit;
-}
 
 require_once "config.php";
 $first_name = "";
@@ -38,7 +36,7 @@ $_SESSION["edit_member_id"] = "12";
 //
 
 if(isset($_SESSION["edit_member_id"])){
-	
+
 	$edit_member_id = $_SESSION["edit_member_id"];
 
 	$sql = "SELECT FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText, GroupID FROM members WHERE MemberID = $edit_member_id";
@@ -46,8 +44,8 @@ if(isset($_SESSION["edit_member_id"])){
 	$result = mysqli_query($link, $sql);
 	if($result){
 
-		while ($row = mysqli_fetch_array($result)) { 
-				
+		while ($row = mysqli_fetch_array($result)) {
+
 			$first_name = $row['FirstName'];
 			$last_name = $row['LastName'];
 			$email = $row['EmailAddress'];
@@ -69,8 +67,8 @@ if(isset($_SESSION["edit_member_id"])){
 
 			$home_address = $row['HomeAddress'];
 			$prayer_request = $row['PrayerRequest'];
-			
-		} 
+
+		}
 
 	}else{
 		echo $link->error;
@@ -88,7 +86,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 
 
 
-	
+
 	if(empty(trim($_POST["email"]))){
 		$email_error = "Must enter email.";
 	} else {
@@ -171,21 +169,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 	}
 
 	//INSERT INTO `members`(`FirstName`, `LastName`, `EmailAddress`, `HomeAddress`, `PhoneNumber`, `OptEmail`, `OptText`, `GroupID`) VALUES ([value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9])
-	 
+
 
 	if(empty($any_error)){
 		//$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText) VALUES (?,?,?,?,?,?,?,?)";
-		
+
 		$sql = "UPDATE members set FirstName='$first_name', LastName='$last_name', EmailAddress='$email', HomeAddress='$home_address', PhoneNumber='$phone_number', PrayerRequest='$prayer_request', OptEmail='$opt_email', OptText='$opt_phone' WHERE MemberID=$edit_member_id";
-		
+
 		$result = mysqli_query($link, $sql);
 		if($result){
 			header("location: checkin.php");
 		}else{
 			echo $link->error;
 		}
-		
-		
+
+
 	}
 }
 
@@ -246,13 +244,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $graduation_date_error; ?></span>
 			  </div>
-			  
+
 
 			  <div class="form-group">
 				<label for="life_group_id">Group:</label>
 					<select name="life_group_id" class="custom-select">
 						<option <?php if($life_group_id==null){echo "selected";}?>>None</option>
-						
+
 						<?php
 
 							$sql = "SELECT * FROM groups WHERE GroupID > 0";
@@ -260,7 +258,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 							$result = mysqli_query($link, $sql);
 							if($result){
 
-								while ($row = mysqli_fetch_array($result)) { 
+								while ($row = mysqli_fetch_array($result)) {
 									$isSelected = "";
 									echo $row['GroupID'] . " = " . $life_group_id;
 									if($row['GroupID'] == $life_group_id){
@@ -268,8 +266,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 									}
 
 									echo "<option value=".$row['GroupID']." $isSelected>".$row['GroupName']."</option>";
-									
-								} 
+
+								}
 
 							}else{
 								echo $link->error;
