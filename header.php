@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'checkinUserClass.php';
 ?>
 
 <!DOCTYPE html>

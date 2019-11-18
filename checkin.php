@@ -1,5 +1,38 @@
 <?php 
-include 'header.php';
+	include 'header.php';
+
+	//TODO: need to change session variables to not allow user to access dashboard
+
+    require_once "db_connect.php";
+    $phone = "";
+
+    $phone_error = "";
+	
+	
+	if($_SERVER["REQUEST_METHOD"] == "POST"){
+		if(empty(trim($_POST["phone"]))){
+            $phone_error = "Must enter phone Number in format: 3175551234.";
+        } else {
+            $phone = trim($_POST["phone"]);
+        }
+		if(empty($phone_error)){
+			$checkinStmt = $con->prepare('SELECT * FROM members WHERE PhoneNumber = :phone');
+			$checkinStmt->execute(array('phone'=>$phone));
+			$row = $checkinStmt->fetch(PDO::FETCH_OBJ);
+			if($loginStmt->rowCount() != 1){
+				$email_error = "Login Unsuccessful. Please Try Another Phone Number.";
+			}else{
+				
+					$_SESSION["id"] = $row->id;
+					$_SESSION["email"] = $row->email;     
+					Header("Location:dashboard.php");
+				}else{				
+					$password_error = "Login Unsuccessful. Please Try Another Password.";
+				}
+			}
+		}
+	}
+
 ?>
 
 <body>
@@ -12,8 +45,9 @@ include 'header.php';
 		<div class="col">
 			<form action="/action_page.php" class="needs-validation" novalidate>
 			  <div class="form-group">
-				<label for="email">Email:</label>
-				<input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+				<label for="tel" pattern="[0-9]{10}" required>Phone Number:</label>
+				<input type="tel" class="form-control" id="phone" placeholder="3175551234" name="phone" required>
+				<span class="help-block"><?php echo $phone_error; ?></span>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 			  </div>
