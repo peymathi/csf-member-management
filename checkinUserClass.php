@@ -1,5 +1,5 @@
 <?php 
-class Address
+class UserCheckin
 {
 	private $MemberID;
 	private $FirstName;
@@ -11,7 +11,7 @@ class Address
 	private $PrayerRequest;
 	private $OptEmail;
 	private $OptText;
-	private $GroupID
+	private $GroupID;
 	function __construct($MemberID = 0, $FirstName = "", $LastName = "", $EmailAddress = "", $HomeAddress = "", $PhoneNumber = 0,$PhotoPath = "", $PrayerRequest = "", $OptEmail = 0, $OptText = 0, $GroupID = 0)
 	{
 		$this->MemberID = $MemberID;

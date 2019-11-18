@@ -8,6 +8,8 @@
 
     $phone_error = "";
 	
+	$UserCheckin = new UserCheckin();
+	
 	
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
 		if(empty(trim($_POST["phone"]))){
@@ -19,16 +21,21 @@
 			$checkinStmt = $con->prepare('SELECT * FROM members WHERE PhoneNumber = :phone');
 			$checkinStmt->execute(array('phone'=>$phone));
 			$row = $checkinStmt->fetch(PDO::FETCH_OBJ);
-			if($loginStmt->rowCount() != 1){
-				$email_error = "Login Unsuccessful. Please Try Another Phone Number.";
+			if($checkinStmt->rowCount() != 1){
+				$phone_error = "Login Unsuccessful. Please Try Another Phone Number.";
 			}else{
-				
-					$_SESSION["id"] = $row->id;
-					$_SESSION["email"] = $row->email;     
-					Header("Location:dashboard.php");
-				}else{				
-					$password_error = "Login Unsuccessful. Please Try Another Password.";
-				}
+				$UserCheckin->setMemberID($row->MemberID);
+				$UserCheckin->setFirstName($row->FirstName);
+				$UserCheckin->setLastName($row->LastName);
+				$UserCheckin->setEmailAddress($row->EmailAddress);
+				$UserCheckin->setHomeAddress($row->HomeAddress);
+				$UserCheckin->setPhoneNumber($row->PhoneNumber);
+				$UserCheckin->setPhotoPath($row->PhotoPath);
+				$UserCheckin->setPrayerRequest($row->PrayerRequest);
+				$UserCheckin->setOptEmail($row->OptEmail);
+				$UserCheckin->setOptText($row->OptText);
+				$UserCheckin->setGroupID($row->GroupID);
+				Header("Location:edit_member.php");
 			}
 		}
 	}
@@ -43,7 +50,7 @@
 <div class="container" style="margin-top:30px">
 	<div class="row">
 		<div class="col">
-			<form action="/action_page.php" class="needs-validation" novalidate>
+			<form action="" method="post" class="needs-validation" novalidate>
 			  <div class="form-group">
 				<label for="tel" pattern="[0-9]{10}" required>Phone Number:</label>
 				<input type="tel" class="form-control" id="phone" placeholder="3175551234" name="phone" required>

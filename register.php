@@ -214,7 +214,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//here after clicking submit on login p
 			  </div>
 			  
 				<div class="form-group">
-				<label for="life_group_id">Group:</label>
+				<label for="life_group_id">Life Group:</label>
 					<select name="life_group_id" class="custom-select">
 						<option selected>None</option>
 						
