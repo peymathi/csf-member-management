@@ -1,44 +1,49 @@
 <?php 
-	include 'header.php';
+include 'header.php';
 
-	//TODO: need to change session variables to not allow user to access dashboard
+//TODO: need to change session variables to not allow user to access dashboard
 
-    require_once "db_connect.php";
-    $phone = "";
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+	header("location: login.php");
+	exit;
+}
+require_once "db_connect.php";
+$phone = "";
 
-    $phone_error = "";
-	
-	$UserCheckin = new UserCheckin();
-	
-	
-	if($_SERVER["REQUEST_METHOD"] == "POST"){
-		if(empty(trim($_POST["phone"]))){
-            $phone_error = "Must enter phone Number in format: 3175551234.";
-        } else {
-            $phone = trim($_POST["phone"]);
-        }
-		if(empty($phone_error)){
-			$checkinStmt = $con->prepare('SELECT * FROM members WHERE PhoneNumber = :phone');
-			$checkinStmt->execute(array('phone'=>$phone));
+$phone_error = "";
+
+$UserCheckin = new UserCheckin();
+
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+	if(empty(trim($_POST["phone"]))){
+		$phone_error = "Must enter phone Number in format: 3175551234.";
+	} else {
+		$phone = trim($_POST["phone"]);
+	}
+	if(empty($phone_error)){
+		$checkinStmt = $con->prepare('SELECT * FROM members WHERE PhoneNumber = :phone');
+		$checkinStmt->execute(array('phone'=>$phone));
+		if($checkinStmt->rowCount() != 1){
+			$phone_error = "Login Unsuccessful. Please Try Another Phone Number.";
+		}else{
 			$row = $checkinStmt->fetch(PDO::FETCH_OBJ);
-			if($checkinStmt->rowCount() != 1){
-				$phone_error = "Login Unsuccessful. Please Try Another Phone Number.";
-			}else{
-				$UserCheckin->setMemberID($row->MemberID);
-				$UserCheckin->setFirstName($row->FirstName);
-				$UserCheckin->setLastName($row->LastName);
-				$UserCheckin->setEmailAddress($row->EmailAddress);
-				$UserCheckin->setHomeAddress($row->HomeAddress);
-				$UserCheckin->setPhoneNumber($row->PhoneNumber);
-				$UserCheckin->setPhotoPath($row->PhotoPath);
-				$UserCheckin->setPrayerRequest($row->PrayerRequest);
-				$UserCheckin->setOptEmail($row->OptEmail);
-				$UserCheckin->setOptText($row->OptText);
-				$UserCheckin->setGroupID($row->GroupID);
-				Header("Location:edit_member.php");
-			}
+			$UserCheckin->setMemberID($row->MemberID);
+			$UserCheckin->setFirstName($row->FirstName);
+			$UserCheckin->setLastName($row->LastName);
+			$UserCheckin->setEmailAddress($row->EmailAddress);
+			$UserCheckin->setHomeAddress($row->HomeAddress);
+			$UserCheckin->setPhoneNumber($row->PhoneNumber);
+			$UserCheckin->setPhotoPath($row->PhotoPath);
+			$UserCheckin->setPrayerRequest($row->PrayerRequest);
+			$UserCheckin->setOptEmail($row->OptEmail);
+			$UserCheckin->setOptText($row->OptText);
+			$UserCheckin->setGroupID($row->GroupID);
+			$_SESSION["UserCheckin"] = $UserCheckin;
+			Header("Location:edit_member.php");
 		}
 	}
+}
 
 ?>
 

@@ -12,7 +12,8 @@ class UserCheckin
 	private $OptEmail;
 	private $OptText;
 	private $GroupID;
-	function __construct($MemberID = 0, $FirstName = "", $LastName = "", $EmailAddress = "", $HomeAddress = "", $PhoneNumber = 0,$PhotoPath = "", $PrayerRequest = "", $OptEmail = 0, $OptText = 0, $GroupID = 0)
+	
+	function __construct($MemberID = "", $FirstName = "", $LastName = "", $EmailAddress = "", $HomeAddress = "", $PhoneNumber = "",$PhotoPath = "", $PrayerRequest = "", $OptEmail = "", $OptText = "", $GroupID = "")
 	{
 		$this->MemberID = $MemberID;
 		$this->FirstName = $FirstName;
@@ -23,7 +24,12 @@ class UserCheckin
 		$this->PhotoPath = $PhotoPath;
 		$this->PrayerRequest = $PrayerRequest;
 		$this->OptEmail = $OptEmail;
+		$this->OptText = $OptText;
+		$this->GroupID = $GroupID;
+		
 	}
+	
+	/* GET/SET for MemberID*/
     public function getMemberID()
     {
         return $this->MemberID;
@@ -32,6 +38,8 @@ class UserCheckin
     {
         $this->MemberID = $MemberID;
     }
+	
+	/* GET/SET for FirstName*/
     public function getFirstName()
     {
         return $this->FirstName;
@@ -40,6 +48,8 @@ class UserCheckin
     {
         $this->FirstName = $FirstName;
     }
+	
+	/* GET/SET for LastName*/
     public function getLastName()
     {
         return $this->LastName;
@@ -48,6 +58,8 @@ class UserCheckin
     {
         $this->LastName = $LastName;
     }
+	
+	/* GET/SET for EmailAddress*/
     public function getEmailAddress()
     {
         return $this->EmailAddress;
@@ -56,6 +68,8 @@ class UserCheckin
     {
         $this->EmailAddress = $EmailAddress;
     }
+	
+	/* GET/SET for HomeAddress*/
     public function getHomeAddress()
     {
         return $this->HomeAddress;
@@ -64,6 +78,8 @@ class UserCheckin
     {
         $this->HomeAddress = $HomeAddress;
     }
+	
+	/* GET/SET for PhoneNumber*/
     public function getPhoneNumber()
     {
         return $this->PhoneNumber;
@@ -72,6 +88,8 @@ class UserCheckin
     {
         $this->PhoneNumber = $PhoneNumber;
     }
+	
+	/* GET/SET for PhotoPath*/
     public function getPhotoPath()
     {
         return $this->PhotoPath;
@@ -80,6 +98,8 @@ class UserCheckin
     {
         $this->PhotoPath = $PhotoPath;
     }
+	
+	/* GET/SET for PrayerRequest*/
     public function getPrayerRequest()
     {
         return $this->PrayerRequest;
@@ -88,6 +108,8 @@ class UserCheckin
     {
         $this->PrayerRequest = $PrayerRequest;
     }
+	
+	/* GET/SET for OptEmail*/
     public function getOptEmail()
     {
         return $this->OptEmail;
@@ -96,6 +118,8 @@ class UserCheckin
     {
         $this->OptEmail = $OptEmail;
     }
+	
+	/* GET/SET for OptText*/
 	public function getOptText()
     {
         return $OptText->OptText;
@@ -104,6 +128,8 @@ class UserCheckin
     {
         $this->OptText = $OptText;
     }
+	
+	/* GET/SET for GroupID*/
 	public function getGroupID()
     {
         return $this->GroupID;
