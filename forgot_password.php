@@ -17,37 +17,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	}
 
 	if(empty($email_error)){
-		//$sql = "SELECT id, email, password FROM admins WHERE email = ?";
-
-		$sql = "UPDATE admins SET password = ? WHERE email = ?";
-
-        if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ss", $param_password, $param_email);
-
-			$newpassword = randomPassword();//unhashed
-			$param_password = password_hash($newpassword, PASSWORD_DEFAULT);
-			$param_email = $email;
-
-			if(mysqli_stmt_execute($stmt)){
-
-				echo $newpassword;
-				$to = $email;
-				$subject = "Password Reset";
-                $txt = "Your new password is : $newpassword";
-                $headers = "From: test@test.com";
-                mail($to,$subject,$txt,$headers);
-
-			} else{
-				//echo "Oops! Something went wrong. Please try again later.";
-			}
-			echo "An email was sent if there is a user with that email.";
-		}
-
-		mysqli_stmt_close($stmt);
+		//$sql = "UPDATE admins SET password = :password WHERE email = :email";
+		$newpassword = randomPassword();//unhashed
+		$to = $email;
+		$subject = "Password Reset";
+		$txt = "Your new password is : ".$newpassword;
+		$headers = "From: test@test.com";
+		
+		$passwordStmt = $con->prepare('UPDATE admins SET password = :password WHERE email = :email');
+		$password = password_hash($newpassword, PASSWORD_DEFAULT);
+		$passwordStmt->execute(array('password'=>$password, 'email'=>$email));
+		
+		mail($to,$subject,$txt,$headers);
 	}
-
-	mysqli_close($link);
+	$email_error = "An email was sent if there is a user with that email.";
 }
 
 
