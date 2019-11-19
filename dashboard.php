@@ -16,13 +16,13 @@
         <a class="nav-link" href="checkin.php">Student Check In</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="logout.php">Log Out</a>
+        <a class="nav-link" href="#">Reports</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="change_password.php">Change password</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Reports</a>
+        <a class="nav-link" href="logout.php">Log Out</a>
       </li>
     </ul>
 </nav>
