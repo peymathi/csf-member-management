@@ -13,7 +13,6 @@ $PhoneNumber = $UserCheckin->getPhoneNumber();
 $PhotoPath = $UserCheckin->getPhotoPath();
 $PrayerRequest = $UserCheckin->getPrayerRequest();
 $OptEmail = $UserCheckin->getOptEmail();
-//TODO: Fix OptText to read from $UserCheckin->getOptText();
 $OptText = $UserCheckin->getOptText();
 $GroupID = $UserCheckin->getGroupID();
 
@@ -112,7 +111,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 		$updateStmt = $con->prepare("UPDATE members set FirstName = :FirstName, LastName = :LastName, EmailAddress = :EmailAddress, HomeAddress = :HomeAddress,
 		PhoneNumber = :PhoneNumber, PhotoPath = :PhotoPath, PrayerRequest = :PrayerRequest, OptEmail = :OptEmail, OptText = :OptText, GroupID = :GroupID WHERE MemberID = :MemberID");
 		$updateStmt->execute(array('FirstName' => $FirstName, 'LastName' => $LastName, 'EmailAddress' => $Email, 'HomeAddress' => $HomeAddress,'PhoneNumber' => $PhoneNumber,
-		'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptEmail, 'GroupID' => $GroupID, 'MemberID' => $MemberID));
+		'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptText, 'GroupID' => $GroupID, 'MemberID' => $MemberID));
 		$_SESSION['UserCheckin'] = Null;
 		Header("location: checkin.php");
 	}

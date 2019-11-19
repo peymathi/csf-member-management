@@ -112,7 +112,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 		$updateStmt = $con->prepare('INSERT INTO members (`MemberID`, `FirstName`, `LastName`, `EmailAddress`, `HomeAddress`, `PhoneNumber`, `PhotoPath`, `PrayerRequest`, `OptEmail`, `OptText`, `GroupID`) VALUES
 		(NULL, :FirstName, :LastName, :EmailAddress, :HomeAddress, :PhoneNumber, :PhotoPath, :PrayerRequest, :OptEmail, :OptText, :GroupID)');
 		$updateStmt->execute(array('FirstName' => $FirstName, 'LastName' => $LastName, 'EmailAddress' => $Email, 'HomeAddress' => $HomeAddress,
-		'PhoneNumber' => $PhoneNumber, 'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptEmail, 'GroupID' => $GroupID));
+		'PhoneNumber' => $PhoneNumber, 'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptText, 'GroupID' => $GroupID));
 		Header("location: checkin.php");
 	}
 }
