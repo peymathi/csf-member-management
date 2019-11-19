@@ -11,7 +11,7 @@ $phone_error = "";
 $UserCheckin = new UserCheckin();
 
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if(isset($_POST['edit'])){
 	if(empty(trim($_POST["phone"]))){
 		$phone_error = "Must enter phone Number in format: 3175551234.";
 	} else {
@@ -40,6 +40,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		}
 	}
 }
+if(isset($_POST['register'])){
+	Header("Location:register.php");
+}
 
 ?>
 
@@ -51,7 +54,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <div class="container" style="margin-top:30px">
 	<div class="row">
 		<div class="col">
-			<form action="" method="post" class="needs-validation" novalidate>
+			<form action="checkin.php" method="post" class="needs-validation" novalidate>
 			  <div class="form-group">
 				<label for="tel" pattern="[0-9]{10}" required>Phone Number:</label>
 				<input type="tel" class="form-control" id="phone" placeholder="3175551234" name="phone" required>
@@ -59,7 +62,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 			  </div>
-			  <button type="submit" class="btn btn-primary">Check In</button>
+			  <button type="submit" class="btn btn-primary" name="edit">Check In</button>
+			  <button type="submit" class="btn btn-primary" name="register">Register</button>
 			</form>
 		</div>
 	</div>
