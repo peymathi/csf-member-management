@@ -1,13 +1,9 @@
-<?php
+<?php 
 include 'header.php';
-include "phpUtil/sessionVerification.php";
-session_verify();
-
+//TODO: need to add session variables to not allow user to access dashboard
 
 require_once "db_connect.php";
-
 $UserCheckin = $_SESSION["UserCheckin"];
-
 $MemberID = $UserCheckin->getMemberID();
 $FirstName = $UserCheckin->getFirstName();
 $LastName = $UserCheckin->getLastName();
@@ -17,7 +13,9 @@ $PhoneNumber = $UserCheckin->getPhoneNumber();
 $PhotoPath = $UserCheckin->getPhotoPath();
 $PrayerRequest = $UserCheckin->getPrayerRequest();
 $OptEmail = $UserCheckin->getOptEmail();
-$OptText = $UserCheckin->getOptText();
+//TODO: Fix OptText to read from $UserCheckin->getOptText();
+//$OptText = $UserCheckin->getOptText();
+$OptText = 1;
 $GroupID = $UserCheckin->getGroupID();
 
 /* TODO Not default major and Graduation Date to Null */
@@ -32,58 +30,10 @@ $graduation_date_error = "";
 $major_error = "";
 $life_group_error = "";
 $home_address_error = "";
-
 $any_error = "";
 
-<<<<<<< HEAD
-//temporary for testing
-$_SESSION["edit_member_id"] = "12";
-//
-
-if(isset($_SESSION["edit_member_id"])){
-
-	$edit_member_id = $_SESSION["edit_member_id"];
-
-	$sql = "SELECT FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText, GroupID FROM members WHERE MemberID = $edit_member_id";
-
-	$result = mysqli_query($link, $sql);
-	if($result){
-
-		while ($row = mysqli_fetch_array($result)) {
-
-			$first_name = $row['FirstName'];
-			$last_name = $row['LastName'];
-			$email = $row['EmailAddress'];
-			$phone_number = $row['PhoneNumber'];
-			//$graduation_date = $row['name'];
-			//$major = $row['name'];
-			$life_group_id = $row['GroupID'];
-			$opt_phone = $row['OptText'];//default 0 = no
-
-			if($opt_phone == "1"){
-				$opt_phone_checked="checked";
-			}
-
-			$opt_email = $row['OptEmail'];//default 0 = no
-
-			if($opt_email == "1"){
-				$opt_email_checked="checked";
-			}
-
-			$home_address = $row['HomeAddress'];
-			$prayer_request = $row['PrayerRequest'];
-
-		}
-
-	}else{
-		echo $link->error;
-	}
-
-=======
 $opt_email_checked="";
 $opt_phone_checked="";
->>>>>>> 4d5178e6e7056102201f6dd619126c11de1e0582
-
 if($OptText == "1"){
 	$opt_phone_checked="checked";
 }
@@ -92,113 +42,81 @@ if($OptEmail == "1"){
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> 4d5178e6e7056102201f6dd619126c11de1e0582
 	if(empty(trim($_POST["email"]))){
 		$email_error = "Must enter email.";
 	} else {
 		$email = trim($_POST["email"]);
 	}
-
 	if(empty(trim($_POST["first_name"]))){
 		$first_name_error = "Must enter first name.";
 	} else {
 		$FirstName = trim($_POST["first_name"]);
 	}
-
 	if(empty(trim($_POST["last_name"]))){
 		$last_name_error = "Must enter last name.";
 	} else {
 		$LastName = trim($_POST["last_name"]);
 	}
-
 	if(empty(trim($_POST["phone_number"]))){
 		$phone_number_error = "Must enter phone number.";
 	} else {
 		$PhoneNumber = trim($_POST["phone_number"]);
 	}
-
 	if(empty(trim($_POST["graduation_date"]))){
 		$graduation_date_error = "Must enter graduation date.";
 	} else {
 		$graduation_date = trim($_POST["graduation_date"]);
 	}
-
 	if(empty(trim($_POST["major"]))){
 		$major_error = "Must enter major.";
 	} else {
 		$major = trim($_POST["major"]);
 	}
-
 	if(empty(trim($_POST["life_group_id"]))){
 		//$life_group_error = "Must enter life group.";
 		$GroupID = null;
 	} else {
 		$GroupID = trim($_POST["life_group_id"]);
 	}
-
 	if(empty(trim($_POST["home_address"]))){
 		$home_address_error = "Must enter home address.";
 	} else {
 		$HomeAddress = trim($_POST["home_address"]);
 	}
-
-	if(isset($_POST["opt_phone"])){
-		$OptText = 0;//if empty 0 means no
-	} else {
+	if(isset($_POST["opt_text"])){ //if opted on set 1 else 0
 		$OptText = 1;
-	}
-
-	if(isset($_POST["opt_email"])){
-		$OptEmail = 0;//if empty 0 means no
 	} else {
-		$OptEmail = 1;
+		$OptText = 0;
 	}
-
+	if(isset($_POST["opt_email"])){ //if opted on set 1 else 0
+		$OptEmail = 1;
+	} else {
+		$OptEmail = 0;
+	}
 	if(empty(trim($_POST["prayer_request"]))){
 		$PrayerRequest = "";
 	} else {
 		$PrayerRequest = trim($_POST["prayer_request"]);
 	}
-
 	//if any of these errors are not empty, then don't add anything to db
 	if(
 	!empty($email_error) || !empty($first_name_error) || !empty($last_name_error) || !empty($phone_number_error) ||
 	!empty($major_error) ||	!empty($graduation_date_error) || !empty($home_address_error) || !empty($life_group_error)
 	){
 		$any_error = "errors";
+		//$any_error = $MemberID."   : ".$FirstName." ".$LastName." ".$EmailAddress." ".$HomeAddress." ".$PhoneNumber." ".$PhotoPath." ".$PrayerRequest." ".$OptEmail." ".$OptEmail." ".$GroupID;
 	}
-
-<<<<<<< HEAD
-	//INSERT INTO `members`(`FirstName`, `LastName`, `EmailAddress`, `HomeAddress`, `PhoneNumber`, `OptEmail`, `OptText`, `GroupID`) VALUES ([value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9])
-
-
-=======
-	/*
->>>>>>> 4d5178e6e7056102201f6dd619126c11de1e0582
+	
 	if(empty($any_error)){
-		//$sql = "INSERT INTO members(FirstName, LastName, EmailAddress, HomeAddress, PhoneNumber, PrayerRequest, OptEmail, OptText) VALUES (?,?,?,?,?,?,?,?)";
-
-		$sql = "UPDATE members set FirstName='$first_name', LastName='$last_name', EmailAddress='$email', HomeAddress='$home_address', PhoneNumber='$phone_number', PrayerRequest='$prayer_request', OptEmail='$opt_email', OptText='$opt_phone' WHERE MemberID=$edit_member_id";
-
-		$result = mysqli_query($link, $sql);
-		if($result){
-			header("location: checkin.php");
-		}else{
-			echo $link->error;
-		}
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 4d5178e6e7056102201f6dd619126c11de1e0582
+		//UPDATE `members` SET `FirstName`=[value-2],`LastName`=[value-3],`EmailAddress`=[value-4],`HomeAddress`=[value-5],`PhoneNumber`=[value-6],
+		//`PhotoPath`=[value-7],`PrayerRequest`=[value-8],`OptEmail`=[value-9],`OptText`=[value-10],`GroupID`=[value-11] WHERE `MemberID`=[value-1];
+		$updateStmt = $con->prepare("UPDATE members set FirstName = :FirstName, LastName = :LastName, EmailAddress = :EmailAddress, HomeAddress = :HomeAddress,
+		PhoneNumber = :PhoneNumber, PhotoPath = :PhotoPath, PrayerRequest = :PrayerRequest, OptEmail = :OptEmail, OptText = :OptText, GroupID = :GroupID WHERE MemberID = :MemberID");
+		$updateStmt->execute(array('FirstName' => $FirstName, 'LastName' => $LastName, 'EmailAddress' => $EmailAddress, 'HomeAddress' => $HomeAddress,'PhoneNumber' => $PhoneNumber,
+		'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptEmail, 'GroupID' => $GroupID, 'MemberID' => $MemberID));
+		$_SESSION['UserCheckin'] = Null;
+		Header("location: checkin.php");
 	}
-	*/
 }
 ?>
 
@@ -253,36 +171,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $graduation_date_error; ?></span>
 			  </div>
-
+			  
 
 			  <div class="form-group">
 				<label for="life_group_id">Group:</label>
-<<<<<<< HEAD
-					<select name="life_group_id" class="custom-select">
-						<option <?php if($life_group_id==null){echo "selected";}?>>None</option>
-
-						<?php
-
-							$sql = "SELECT * FROM groups WHERE GroupID > 0";
-
-							$result = mysqli_query($link, $sql);
-							if($result){
-
-								while ($row = mysqli_fetch_array($result)) {
-									$isSelected = "";
-									echo $row['GroupID'] . " = " . $life_group_id;
-									if($row['GroupID'] == $life_group_id){
-										$isSelected = "selected";
-									}
-
-									echo "<option value=".$row['GroupID']." $isSelected>".$row['GroupName']."</option>";
-
-								}
-
-							}else{
-								echo $link->error;
-=======
-					<select name="life_group_id" class="custom-select">
+					<select name="life_group_id" class="custom-select">						
 						<?php
 						$GroupIDStmt = $con->prepare("SELECT * FROM groups");
 						$GroupIDStmt->execute(array());
@@ -290,7 +183,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 							$isSelected = "";
 							if($GroupRow['GroupID'] == $GroupID){
 								$isSelected = "selected";
->>>>>>> 4d5178e6e7056102201f6dd619126c11de1e0582
 							}
 							echo "<option value=".$GroupRow['GroupID']." $isSelected>".$GroupRow['GroupName']."</option>";
 						}
@@ -312,16 +204,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 			  </div>
 
 				<div class="form-group form-check">
-					<label class="form-check-label">
-						<input class="form-check-input" type="checkbox" value="1" name="OptText" <?php echo $opt_phone_checked; ?>>Opt in for text notifications.
+					<label class="form-check-label"></label>
+						<input class="form-check-input" type="checkbox" name="opt_text" <?php echo $opt_phone_checked; ?>>Opt in for text notifications
 					</label>
 				</div>
 
 				<div class="form-group form-check">
-					<label class="form-check-label">
-						<input class="form-check-input" type="checkbox" value="1" name="OptEmail" <?php echo $opt_email_checked; ?>>Opt in for email notifications.
+					<label class="form-check-label"></label>
+						<input class="form-check-input" type="checkbox" name="opt_email" <?php echo $opt_email_checked; ?>>Opt in for email notifications
 					</label>
 				</div>
+				<span class="help-block"><?php echo $any_error; ?></span>
 			  <button type="submit" class="btn btn-primary">Update</button>
 			</form>
 		</div>
