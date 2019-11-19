@@ -14,8 +14,7 @@ $PhotoPath = $UserCheckin->getPhotoPath();
 $PrayerRequest = $UserCheckin->getPrayerRequest();
 $OptEmail = $UserCheckin->getOptEmail();
 //TODO: Fix OptText to read from $UserCheckin->getOptText();
-//$OptText = $UserCheckin->getOptText();
-$OptText = 1;
+$OptText = $UserCheckin->getOptText();
 $GroupID = $UserCheckin->getGroupID();
 
 /* TODO Not default major and Graduation Date to Null */

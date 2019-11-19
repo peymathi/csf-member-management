@@ -13,7 +13,7 @@ class UserCheckin
 	private $OptText;
 	private $GroupID;
 	
-	function __construct($MemberID = "", $FirstName = "", $LastName = "", $EmailAddress = "", $HomeAddress = "", $PhoneNumber = "",$PhotoPath = "", $PrayerRequest = "", $OptEmail = "", $OptText = "", $GroupID = "")
+	function __construct($MemberID = "", $FirstName = "", $LastName = "", $EmailAddress = "", $HomeAddress = "", $PhoneNumber = "",$PhotoPath = "", $PrayerRequest = "", $OptEmail = 0, $OptText = 0, $GroupID = "")
 	{
 		$this->MemberID = $MemberID;
 		$this->FirstName = $FirstName;
@@ -122,7 +122,7 @@ class UserCheckin
 	/* GET/SET for OptText*/
 	public function getOptText()
     {
-        return $OptText->OptText;
+        return $this->OptText;
     }
     public function setOptText($OptText)
     {
