@@ -17,10 +17,12 @@ session_start();
 
 	<title>Impact: 
 	<?php
-	if(basename($_SERVER['PHP_SELF'])=="index.php") print 'Homepage';		
+	if(basename($_SERVER['PHP_SELF'])=="index.php") print 'Homepage';
+		else if(basename($_SERVER['PHP_SELF'])=="dashboard.php") print 'Dashboard';		
 		else if(basename($_SERVER['PHP_SELF'])=="checkin.php") print 'Check In';
 		else if(basename($_SERVER['PHP_SELF'])=="login.php") print 'Log In';
 		else if(basename($_SERVER['PHP_SELF'])=="register.php") print 'Register';
+		else if(basename($_SERVER['PHP_SELF'])=="edit_member.php") print 'Edit Member';
 		else if(basename($_SERVER['PHP_SELF'])=="change_password.php") print 'Change Password';
 		else if(basename($_SERVER['PHP_SELF'])=="forgot_password.php") print 'Password Reset';
 	?>
