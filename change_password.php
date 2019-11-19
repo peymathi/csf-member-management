@@ -8,7 +8,7 @@ session_verify();
 $email = $new_password = $confirm_password = "";
 $email_error = $new_password_error = $confirm_password_error = "";
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if(isset($_POST['change'])){
 	if(empty(trim($_POST["email"]))){
         $email_error = "Please enter the Email.";
     } elseif(strlen(trim($_POST["email"])) < 6){
@@ -37,8 +37,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($email_error) && empty($new_password_error) && empty($confirm_password_error)){
         //Prepare an update statement
 		$passwordStmt = $con->prepare('UPDATE admins SET password = :password WHERE email = :email');
-		$newPassword = password_hash($newpassword, PASSWORD_DEFAULT);
+		$newPassword = password_hash($new_password, PASSWORD_DEFAULT);
 		$passwordStmt->execute(array('password'=>$newPassword, 'email'=>$email));
+		Header("Location: dashboard.php");
     }
 }
 ?>
@@ -71,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				<div class="invalid-feedback">Please fill out this field.</div>
 			  </div>
 			  <span class="help-block"><?php echo $confirm_password_error; ?></span>
-			  <button type="submit" class="btn btn-primary">Change Password</button>
+			  <button type="submit" class="btn btn-primary" name="change">Change Password</button>
 			</form>
 		</div>
 	</div>
