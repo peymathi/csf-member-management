@@ -1,14 +1,13 @@
 <?php
 include 'header.php';
 
-
-require_once "config.php";
+require_once "db_connect.php";
 
 $email = "";
-
 $email_error = "";
+$newpassword="";
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if(isset($_POST['reset'])){
 
 	if(empty(trim($_POST["email"]))){
 		$email_error = "Must enter email.";
@@ -28,9 +27,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$password = password_hash($newpassword, PASSWORD_DEFAULT);
 		$passwordStmt->execute(array('password'=>$password, 'email'=>$email));
 		
-		mail($to,$subject,$txt,$headers);
+		//TODO: Get mail server set up
+		//mail($to,$subject,$txt,$headers);
+		//Header("Location: login.php");
 	}
 	$email_error = "An email was sent if there is a user with that email.";
+}
+
+if(isset($_POST['back'])){
+	Header("Location: login.php");
 }
 
 
@@ -62,16 +67,11 @@ function randomPassword() {
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $email_error; ?></span>
+				<span class="help-block"><?php echo $newpassword; ?></span>
 			  </div>
-			  <button type="submit" class="btn btn-primary">Reset</button>
+			  <button type="submit" class="btn btn-primary" name="reset">Reset</button>
+			  <button type="submit" class="btn btn-secondary" name="back">Back To Log In</button>
 			</form>
-		</div>
-	</div>
-	<div class="row mt-2">
-		<div class="col">
-			<a href="login.php">
-				<button type="submit" class="btn btn-secondary">Back To Log In</button>
-			</a>
 		</div>
 	</div>
 	<script src="forgot_password.js"></script>

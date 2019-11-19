@@ -1,6 +1,7 @@
 <?php
 include 'header.php';
 
+require_once "db_connect.php";
 include "phpUtil/sessionVerification.php";
 session_verify();
 
