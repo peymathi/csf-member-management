@@ -1,6 +1,5 @@
 <?php
 include 'header.php';
-include 'phpUtil/sessionVerification.php';
 require_once "db_connect.php";
 
 // Verify the session
@@ -51,7 +50,7 @@ if(isset($_POST['forgot'])){
 
 <div class="jumbotron text-center" style="margin-bottom:0">
   <h1>Impact Member Tracking</h1>
-  <span><?php echo $inactive; ?></span>
+  <p><span><?php echo $inactive; ?></p>
 </div>
 <div class="container" style="margin-top:30px">
 	<div class="row">

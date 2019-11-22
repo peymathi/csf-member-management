@@ -15,8 +15,10 @@ function session_verify()
     {
       $session_time = $session->getTime();
 
-      if ($session_time  +  2 * (60 * 60) < time())
+      // 2 and a half hour inactivity limit
+      if ($session_time  + 2.5 * (60 * 60) < time())
       {
+        $session->toggleInactive();
         $session->destroy();
         $_SESSION['session'] = serialize($session);
         Header("Location: login.php");
@@ -59,6 +61,13 @@ function session_verify()
   {
     $session = new Session();
     $_SESSION['session'] = serialize($session);
+
+    // Check if we are already at login page
+    if (basename($_SERVER['PHP_SELF']) != 'login.php')
+    {
+      Header("Location: login.php");
+      exit;
+    }
   }
 }
 
@@ -70,6 +79,7 @@ function isInactive()
    if ($session->wasInactive())
    {
      $session->toggleInactive();
+     $_SESSION['session'] = serialize($session);
      return True;
    }
  }
@@ -83,7 +93,10 @@ function authenticate()
     $session = unserialize($_SESSION['session']);
     $session->authenticate();
     $_SESSION['session'] = serialize($session);
+
+    // DEBUG
     echo $session->getState();
+
     if ($session->getState() === Session::STATE_IN) Header("Location: dashboard.php");
     else  Header ("Location: checkin.php");
   }
