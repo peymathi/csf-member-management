@@ -47,6 +47,8 @@ function session_verify()
       case "edit_member.php":
       case "register.php":
         if ($session->getState() === Session::STATE_OUT) Header("Location: login.php");
+        else $session->checkIn();
+        $_SESSION['session'] = serialize($session);
         break;
 
       case "login.php":

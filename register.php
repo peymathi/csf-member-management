@@ -1,9 +1,6 @@
 <?php
 include 'header.php';
-//TODO: need to add session variables to not allow user to access dashboard
-
-//include "phpUtil/sessionVerification.php";
-//session_verify();
+session_verify();
 
 
 require_once "db_connect.php";
@@ -105,7 +102,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 		$any_error = "errors";
 		//$any_error = $MemberID."   : ".$FirstName." ".$LastName." ".$EmailAddress." ".$HomeAddress." ".$PhoneNumber." ".$PhotoPath." ".$PrayerRequest." ".$OptEmail." ".$OptEmail." ".$GroupID;
 	}
-	
+
 	if(empty($any_error)){
 		//UPDATE `members` SET `FirstName`=[value-2],`LastName`=[value-3],`EmailAddress`=[value-4],`HomeAddress`=[value-5],`PhoneNumber`=[value-6],
 		//`PhotoPath`=[value-7],`PrayerRequest`=[value-8],`OptEmail`=[value-9],`OptText`=[value-10],`GroupID`=[value-11] WHERE `MemberID`=[value-1];

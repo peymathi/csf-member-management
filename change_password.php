@@ -2,7 +2,6 @@
 include 'header.php';
 
 require_once "db_connect.php";
-include "phpUtil/sessionVerification.php";
 session_verify();
 
 $email = $new_password = $confirm_password = "";

@@ -1,6 +1,6 @@
 <?php
-    session_start();
     include "phpUtil/sessionVerification.php";
+    session_start();
     if (isset($_SESSION['session']))
     {
       $session = unserialize($_SESSION['session']);
