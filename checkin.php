@@ -10,18 +10,23 @@ $phone_error = "";
 $UserCheckin = new UserCheckin();
 
 
-if(isset($_POST['edit'])){
-	if(empty(trim($_POST["phone"]))){
-		$phone_error = "Must enter phone Number in format: 3175551234.";
-	} else {
-		$phone = trim($_POST["phone"]);
-	}
-	if(empty($phone_error)){
+if(isset($_POST['edit']))
+{
+	// Validate phone input
+	if(empty(trim($_POST["phone"])))
+		$phone_error = "Must enter phone Number in format: (xxx)-xxx-xxxx.";
+	else $phone = trim($_POST["phone"]);
+
+	if(empty($phone_error))
+	{
 		$checkinStmt = $con->prepare('SELECT * FROM members WHERE PhoneNumber = :phone');
 		$checkinStmt->execute(array('phone'=>$phone));
-		if($checkinStmt->rowCount() != 1){
-			$phone_error = "Login Unsuccessful. Please Try Another Phone Number.";
-		}else{
+
+		if($checkinStmt->rowCount() != 1)
+			$phone_error = "Oops! We don't have your phone number on record. Please try again.";
+
+		else
+		{
 			$row = $checkinStmt->fetch(PDO::FETCH_OBJ);
 			$UserCheckin->setMemberID($row->MemberID);
 			$UserCheckin->setFirstName($row->FirstName);
@@ -39,31 +44,70 @@ if(isset($_POST['edit'])){
 		}
 	}
 }
-if(isset($_POST['register'])){
-	Header("Location:register.php");
-}
 
 ?>
 
 <body>
 
+	<!-- Modal -->
+	<div id="checkInModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-lg">
+
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">Modal Header</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+	      </div>
+	      <div class="modal-body">
+
+					<!-- Display the original section -->
+					<div id="displayData" hidden>
+					</div>
+
+					<!-- Display the prayer request section -->
+					<div id="prayerRequest" hidden>
+					</div>
+
+					<!-- Display the lifegroups section -->
+					<div id="lifeGroups" hidden>
+					</div>
+
+					<!-- Display the end of the form -->
+					<div id="finishForm" hidden>
+					</div>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Check In</h1>
+  <h1>Night of Worship Check In</h1>
 </div>
+
 <div class="container" style="margin-top:30px">
 	<div class="row">
 		<div class="col">
 			<form action="checkin.php" method="post" class="needs-validation" novalidate>
 			  <div class="form-group">
-				<label for="tel" pattern="[0-9]{10}" required>Phone Number:</label>
-				<input type="tel" class="form-control" id="phone" placeholder="3175551234" name="phone" required>
-				<span class="help-block"><?php echo $phone_error; ?></span>
-				<div class="valid-feedback">Valid.</div>
-				<div class="invalid-feedback">Please fill out this field.</div>
+					<label for="tel" required>Been here before? Enter your phone number to sign in: </label>
+					<input type="tel" class="form-control input-medium bfh-phone" id="phone" placeholder="(xxx)-xxx-xxxx" pattern="[0-9]{10}" name="phone" required>
+					<span class="help-block"><?php echo $phone_error; ?></span>
+					<br>
+					<div class="valid-feedback">Valid.</div>
+					<div class="invalid-feedback">Please fill out this field.</div>
+
+					<!-- Check in button opens modal -->
+					<button type="button" name="checkIn" class="btn btn-primary" data-toggle="modal" data-target="#checkInModal">Check In</button>
 			  </div>
-			  <button type="submit" class="btn btn-primary" name="edit">Check In</button>
-			  <button type="submit" class="btn btn-primary" name="register">Register</button>
+				<a href="register.php">First Time? Click Here to Register!</a>
 			</form>
+			<a href="logout.php">Logout</a>
 		</div>
 	</div>
 	<script src="checkin.js"></script>
