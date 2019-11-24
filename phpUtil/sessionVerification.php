@@ -11,7 +11,7 @@ function session_verify()
     $session = unserialize($_SESSION['session']);
 
     // If the session is in a logged in state check for inactivity
-    if ($session->getState() === Session::STATE_IN)
+    if ($session->getState() != Session::STATE_OUT)
     {
       $session_time = $session->getTime();
 
