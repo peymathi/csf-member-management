@@ -21,17 +21,17 @@
 function checkIn(userData)
 {
 	$("#displayData").collapse("show");
-	$("#modal-title").text("Welcome Back " + userData.Name + "!");
+	$("#modal-title").text("Welcome Back " + userData.FirstName + "!");
 
 	// Display user's data
-	$("#name").text("Name: " + userData.Name);
-	$("#email").text("Email: " + userData.Email);
-	$("#phoneNumber").text("Phone: " + userData.Phone);
-	$("#status").text("Status: " + userData.Status);
-	$("#major").text("Major: " + userData.Major);
-	$("#life-groups").text("Life Group: " + userData.LifeGroup);
-	$("#optEmail").text("Opt Into Emails: " + (userData.OptEmail ? "Yes" : "No"));
-	$("#optText").text("Opt Into Texts: " + (userData.OptText ? "Yes" : "No"));
+	$("#name").text(" " + userData.FirstName  + " " + userData.LastName);
+	$("#email").text(" " + userData.Email);
+	$("#phoneNumber").text(userData.Phone);
+	$("#status").text(userData.Status);
+	$("#major").text(userData.Major);
+	$("#life-groups").text( userData.LifeGroup);
+	$("#optEmail").text((userData.OptEmail ? "Yes" : "No"));
+	$("#optText").text((userData.OptText ? "Yes" : "No"));
 }
 
 // Runs after user verifies their info.
@@ -39,6 +39,7 @@ function continueForm(userData)
 {
 	// Hide the old page
 	$("#displayData").collapse("hide");
+	$("#editMember").collapse("hide");
 
 	// Check if the user is not in a lifegroup
 	if (userData.LifeGroup === "None")
@@ -61,6 +62,7 @@ function displayLifegroups(userData)
 	// TODO ****************
 	// Get lifegroups from ajax call
 
+	// TODO ****************
 	// Add lifegroups to select element
 
 	$("#showLifeGroups").collapse("show");
@@ -72,11 +74,15 @@ function finishLifeGroups(userData)
 	// TODO ****************
 	// Receive user data
 
+	// TODO ****************
 	// Send data to DB with ajax call
 
 	// Close the lifegroups divs
+	$("#showLifeGroups").collapse("hide");
+	$("#askLifeGroups").collapse("hide");
 
 	// Open prayer request div
+	$("#prayerRequest").collapse("show");
 }
 
 // Runs once the user has finished checking in
@@ -84,16 +90,50 @@ function finishForm(userData)
 {
 	$("#prayerRequest").collapse("hide");
 	$("#finishForm").collapse("show");
+
 	// TODO ******************
 	// Send the user's data to the DB through ajax call
 
 	// Delay for 5 seconds and then link back to original check in page
+	setTimeout(function(){
+		location.reload();
+	}, 5000);
 }
 
 // Function that runs when a user wants to edit info
 function editMember(userData)
 {
+	$("#displayData").collapse("hide");
+	$("#editMember").collapse("show");
 
+	// TODO ***************
+	// Get the list of lifegroups through ajax call
+
+	// Fill out form elements with user info
+	$("input[name='editFirstName']").val(userData.FirstName);
+	$("input[name='editLastName']").val(userData.LastName);
+	$("input[name='editEmail']").val(userData.Email);
+	$("input[name='editPhone']").val(userData.Phone);
+	$("select[name='editStatus']").val(userData.Status);
+	$("input[name='editMajor']").val(userData.Major);
+
+	// TODO ***************
+	// Populate life groups select element with options for each
+	// life group.
+
+	$("#optEmail" + ((userData.OptEmail) ? "1" : "2")).attr("checked", true);
+	$("#optTexts" + ((userData.OptText) ? "1" : "2")).attr("checked", true);
+}
+
+// Function for when editing a member is finished
+function finishEditMember(userData)
+{
+	$("#editMember").collapse("hide");
+
+	// TODO************
+	// Perform ajax call to push changes to member to DB
+
+	continueForm(userData);
 }
 
 // Function that runs when a user enters a phone number. Attempts to get
@@ -108,12 +148,13 @@ function getMember(phone)
 	if(true)
 	{
 		return {
-			Name: "Peyton",
+			FirstName: "Peyton",
+			LastName: "Mathis",
 			Email: "peymathi@iu.edu",
 			Phone: "3174604323",
 			Status: "Junior",
 			Major: "Computer Science",
-			LifeGroup: "Tuesday, 6:00 Taylor Hall",
+			LifeGroup: "Tuesday 6:00 	",
 			OptEmail: true,
 			OptText: true
 		};
@@ -133,14 +174,22 @@ $(document).ready(function() {
 
 	var userData = false;
 
+	$(".editToggle").on("click", function() {
+
+		// Disable all other inputs
+		$(".inputToggle").prop("disabled", true);
+		$("." + this.id).prop("disabled", false);
+
+	});
+
 	$("#checkIn").on("click", function() {
 		userData = getMember($("#phone").val());
 
 		// If there is a user
 		if (userData)
 		{
-			$("#checkInModal").modal("show");
 			checkIn(userData);
+			$("#checkInModal").modal("show");
 		}
 
 		// If there is not a user
@@ -159,7 +208,7 @@ $(document).ready(function() {
 		finishForm(userData);
 	});
 
-	$("#editMember").on("click", function() {
+	$("#editMemberBtn").on("click", function() {
 		editMember(userData);
 	});
 
@@ -179,14 +228,23 @@ $(document).ready(function() {
 		finishLifeGroups(userData);
 	});
 
+	$("#saveEditMember").on("click", function() {
+		finishEditMember(userData);
+	});
+
+	$("#cancelEditMember").on("click", function() {
+		continueForm(userData);
+	});
+
 	// Hide all modal body divs on modal close
 	$("#checkInModal").on("hidden.bs.modal", function(){
-		$("#displayData").collapse("hide");
 		$("#prayerRequest").collapse("hide");
 		$("#askLifeGroups").collapse("hide");
 		$("#finishForm").collapse("hide");
 		$("#showLifeGroups").collapse("hide");
 		$("#confirmLifeGroup").collapse("hide");
+		$("#editMember").collapse("hide");
+		$("#displayData").collapse("show");
 	});
 
 });

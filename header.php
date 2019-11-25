@@ -15,6 +15,7 @@ session_start();
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
+	<link rel="stylesheet" type="text/css" href="css/custom_style.css">
 	<title>Impact:
 	<?php
 	if(basename($_SERVER['PHP_SELF'])=="index.php") print 'Homepage';
