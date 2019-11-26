@@ -192,27 +192,15 @@ require_once "db_connect.php";
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editLifeGroup" name="btnEditLifeGroup">Edit</button>
 							</div>
 
-							<!-- Opt Emails -->
+							<!-- Opt Emails Opt Texts -->
 							<div class="form-row form-group justify-content-center">
 								<div class="form-check form-check-inline">
-									<input type="radio" class="form-check-input checkin-opt-radio" name="optEmail" id="optEmail1" value="optIn">
-									<label class="form-check-label col-form-label" for="optEmail1">Opt Into Emails</label>
+									<input type="checkbox" name="checkOptEmail" class="form-check-input checkin-opt-checkbox">
+									<label class="form-check-label col-form-label" for="checkOptEmail">Opt Into Emails</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input type="radio" class="form-check-input checkin-opt-radio" name="optEmail" id="optEmail2" value="optOut">
-									<label class="form-check-label col-form-label" for="optEmail2">Opt Out of Emails</label>
-								</div>
-							</div>
-
-							<!-- Opt Texts -->
-							<div class="form-row form-group justify-content-center">
-								<div class="form-check form-check-inline">
-									<input type="radio" class="form-check-input checkin-opt-radio" name="optTexts" id="optTexts1" value="optIn">
-									<label class="form-check-label col-form-label" for="optTexts1">Opt Into Texts</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input type="radio" class="form-check-input checkin-opt-radio" name="optTexts" id="optTexts2" value="optOut">
-									<label class="form-check-label col-form-label" for="optTexts2">Opt Out of Texts</label>
+									<input type="checkbox" name="checkOptTexts" class="form-check-input checkin-opt-checkbox">
+									<label class="form-check-label col-form-label" for="checkOptTexts">Opt Into Texts</label>
 								</div>
 							</div>
 
@@ -224,8 +212,97 @@ require_once "db_connect.php";
 							</div>
 						</div>
 					</div>
+					
+					<!-- Registration Page -->
+					<div class="collapse show" id="registerModal">
+						<div class="form-horizontal">
+
+							<!-- First Name -->
+							<div class="form-row form-group justify-content-center">
+								<div class="col-2">
+									<label for="regFirst" class="col-form-label">First Name</label>
+								</div>
+								<div class="col-8">
+									<input type="text" class="form-control" placeholder="First Name">
+								</div>
+							</div>
+
+							<!-- Last Name -->
+							<div class="form-row form-group justify-content-center">
+								<div class="col-2">
+									<label class="col-form-label"></label>
+								</div>
+								<div class="col-8">
+									<input type="text" class="form-control" placeholder="">
+								</div>
+							</div>
+
+							<!-- Email -->
+							<div class="form-row form-group justify-content-center">
+								<div class="col-2">
+									<label class="col-form-label"></label>
+								</div>
+								<div class="col-8">
+									<input type="text" class="form-control" placeholder="">
+								</div>
+							</div>
+
+							<!-- Phone Number -->
+							<div class="form-row form-group justify-content-center">
+								<div class="col-2">
+									<label class="col-form-label"></label>
+								</div>
+								<div class="col-8">
+									<input type="text" class="form-control" placeholder="">
+								</div>
+							</div>
+
+							<!-- Status -->
+							<div class="form-row form-group justify-content-center">
+								<div class="col-2">
+									<label class="col-form-label" for="regStatus"></label>
+								</div>
+								<div class="col-8">
+									<select class="form-control" name="regStatus">
+										<option val="Freshman">Freshman</option>
+										<option val="Sophomore">Sophomore</option>
+										<option val="Junior">Junior</option>
+										<option val="Senior">Senior</option>
+										<option val="Graduate">Graduate</option>
+										<option val="Alumni">Alumni</option>
+										<option val="Staff">Staff</option>
+										<option val="Other">Other</option>
+									</select>
+								</div>
+							</div>
+
+							<!-- Major -->
+							<div class="form-row form-group justify-content-center">
+								<div class="col-2">
+									<label class="col-form-label" for="regMajor">Major</label>
+								</div>
+								<div class="col-8">
+									<input type="text" class="form-control" name="regMajor" placeholder="Major">
+								</div>
+							</div>
+
+							<!-- Opt Emails Opt Texts-->
+							<div class="form-row form-group justify-content-center">
+								<div class="form-check form-check-inline">
+									<input type="checkbox" name="regOptEmail" class="form-check-input checkin-opt-checkbox">
+									<label class="form-check-label col-form-label" for="regOptEmail">Opt Into Emails</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input type="checkbox" name="regOptTexts" class="form-check-input checkin-opt-checkbox">
+									<label class="form-check-label col-form-label" for="regOptTexts">Opt Into Texts</label>
+								</div>
+							</div>
+
+						</div>
+					</div>
 
 	      </div>
+
 	      <div class="modal-footer">
 
 	      </div>
@@ -252,8 +329,10 @@ require_once "db_connect.php";
 
 					<!-- Check in button opens modal -->
 					<button type="button" id="checkIn" class="btn btn-primary">Check In</button>
+
+					<!-- Register button opens registration modal -->
+					<button type="button" id="register" class="btn btn-primary">First Time? Register Here!</button>
 			  </div>
-				<a href="register.php">First Time? Click Here to Register!</a>
 			</form>
 			<a href="logout.php">Logout</a>
 		</div>

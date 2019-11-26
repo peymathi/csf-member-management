@@ -121,8 +121,8 @@ function editMember(userData)
 	// Populate life groups select element with options for each
 	// life group.
 
-	$("#optEmail" + ((userData.OptEmail) ? "1" : "2")).attr("checked", true);
-	$("#optTexts" + ((userData.OptText) ? "1" : "2")).attr("checked", true);
+	$("input[name='checkOptEmail']").attr("checked", userData.OptEmail);
+	$("input[name='checkOptTexts']").attr("checked", userData.OptText);
 }
 
 // Function for when editing a member is finished
@@ -134,6 +134,14 @@ function finishEditMember(userData)
 	// Perform ajax call to push changes to member to DB
 
 	continueForm(userData);
+}
+
+// Function for registering a new member. Gets called upon clicking the register button
+// in registration form. Formats the data, creates a userData object. Calls continueForm when done
+// and follows the path of a normal check in upon registration
+function finishRegForm()
+{
+
 }
 
 // Function that runs when a user enters a phone number. Attempts to get
@@ -177,8 +185,12 @@ $(document).ready(function() {
 	$(".editToggle").on("click", function() {
 
 		// Disable all other inputs
-		$(".inputToggle").prop("disabled", true);
-		$("." + this.id).prop("disabled", false);
+		$(".inputToggle:not(." + this.id + ")").prop("disabled", true);
+
+		// Toggle current input
+		$("." + this.id).prop("disabled", function(index, cur_val) {
+			return (cur_val) ? false : true;
+		});
 
 	});
 
@@ -188,6 +200,7 @@ $(document).ready(function() {
 		// If there is a user
 		if (userData)
 		{
+			$("#registerModal").collapse("hide");
 			checkIn(userData);
 			$("#checkInModal").modal("show");
 		}
@@ -198,6 +211,13 @@ $(document).ready(function() {
 			wrongNumber();
 		}
 
+	});
+
+	$("#register").on("click", function() {
+		$("#displayData").collapse("hide");
+		$("#modal-title").text("Welcome to CSF Night of Worship!");
+		$("#registerModal").collapse("show");
+		$("#checkInModal").modal("show");
 	});
 
 	$("#confirmInfo").on("click", function() {
@@ -244,6 +264,7 @@ $(document).ready(function() {
 		$("#showLifeGroups").collapse("hide");
 		$("#confirmLifeGroup").collapse("hide");
 		$("#editMember").collapse("hide");
+		$("#registerModal").collapse("show");
 		$("#displayData").collapse("show");
 	});
 
