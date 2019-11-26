@@ -14,6 +14,12 @@
       <li class="nav-item">
         <a class="nav-link" href="checkin.php">Student Check In</a>
       </li>
+	  <li class="nav-item">
+        <a class="nav-link" href="member_management.php">Member Management</a>
+      </li>
+	  <li class="nav-item">
+        <a class="nav-link" href="edit_life_groups.php">Life Group Management</a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Reports</a>
       </li>
