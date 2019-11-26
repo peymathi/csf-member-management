@@ -40,12 +40,12 @@ function session_verify()
     {
       case "change_password.php":
       case "dashboard.php":
+      case "edit_member.php":
+      case "register.php":
         if ($session->getState() != Session::STATE_IN) Header("Location: login.php");
         break;
 
       case "checkin.php":
-      case "edit_member.php":
-      case "register.php":
         if ($session->getState() === Session::STATE_OUT) Header("Location: login.php");
         else $session->checkIn();
         $_SESSION['session'] = serialize($session);
