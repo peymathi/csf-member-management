@@ -47,8 +47,8 @@
 			  
 
 			  <div class="form-group">
-				<label for="life_group_id">Group:</label>
-					<select name="life_group_id" class="custom-select">						
+				<label for="group_id">Group:</label>
+					<select name="group_id" class="custom-select">						
 						<?php
 						$GroupIDStmt = $con->prepare("SELECT * FROM groups");
 						$GroupIDStmt->execute(array());
@@ -58,6 +58,23 @@
 								$isSelected = "selected";
 							}
 							echo "<option value=".$GroupRow['GroupID']." $isSelected>".$GroupRow['GroupName']."</option>";
+						}
+						?>
+					</select>
+				</div>
+
+				<div class="form-group">
+				<label for="life_group_id">Life Group:</label>
+					<select name="life_group_id" class="custom-select">						
+						<?php
+						$LifeGroupIDStmt = $con->prepare("SELECT * FROM life_groups");
+						$LifeGroupIDStmt->execute(array());
+						while($LifeGroupRow = $LifeGroupIDStmt->fetch(PDO::FETCH_ASSOC)) {
+							$isSelected = "";
+							if($LifeGroupRow['LifeGroupID'] == $LifeGroupID){
+								$isSelected = "selected";
+							}
+							echo "<option value=".$LifeGroupRow['GroupID']." $isSelected>".$LifeGroupRow['GroupName']."</option>";
 						}
 						?>
 					</select>

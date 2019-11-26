@@ -11,9 +11,10 @@ class UserCheckin
 	private $PrayerRequest;
 	private $OptEmail;
 	private $OptText;
-	private $GroupID;
+    private $GroupID;
+    private $LifeGroupID;
 	
-	function __construct($MemberID = "", $FirstName = "", $LastName = "", $EmailAddress = "", $HomeAddress = "", $PhoneNumber = "",$PhotoPath = "", $PrayerRequest = "", $OptEmail = 0, $OptText = 0, $GroupID = "")
+	function __construct($MemberID = "", $FirstName = "", $LastName = "", $EmailAddress = "", $HomeAddress = "", $PhoneNumber = "",$PhotoPath = "", $PrayerRequest = "", $OptEmail = 0, $OptText = 0, $GroupID = "", $LifeGroupID = "")
 	{
 		$this->MemberID = $MemberID;
 		$this->FirstName = $FirstName;
@@ -25,7 +26,8 @@ class UserCheckin
 		$this->PrayerRequest = $PrayerRequest;
 		$this->OptEmail = $OptEmail;
 		$this->OptText = $OptText;
-		$this->GroupID = $GroupID;
+        $this->GroupID = $GroupID;
+        $this->$LifeGroupID = $LifeGroupID;
 		
 	}
 	
@@ -137,5 +139,14 @@ class UserCheckin
     public function setGroupID($GroupID)
     {
         $this->GroupID = $GroupID;
+    }
+
+    public function getLifeGroupID()
+    {
+        return $this->LifeGroupID;
+    }
+    public function setLifeGroupID($LifeGroupID)
+    {
+        $this->LifeGroupID = $LifeGroupID;
     }
 }
