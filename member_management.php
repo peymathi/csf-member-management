@@ -98,11 +98,21 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 
 <div class="container" style="margin-top:30px">
 
-	<div class="row">
+	
+		<div class="row mt-2">
+			<div class="col">
+				<a href="dashboard.php">
+					<button type="submit" class="btn btn-secondary">Back</button>
+				</a>
+			</div>
+		
+
+
+	
 		<div class="col">
-		<form action="" method="post" class="needs-validation" novalidate>
+			<a href="register.php">
 			  <button type="submit" class="btn btn-primary">Add Member</button>
-			</form>
+			</a>
 		</div>
 	</div>
 
