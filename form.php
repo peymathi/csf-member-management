@@ -77,6 +77,7 @@
 				<label for="life_group_id">Life Group:</label>
 					<select name="life_group_id" class="custom-select">						
 						<?php
+						echo '<option value="">None</option>';
 						$LifeGroupIDStmt = $con->prepare("SELECT * FROM life_groups");
 						$LifeGroupIDStmt->execute(array());
 						while($LifeGroupRow = $LifeGroupIDStmt->fetch(PDO::FETCH_ASSOC)) {
@@ -84,7 +85,7 @@
 							if($LifeGroupRow['LifeGroupID'] == $LifeGroupID){
 								$isSelected = "selected";
 							}
-							echo "<option value=".$LifeGroupRow['GroupID']." $isSelected>".$LifeGroupRow['GroupName']."</option>";
+							echo "<option value=".$LifeGroupRow['LifeGroupID']." $isSelected>".$LifeGroupRow['LifeGroupName']."</option>";
 						}
 						?>
 					</select>

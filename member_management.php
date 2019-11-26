@@ -35,7 +35,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				$OptText = $MemberRow['OptText'];
 				$GroupID = $MemberRow['GroupID'];
 				$LifeGroupID = $MemberRow['LifeGroupID'];
-				
 				$tempmemberobj =  new UserCheckin($MemberID, $FirstName, $LastName, $EmailAddress, $HomeAddress, $PhoneNumber, $PhotoPath, $PrayerRequest, $OptEmail, $OptText, $GroupID, $LifeGroupID);
 				$member = $tempmemberobj;
 			}
@@ -69,8 +68,26 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 	$OptText = $GroupRow['OptText'];
 	$GroupID = $GroupRow['GroupID'];
 	$LifeGroupID = $GroupRow['LifeGroupID'];
+
+	$GroupName = "";
+	$LifeGroupName = "";
 	
-	$tempmemberobj =  new UserCheckin($MemberID, $FirstName, $LastName, $EmailAddress, $HomeAddress, $PhoneNumber, $PhotoPath, $PrayerRequest, $OptEmail, $OptText, $GroupID, $LifeGroupID);
+	$LifeGroupStmt = $con->prepare("SELECT * FROM life_groups WHERE `LifeGroupID` = :LifeGroupID");
+	$LifeGroupStmt->execute(array("LifeGroupID"=>$LifeGroupID));
+	while($LifeGroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
+		$LifeGroupName = $LifeGroupRow['LifeGroupName'];
+	}
+
+	$GroupStmt = $con->prepare("SELECT * FROM groups WHERE `GroupID` = :GroupID");
+	$GroupStmt->execute(array("GroupID"=>$GroupID));
+	while($GroupRow = $GroupStmt->fetch(PDO::FETCH_ASSOC)) {
+		$GroupName = $GroupRow['GroupName'];
+	}
+
+
+
+
+	$tempmemberobj =  new UserCheckin($MemberID, $FirstName, $LastName, $EmailAddress, $HomeAddress, $PhoneNumber, $PhotoPath, $PrayerRequest, $OptEmail, $OptText, $GroupID, $LifeGroupID,$GroupName,$LifeGroupName);
 	array_push($members, $tempmemberobj);
 }
 
@@ -99,16 +116,16 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 <div class="container" style="margin-top:30px">
 
 	
-		<div class="row mt-2">
+		<div class="row mb-2">
 			<div class="col">
 				<a href="dashboard.php">
 					<button type="submit" class="btn btn-secondary">Back</button>
 				</a>
 			</div>
-		
+		</div>
 
 
-	
+	<div class="row mb-2">
 		<div class="col">
 			<a href="register.php">
 			  <button type="submit" class="btn btn-primary">Add Member</button>
@@ -166,14 +183,21 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 								echo "<td>" . $member->getHomeAddress() . "</td>";
 								echo "<td>" . $member->getPhoneNumber() . "</td>";
 								echo "<td>" . $member->getPrayerRequest() . "</td>";
-								echo "<td>" . $member->getOptEmail() . "</td>";
-								echo "<td>" . $member->getOptText() . "</td>";
-								echo "<td>" . $member->getGroupID() . "</td>";
-								echo "<td>" . $member->getLifeGroupID() . "</td>";
-
 								
+								if($member->getOptEmail() == "0"){
+									echo "<td>No</td>";
+								}else{
+									echo "<td>Yes</td>";
+								}
 
-
+								if($member->getOptText() == "0"){
+									echo "<td>No</td>";
+								}else{
+									echo "<td>Yes</td>";
+								}
+								
+								echo "<td>" . $member->getGroupName() . "</td>";
+								echo "<td>" . $member->getLifeGroupName() . "</td>";
 								
 								echo "</tr>";
 							}
