@@ -128,7 +128,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 		$updateStmt->execute(array('FirstName' => $FirstName, 'LastName' => $LastName, 'EmailAddress' => $Email, 'HomeAddress' => $HomeAddress,'PhoneNumber' => $PhoneNumber,
 		'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptText, 'GroupID' => $GroupID, 'LifeGroupID' => $LifeGroupID, 'MemberID' => $MemberID));
 		$_SESSION['UserCheckin'] = Null;
-		Header("location: checkin.php");
+		Header("location: member_management.php");
 	}
 }
 ?>
