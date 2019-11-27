@@ -70,6 +70,10 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 
 ?>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
@@ -129,10 +133,13 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 								</form>
 								</td>';
 
-
+								
+								$memberString = "";
 								foreach($group->getMembers() as $member) {
-									echo "<td>" . $member . "</td>";
+									$memberString .= " " . $member;
 								}
+								
+								echo "<td>" . $memberString . "</td>";
 								echo "</tr>";
 							}
 					?>
@@ -143,6 +150,6 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 	</div>
 </div>
 
-<script src="edit_life_groups.js"></script>
+<script src="js/edit_life_groups.js"></script>
 </body>
 </html>

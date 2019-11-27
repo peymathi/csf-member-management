@@ -95,17 +95,9 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 
 ?>
 
-
-
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<style>
-	div.dataTables_wrapper {
-        width: 800px;
-        margin: 0 auto;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <body>
 
@@ -209,6 +201,6 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 	</div>
 </div>
 
-<script src="member_management.js"></script>
+<script src="js/member_management.js"></script>
 </body>
 </html>
