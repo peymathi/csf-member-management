@@ -82,14 +82,40 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 
 <div class="container" style="margin-top:30px">
 
-	<div class="row mt-2">
+	<div class="row">
 		<div class="col">
-			<a href="dashboard.php">
-				<button type="submit" class="btn btn-secondary">Back</button>
-			</a>
+			<table id="example" class="display nowrap" style="width:100%">
+				<thead>
+					<tr>
+						<th>Life Group Name</th>
+						<th>Members</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+							//loop through life groups
+							foreach($lifegroups as $group) {
+								echo "<tr>";
+								
+								echo "<td>" . $group->getLifeGroupName() . "</td>";
+								
+								$memberString = "";
+								foreach($group->getMembers() as $member) {
+									$memberString .= " " . $member;
+								}
+								echo "<td>" . $memberString . "</td>";
+
+								echo '</td>';
+								
+								echo "</tr>";
+							}
+					?>
+				</tbody>
+			</table>
+
 		</div>
 	</div>
-
+	
 	<div class="row">
 		<div class="col">
 		<form action="" method="post" class="needs-validation" novalidate>
@@ -106,46 +132,39 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 			</form>
 		</div>
 	</div>
-
+	
 	<div class="row">
 		<div class="col">
-
-			<table id="example" class="display nowrap" style="width:100%">
-				<thead>
-					<tr>
-						<th>Life Group Name</th>
-						<th>Delete</th>
-						<th>Members</th>
-					</tr>
-				</thead>
-				<tbody>
+		<form action="" method="post" class="needs-validation" novalidate>
+			  <div class="form-group">
+				<label for="life_group_name">Delete Life Group:</label>
+				<select name="life_group_id" class="custom-select">						
 					<?php
-							//loop through life groups
-							foreach($lifegroups as $group) {
-								echo "<tr>";
-								echo "<td>" . $group->getLifeGroupName() . "</td>";
-
-								echo '<td>
-								<form action="" method="post">
-								<input type="hidden" id="deletelifegroup" name="deletelifegroup" value="'. $group->getLifeGroupID() . '">
-								<button type="submit" class="btn btn-danger">Delete</button>
-
-								</form>
-								</td>';
-
-								
-								$memberString = "";
-								foreach($group->getMembers() as $member) {
-									$memberString .= " " . $member;
-								}
-								
-								echo "<td>" . $memberString . "</td>";
-								echo "</tr>";
+						echo '<option value="">None</option>';
+						$LifeGroupIDStmt = $con->prepare("SELECT * FROM life_groups");
+						$LifeGroupIDStmt->execute(array());
+						while($LifeGroupRow = $LifeGroupIDStmt->fetch(PDO::FETCH_ASSOC)) {
+							$isSelected = "";
+							if($LifeGroupRow['LifeGroupID'] == $LifeGroupID){
+								$isSelected = "selected";
 							}
+							echo "<option value=".$LifeGroupRow['LifeGroupID']." $isSelected>".$LifeGroupRow['LifeGroupName']."</option>";
+						}
 					?>
-				</tbody>
-			</table>
-
+					</select>
+				<div class="valid-feedback">Valid.</div>
+				<div class="invalid-feedback">Please fill out this field.</div>
+				<span class="help-block"><?php echo $LifeGroupNameError; ?></span>
+			  </div>
+				<button type="submit" class="btn btn-danger">Delete</button>
+			</form>
+		</div>
+	</div>
+	<div class="row mt-2">
+		<div class="col">
+			<a href="dashboard.php">
+				<button type="submit" class="btn btn-secondary">Back</button>
+			</a>
 		</div>
 	</div>
 </div>
