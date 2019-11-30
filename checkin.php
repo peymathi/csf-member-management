@@ -6,7 +6,6 @@ require_once "db_connect.php";
 ?>
 
 <body>
-
 	<!-- Modal -->
 	<div id="checkInModal" class="modal fade" role="dialog">
 	  <div class="modal-dialog modal-lg">
@@ -212,7 +211,7 @@ require_once "db_connect.php";
 							</div>
 						</div>
 					</div>
-					
+
 					<!-- Registration Page -->
 					<div class="collapse show" id="registerModal">
 						<div class="form-horizontal">
@@ -223,47 +222,48 @@ require_once "db_connect.php";
 									<label for="regFirst" class="col-form-label">First Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" placeholder="First Name">
+									<input type="text" class="form-control" name="regFirst" placeholder="First Name">
 								</div>
 							</div>
 
 							<!-- Last Name -->
 							<div class="form-row form-group justify-content-center">
 								<div class="col-2">
-									<label class="col-form-label"></label>
+									<label class="col-form-label">Last Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" placeholder="">
+									<input type="text" class="form-control" name="regLast" placeholder="Last Name">
 								</div>
 							</div>
 
 							<!-- Email -->
 							<div class="form-row form-group justify-content-center">
 								<div class="col-2">
-									<label class="col-form-label"></label>
+									<label class="col-form-label">Email</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" placeholder="">
+									<input type="text" class="form-control" name="regEmail" placeholder="Email">
 								</div>
 							</div>
 
 							<!-- Phone Number -->
 							<div class="form-row form-group justify-content-center">
 								<div class="col-2">
-									<label class="col-form-label"></label>
+									<label class="col-form-label">Phone Number</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" placeholder="">
+									<input type="text" class="form-control" name="regPhone" placeholder="Phone Number">
 								</div>
 							</div>
 
 							<!-- Status -->
 							<div class="form-row form-group justify-content-center">
 								<div class="col-2">
-									<label class="col-form-label" for="regStatus"></label>
+									<label class="col-form-label" for="regStatus">Status</label>
 								</div>
 								<div class="col-8">
 									<select class="form-control" name="regStatus">
+										<option val='- -'>- -</option>
 										<option val="Freshman">Freshman</option>
 										<option val="Sophomore">Sophomore</option>
 										<option val="Junior">Junior</option>
@@ -298,6 +298,9 @@ require_once "db_connect.php";
 								</div>
 							</div>
 
+							<div class="form-row form-group justify-content-center">
+								<button type="button" name="register" class="btn btn-primary">Register</button>
+							</div>
 						</div>
 					</div>
 
@@ -314,6 +317,9 @@ require_once "db_connect.php";
 <div class="jumbotron text-center" style="margin-bottom:0">
   <h1>Night of Worship Check In</h1>
 </div>
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
+</nav>
 
 <div class="container" style="margin-top:30px">
 	<div class="row">

@@ -12,8 +12,7 @@ $username = 'root';
 $password = '';
 try {
     $con = new PDO("mysql:host=$hostname;dbname=csfi_db", $username, $password);
-    /*** echo a message saying we have connected ***/
-    echo 'Connected to database';
+
     }
 catch(PDOException $e)
     {

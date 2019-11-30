@@ -74,9 +74,6 @@ function finishLifeGroups(userData)
 	// TODO ****************
 	// Receive user data
 
-	// TODO ****************
-	// Send data to DB with ajax call
-
 	// Close the lifegroups divs
 	$("#showLifeGroups").collapse("hide");
 	$("#askLifeGroups").collapse("hide");
@@ -91,8 +88,19 @@ function finishForm(userData)
 	$("#prayerRequest").collapse("hide");
 	$("#finishForm").collapse("show");
 
+	// TODO ************
+	// Make ajax call to push new user data to DB
+	if (userData.NewMember)
+	{
+
+	}
+
 	// TODO ******************
-	// Send the user's data to the DB through ajax call
+	// Send the user's updated data to the DB through ajax call
+	else
+	{
+
+	}
 
 	// Delay for 5 seconds and then link back to original check in page
 	setTimeout(function(){
@@ -130,6 +138,9 @@ function finishEditMember(userData)
 {
 	$("#editMember").collapse("hide");
 
+	// TODO ************
+	// Validate form data
+
 	// TODO************
 	// Perform ajax call to push changes to member to DB
 
@@ -141,7 +152,40 @@ function finishEditMember(userData)
 // and follows the path of a normal check in upon registration
 function finishRegForm()
 {
+	// Get all of the data from the registration form
+	// Create a new user object
 
+	// TODO *********
+	// Validate input
+
+	userData = {
+			FirstName: $("input[name='regFirst']").val(),
+			LastName: $("input[name='regLast']").val(),
+			Email: $("input[name='regEmail']").val(),
+			Phone: $("input[name='regPhone']").val(),
+			Status: $("select[name='regStatus']").val(),
+			Major: $("input[name='regMajor']").val(),
+			LifeGroup: "None",
+			OptEmail: $("input[name='regOptEmail']").is(':checked'),
+			OptTexts: $("input[name='regOptTexts']").is(':checked'),
+			NewMember: true,
+			PrayerRequest: ""
+	};
+
+	console.log(userData.FirstName);
+	console.log(userData.LastName);
+	console.log(userData.Email);
+	console.log(userData.Phone);
+	console.log(userData.Status);
+	console.log(userData.Major);
+	console.log(userData.LifeGroup);
+	console.log(userData.OptEmail);
+	console.log(userData.OptTexts);
+
+	// Hide registration
+	$("#registerModal").collapse("hide");
+
+	continueForm(userData);
 }
 
 // Function that runs when a user enters a phone number. Attempts to get
@@ -162,9 +206,11 @@ function getMember(phone)
 			Phone: "3174604323",
 			Status: "Junior",
 			Major: "Computer Science",
-			LifeGroup: "Tuesday 6:00 	",
+			LifeGroup: "Tuesday 6:00",
 			OptEmail: true,
-			OptText: true
+			OptText: true,
+			NewMember: false,
+			PrayerRequest: ""
 		};
 	}
 
@@ -212,6 +258,8 @@ $(document).ready(function() {
 		}
 
 	});
+
+	$("button[name='register']").on("click", finishRegForm);
 
 	$("#register").on("click", function() {
 		$("#displayData").collapse("hide");

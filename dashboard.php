@@ -6,7 +6,7 @@
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Impact Member Tracking</h1>
+  <h1>CSF Member Tracking</h1>
 </div>
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">

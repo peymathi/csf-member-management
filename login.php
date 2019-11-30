@@ -48,10 +48,13 @@ if(isset($_POST['forgot'])){
 
 <body>
 
+
 <div class="jumbotron text-center" style="margin-bottom:0">
   <h1>Impact Member Tracking</h1>
   <p><span><?php echo $inactive; ?></p>
 </div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
+</nav>
 <div class="container" style="margin-top:30px">
 	<div class="row">
 		<div class="col">
