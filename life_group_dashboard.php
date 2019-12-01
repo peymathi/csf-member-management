@@ -2,6 +2,26 @@
 include 'header.php';
 session_verify();
 
+require_once "db_connect.php";
+require_once "lifeGroupClass.php";
+
+$lifegroups = [];
+
+$LifeGroupStmt = $con->prepare("SELECT * FROM life_groups");
+$LifeGroupStmt->execute(array());
+while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
+	$lifegroupid = $GroupRow['LifeGroupID'];
+	$lifegroupname = $GroupRow['LifeGroupName'];
+	$members = [];
+	
+	$MembersStmt = $con->prepare("SELECT * FROM members WHERE LifeGroupID = :LifeGroupID");
+	$MembersStmt->execute(array(':LifeGroupID' => $lifegroupid));
+	while($MemberRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
+		array_push($members, ( $MemberRow['FirstName'] . " " . $MemberRow['LastName'] ) );
+	}
+	$templifegroupobj =  new LifeGroup($lifegroupid, $lifegroupname, $members);
+	array_push($lifegroups, $templifegroupobj);
+}
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -11,46 +31,63 @@ session_verify();
 	<div class="jumbotron text-center" style="margin-bottom:0">
 		<h1>Impact Member Tracking</h1>
 	</div>
-	<div class="container" style="margin-top:30px">
-
-		<div class="row mt-1">
-			<div class="col-sm-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Show Life Groups/Members</h5>
-						<p class="card-text">All the Life Groups with a list of each members name in some order.</p>
-						<a href="show_life_groups.php" class="btn btn-primary">Show</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Add new Life Group</h5>
-						<p class="card-text">Add a new Life Group for members to sign up for.</p>
-						<a href="add_life_group.php" class="btn btn-warning">Add</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Toggle Life Group Active/Inactive</h5>
-						<p class="card-text">Allows the Life Groups to be avaliable or hidden for the users.</p>
-						<a href="toggle_life_groups.php" class="btn btn-danger">Toggle</a>
-					</div>
-				</div>
-			</div>
-		</div> <!-- end of row div -->
-		<div class="row mt-2">
-			<div class="col">
-				<a href="dashboard.php">
-					<button type="submit" class="btn btn-secondary">Back</button>
-				</a>
-			</div>
-		</div>
-	</div> <!-- end of container div -->
 	
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
+		<ul class="navbar-nav">
+		  <li class="nav-item">
+			<a class="nav-link" href="add_life_group.php">Add Life Group</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="toggle_life_groups.php">Toggle Life Group</a>
+		  </li>
+		</ul>
+	</nav>
 
+	<div class="container" style="margin-top:30px">
+	<div class="row">
+		<div class="col">
+			<table id="example" class="display nowrap" style="width:100%">
+				<thead>
+					<tr>
+						<th>Life Group Name</th>
+						<th>Members</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+							//loop through life groups
+							foreach($lifegroups as $group) {
+								echo "<tr>";
+								
+								echo "<td>" . $group->getLifeGroupName() . "</td>";
+								
+								$memberString = "";
+								foreach($group->getMembers() as $member) {
+									$memberString .= " " . $member;
+								}
+								echo "<td>" . $memberString . "</td>";
+
+								echo '</td>';
+								
+								echo "</tr>";
+							}
+					?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="row mt-2">
+		<div class="col">
+			<a href="dashboard.php">
+				<button type="submit" class="btn btn-secondary">Back</button>
+			</a>
+		</div>
+	</div>
+</div>
+
+
+<script src="js/edit_life_groups.js"></script>
+<!--<script src="js/toggle_life_groups.js"></script>-->
 </body>
 </html>
