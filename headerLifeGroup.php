@@ -8,6 +8,9 @@
 				<a class="nav-link" href="add_life_group.php">Add Life Group</a>
 			</li>
 			<li class="nav-item">
+				<a class="nav-link" href="edit_life_group.php">Edit Life Group Name</a>
+			</li>
+			<li class="nav-item">
 				<a class="nav-link" href="toggle_life_groups.php">Toggle Life Groups</a>
 			</li>
 		</ul>
