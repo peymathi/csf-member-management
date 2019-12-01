@@ -124,13 +124,14 @@ function finishForm(userData)
 		url: 'phpAjax/finishCheckIn.php',
 		method: 'POST',
 		data: userData,
-		error: function() { ajaxError(); }
+		error: function() { ajaxError(); },
+		success: function(data) {
+			// Delay for 5 seconds and then link back to original check in page
+			setTimeout(function(){
+				location.reload();
+			}, 5000);
+		}
 	});
-
-	// Delay for 5 seconds and then link back to original check in page
-	setTimeout(function(){
-		location.reload();
-	}, 5000);
 }
 
 // Function that runs when a user wants to edit info
@@ -149,7 +150,6 @@ function editMember(userData)
 
 	// Select user's lifegroup in select element
 	$("select[name='editLifeGroup'] option:contains('" + userData.LifeGroup + "')").prop('selected', true);
-
 	$("input[name='checkOptEmail']").attr("checked", userData.OptEmail);
 	$("input[name='checkOptTexts']").attr("checked", userData.OptText);
 }
@@ -179,51 +179,100 @@ function finishEditMember(userData)
 		$("input[name='editEmail']").addClass('is-invalid');
 		formResponse.Valid = false;
 	}
+	else $("input[name='editEmail']").removeClass('is-invalid');
 
 	if (formResponse.FirstName === '')
 	{
 		$("input[name='editFirstName']").addClass('is-invalid');
 		formResponse.Valid = false;
 	}
+	else $("input[name='editFirstName']").removeClass('is-invalid');
 
 	if (formResponse.LastName === '')
 	{
 		$("input[name='editLastName']").addClass('is-invalid');
 		formResponse.Valid = false;
 	}
-
-	// TODO ************
-	// Need to check if phone number is already taken
+	else $("input[name='editLastName']").removeClass('is-invalid');
 
 	if (!validatePhone(formResponse.Phone))
 	{
+		$("div[name='editPhone']").text("Invalid Phone");
 		$("input[name='editPhone']").addClass('is-invalid');
 		formResponse.Valid = false;
 	}
+	else $("input[name='editPhone']").removeClass('is-invalid');
 
 	if (formResponse.Major === '')
 	{
 		$("input[name='editMajor']").addClass('is-invalid');
 		formResponse.Valid = false;
 	}
+	else $("input[name='editMajor']").removeClass('is-invalid');
 
   if (formResponse.Valid)
 	{
-		$("#editMember").collapse("hide");
-		$(".is-invalid").removeClass('is-invalid');
+		// Check if we need to validate the phone number being a duplicate
+		if (formResponse.Phone != userData.Phone)
+		{
+			// Perform ajax call to find out if the phone number entered already exists
+			var request = {Phone: formResponse.Phone};
+			$.ajax({
+				url: 'phpAjax/checkDuplicatePhone.php',
+				method: 'POST',
+				data: request,
+				dataType: 'json',
+				error: function() {ajaxError();},
+				success: function(data) {
 
-		// Update userData object after validation
-		userData.FirstName = formResponse.FirstName;
-		userData.LastName = formResponse.LastName;
-		userData.Email = formResponse.Email;
-		userData.Phone = formResponse.Phone;
-		userData.Status = formResponse.Status;
-		userData.Major = formResponse.Major;
-		userData.LifeGroup = formResponse.LifeGroup;
-		userData.OptEmail = formResponse.OptEmail;
-		userData.OptText = formResponse.OptText;
+					if (data.Exists)
+					{
+						$("input[name='editPhone']").addClass("is-invalid");
+						$("div[name='editPhone']").text("Phone Number Already Taken");
+					}
 
-		continueForm(userData);
+					// Phone number does not already exist in DB. Continue check in
+					else
+					{
+						$("#editMember").collapse("hide");
+						$(".is-invalid").removeClass('is-invalid');
+
+						// Update userData object after validation
+						userData.FirstName = formResponse.FirstName;
+						userData.LastName = formResponse.LastName;
+						userData.Email = formResponse.Email;
+						userData.Phone = formResponse.Phone;
+						userData.Status = formResponse.Status;
+						userData.Major = formResponse.Major;
+						userData.LifeGroup = formResponse.LifeGroup;
+						userData.OptEmail = formResponse.OptEmail;
+						userData.OptText = formResponse.OptText;
+
+						continueForm(userData);
+					}
+				}
+			});
+		}
+
+		else
+		{
+
+			$("#editMember").collapse("hide");
+			$(".is-invalid").removeClass('is-invalid');
+
+			// Update userData object after validation
+			userData.FirstName = formResponse.FirstName;
+			userData.LastName = formResponse.LastName;
+			userData.Email = formResponse.Email;
+			userData.Phone = formResponse.Phone;
+			userData.Status = formResponse.Status;
+			userData.Major = formResponse.Major;
+			userData.LifeGroup = formResponse.LifeGroup;
+			userData.OptEmail = formResponse.OptEmail;
+			userData.OptText = formResponse.OptText;
+
+			continueForm(userData);
+		}
 	}
 }
 
@@ -233,12 +282,7 @@ function finishEditMember(userData)
 function finishRegForm()
 {
 	// Get all of the data from the registration form
-	// Create a new user object
-
-	// TODO *********
-	// Validate input
-
-	userData = {
+	formResponse = {
 			FirstName: $("input[name='regFirst']").val(),
 			LastName: $("input[name='regLast']").val(),
 			Email: $("input[name='regEmail']").val(),
@@ -248,48 +292,97 @@ function finishRegForm()
 			LifeGroup: "None",
 			OptEmail: $("input[name='regOptEmail']").is(':checked'),
 			OptTexts: $("input[name='regOptTexts']").is(':checked'),
-			PrayerRequest: ""
+			Valid: true
 	};
 
-	// Hide registration
-	$("#registerModal").collapse("hide");
+	// Validate input
+	// Clean up phone number
+	formResponse.Phone = cleanUpPhone(formResponse.Phone);
 
-	continueForm(userData);
-}
-
-// Function that runs when a user enters a phone number. Attempts to get
-// the user's data through an ajax call. Returns users data in an object
-// with field names as attributes
-function getMember(phone)
-{
-	// TODO************
-	// Perform ajax call to get user data
-
-	// If there is data, create an object and return it
-	if(true)
+	if (!validateEmail(formResponse.Email))
 	{
-		return {
-			FirstName: "Peyton",
-			LastName: "Mathis",
-			Email: "peymathi@iu.edu",
-			Phone: "3174604323",
-			Status: "Junior",
-			Major: "Computer Science",
-			LifeGroup: "None",
-			OptEmail: true,
-			OptText: true,
-			PrayerRequest: ""
-		};
+		$("input[name='regEmail']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+	else $("input[name='regEmail']").removeClass('is-invalid');
+
+	if (formResponse.FirstName === '')
+	{
+		$("input[name='regFirst']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+	else $("input[name='regFirst']").removeClass('is-invalid');
+
+	if (formResponse.LastName === '')
+	{
+		$("input[name='regLast']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+	else $("input[name='regLast']").removeClass('is-invalid');
+
+	if (!validatePhone(formResponse.Phone))
+	{
+		$("div[name='regPhone']").text("Invalid Phone");
+		$("input[name='regPhone']").addClass('is-invalid');
+		formResponse.Valid = false;
 	}
 
-	return false;
-}
+	else
+	{
+		$("input[name='regPhone']").removeClass('is-invalid');
 
-// Function that runs when an incorrect number was entered
-function wrongNumber()
-{
-	$(".form-text").removeClass("d-none");
-	$("#phone").val("");
+	}
+
+	if (formResponse.Major === '')
+	{
+		$("input[name='regMajor']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+	else $("input[name='regMajor']").removeClass('is-invalid');
+
+	if (formResponse.Valid)
+	{
+		// Need to check if phone number is already taken
+		var request = {Phone: formResponse.Phone};
+		$.ajax({
+			url: 'phpAjax/checkDuplicatePhone.php',
+			method: 'POST',
+			data: request,
+			dataType: 'json',
+			error: function() {ajaxError();},
+			success: function(data) {
+				if(data.Exists)
+				{
+					$("input[name='regPhone']").addClass('is-invalid');
+					$("div[name='regPhone']").text("Phone Number Already Taken");
+				}
+
+				// Form validated. Move on with check in
+				else
+				{
+					$(".is-invalid").removeClass('is-invalid');
+
+					userData = {
+						FirstName: formResponse.FirstName,
+						LastName: formResponse.LastName,
+						Email: formResponse.Email,
+						Phone: formResponse.Phone,
+						Status: formResponse.Status,
+						Major: formResponse.Major,
+						LifeGroup: "None",
+						OptEmail: formResponse.OptEmail,
+						OptTexts: formResponse.OptTexts,
+						PrayerRequest: ""
+					};
+
+					// Hide registration
+					$("#registerModal").collapse("hide");
+
+					continueForm(userData);
+				}
+			}
+		});
+	}
 }
 
 $(document).ready(function() {
@@ -309,21 +402,46 @@ $(document).ready(function() {
 	});
 
 	$("#checkIn").on("click", function() {
-		userData = getMember($("#phone").val());
 
-		// If there is a user
-		if (userData)
-		{
-			$("#registerModal").collapse("hide");
-			checkIn(userData);
-			$("#checkInModal").modal("show");
-		}
+		// Perform ajax call to get user data
+		phone = cleanUpPhone( $("#phone").val());
+		var request = {Phone: phone};
+		$.ajax ({
+			url: 'phpAjax/getMemberData.php',
+			method: 'POST',
+			data: request,
+			dataType: 'json',
+			error: function() {ajaxError();},
+			success: function(data) {
 
-		// If there is not a user
-		else
-		{
-			wrongNumber();
-		}
+				userData = data;
+				// If there is a user
+				if (data.Exists)
+				{
+					$("input[name='phone']").removeClass("is-invalid");
+					$("#registerModal").collapse("hide");
+
+					// NOTE *************
+					// Temporary code. Remove when data base is done
+					userData = {
+						FirstName: "Peyton",
+						LastName: "Mathis",
+						Email: "peymathi@iu.edu",
+						Phone: "3174604323",
+						Status: "Junior",
+						Major: "Computer Science",
+						LifeGroup: "None",
+						OptEmail: true,
+						OptText: true,
+						PrayerRequest: ""
+					};
+
+					checkIn(userData);
+					$("#checkInModal").modal("show");
+				}
+				else  $("input[name='phone']").addClass("is-invalid");
+			}
+		});
 
 	});
 

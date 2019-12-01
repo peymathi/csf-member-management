@@ -201,7 +201,8 @@ class db_query
     $stmt -> execute();
   }
 
-  //
+  // NOTE @COREY: Make this function return some kind of datatype with all of the
+  // member's data in it. or false if no such member exists for the number
   public function member_check(string $number)
   {
     $stmt = $this -> connection -> perpare("SELECT * FROM member WHERE number = ?");

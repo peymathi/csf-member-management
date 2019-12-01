@@ -153,7 +153,7 @@ $lifegroups = '<option>- -</option>';
 								</div>
 								<div class="col-8">
 									<input type="text" class="form-control inputToggle editPhone" name="editPhone" disabled required>
-									<div class='invalid-feedback'>Invalid Phone</div>
+									<div class='invalid-feedback' name='editPhone'>Invalid Phone</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editPhone" name="btnEditPhone">Edit</button>
 							</div>
@@ -182,7 +182,7 @@ $lifegroups = '<option>- -</option>';
 							<!-- Major -->
 							<div class="form-row form-group justify-content-center">
 								<div class="col-2">
-									<label for="editMajor" class="col-form-label">Major</label>
+									<label for="editMajor" class="col-form-label">Major (or N/A)</label>
 								</div>
 								<div class="col-8">
 									<input type="text" class="form-control inputToggle editMajor" name="editMajor" disabled required>
@@ -227,6 +227,7 @@ $lifegroups = '<option>- -</option>';
 
 					<!-- Registration Page -->
 					<div class="collapse show" id="registerModal">
+						<form class='needs-validation'>
 						<div class="form-horizontal">
 
 							<!-- First Name -->
@@ -236,6 +237,7 @@ $lifegroups = '<option>- -</option>';
 								</div>
 								<div class="col-8">
 									<input type="text" class="form-control" name="regFirst" placeholder="First Name" required>
+									<div class='invalid-feedback'>Must enter a first name</div>
 								</div>
 							</div>
 
@@ -246,6 +248,7 @@ $lifegroups = '<option>- -</option>';
 								</div>
 								<div class="col-8">
 									<input type="text" class="form-control" name="regLast" placeholder="Last Name" required>
+									<div class='invalid-feedback'>Must enter last name</div>
 								</div>
 							</div>
 
@@ -256,6 +259,7 @@ $lifegroups = '<option>- -</option>';
 								</div>
 								<div class="col-8">
 									<input type="email" class="form-control" name="regEmail" placeholder="Email" required>
+									<div class='invalid-feedback'>Invalid Email</div>
 								</div>
 							</div>
 
@@ -266,6 +270,7 @@ $lifegroups = '<option>- -</option>';
 								</div>
 								<div class="col-8">
 									<input type="text" class="form-control" name="regPhone" placeholder="Phone Number" required>
+									<div class='invalid-feedback' name='regPhone'>Invalid Phone</div>
 								</div>
 							</div>
 
@@ -276,7 +281,6 @@ $lifegroups = '<option>- -</option>';
 								</div>
 								<div class="col-8">
 									<select class="form-control" name="regStatus" required>
-										<option val='- -'>- -</option>
 										<option val="Freshman">Freshman</option>
 										<option val="Sophomore">Sophomore</option>
 										<option val="Junior">Junior</option>
@@ -292,10 +296,11 @@ $lifegroups = '<option>- -</option>';
 							<!-- Major -->
 							<div class="form-row form-group justify-content-center">
 								<div class="col-2">
-									<label class="col-form-label" for="regMajor">Major</label>
+									<label class="col-form-label" for="regMajor">Major (or N/A)</label>
 								</div>
 								<div class="col-8">
 									<input type="text" class="form-control" name="regMajor" placeholder="Major" required>
+									<div class='invalid-feedback'>Must enter major</div>
 								</div>
 							</div>
 
@@ -315,6 +320,7 @@ $lifegroups = '<option>- -</option>';
 								<button type="button" name="register" class="btn btn-primary">Register</button>
 							</div>
 						</div>
+					</form>
 					</div>
 				</form>
 	      </div>
@@ -337,14 +343,12 @@ $lifegroups = '<option>- -</option>';
 <div class="container" style="margin-top:30px">
 	<div class="row">
 		<div class="col">
-			<form action="checkin.php" method="post" class="needs-validation" novalidate>
+			<form class="needs-validation" novalidate>
 			  <div class="form-group">
 					<label for="tel" required>Been here before? Enter your phone number to sign in: </label>
 					<input type="tel" class="form-control input-medium bfh-phone" id="phone" placeholder="(xxx)-xxx-xxxx" pattern="[0-9]{10}" name="phone" autocomplete="off" required>
-					<span class="form-text d-none">Oops! We don't have your phone number... Try registering below!</span>
+					<div class="invalid-feedback">Oops! We don't have your phone number... Try registering below!</div>
 					<br>
-					<div class="valid-feedback">Valid.</div>
-					<div class="invalid-feedback">Please fill out this field.</div>
 
 					<!-- Check in button opens modal -->
 					<button type="button" id="checkIn" class="btn btn-primary">Check In</button>
