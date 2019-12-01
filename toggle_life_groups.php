@@ -34,23 +34,13 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 
 <body>
 
-<div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Impact Member Tracking</h1>
-</div>
-	
-	<nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
-		<ul class="navbar-nav">
-			<li class="nav-item">
-				<a class="nav-link" href="life_group_dashboard.php">Show Life Groups</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="add_life_group.php">Add Life Group</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="toggle_life_groups.php">Toggle Life Groups</a>
-			</li>
-		</ul>
-	</nav>
+	<div class="jumbotron text-center" style="margin-bottom:0">
+	  <h1>Impact Member Tracking</h1>
+	</div>
+		
+	<?php
+			include 'headerLifeGroup.php';
+	?>
 	
 	<div class="container" style="margin-top:30px">
 
@@ -65,22 +55,22 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 				</thead>
 				<tbody>
 					<?php
-							//loop through life groups
-							foreach($lifegroups as $group) {
-								echo "<tr>";
-								
-								echo "<td>" . $group->getLifeGroupName() . "</td>";
-								
-								$memberString = "";
-								foreach($group->getMembers() as $member) {
-									$memberString .= " " . $member;
-								}
-								echo "<td>" . $memberString . "</td>";
-
-								echo '</td>';
-								
-								echo "</tr>";
+						//loop through life groups
+						foreach($lifegroups as $group) {
+							echo "<tr>";
+							
+							echo "<td>" . $group->getLifeGroupName() . "</td>";
+							
+							$memberString = "";
+							foreach($group->getMembers() as $member) {
+								$memberString .= " " . $member;
 							}
+							echo "<td>" . $memberString . "</td>";
+
+							echo '</td>';
+							
+							echo "</tr>";
+						}
 					?>
 				</tbody>
 			</table>
