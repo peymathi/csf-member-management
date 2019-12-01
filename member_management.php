@@ -6,7 +6,6 @@ session_verify();
 require_once "db_connect.php";
 require_once "checkinUserClass.php";
 
-
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	if(isset($_POST["deletemember"])){
@@ -90,9 +89,6 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 	$tempmemberobj =  new UserCheckin($MemberID, $FirstName, $LastName, $EmailAddress, $HomeAddress, $PhoneNumber, $PhotoPath, $PrayerRequest, $OptEmail, $OptText, $GroupID, $LifeGroupID,$GroupName,$LifeGroupName);
 	array_push($members, $tempmemberobj);
 }
-
-
-
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -177,19 +173,14 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 							}
 					?>
 				</tbody>
-			</table>
-
+			</table>	
 		</div>
+		<form method = "post" action = "">
+			<button type="submit" class="btn btn-primary" name="export" value="CSV Export">Download to .csv</button>
+		</form>
 	</div>
 	
 	<br>
-	<div class="row mb-2">
-		<div class="col">
-			<a href="#">
-				<button type="submit" class="btn btn-primary">Download to .csv</button>
-			</a>
-		</div>
-	</div>
 	<div class="row mb-2">
 		<div class="col">
 			<a href="register.php">
@@ -205,3 +196,47 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 <script src="js/member_management.js"></script>
 </body>
 </html>
+<?php
+
+//export data to csv
+if(ISSET($_POST["export"])){
+	ob_end_clean();
+	
+	$header="";
+	$data="";
+	
+	$table ="members";
+	$select = "SELECT * FROM members";
+	$colNames = "DESCRIBE members";
+	$q = $con->query($colNames);
+	$q->execute();
+	$export = $con->prepare( $select ) or die ( "Sql error : " . mysql_error( ) );
+	$export->execute();
+	$fields = $export->columnCount();
+	for ( $i = 0; $i < $fields; $i++ ){
+		$header .= $q->fetch(PDO::FETCH_COLUMN) . ",";
+	}
+	while( $row = $export->fetch(PDO::FETCH_OBJ)){
+		$line = '';
+		foreach( $row as $value ){                                            
+			if((!isset($value)) || ($value == "")){
+				$value = ",";
+			}else{
+				$value = str_replace('"','""', $value);
+				$value = '"'.$value.'"'.",";
+			}
+			$line .= $value;
+		}
+		$data .= trim( $line ) . "\n";
+	}
+	$data = str_replace("\r","",$data);
+	if($data == ""){
+		$data = "\n(0) Records Found!\n";                        
+	}
+	header("Content-type: application/octet-stream");
+	header("Content-Disposition: attachment; filename=members.csv");
+	header("Pragma: no-cache");
+	header("Expires: 0");
+	print "$header\n$data";
+}
+?>
