@@ -4,7 +4,7 @@ session_verify();
 
 
 require_once "db_connect.php";
-/*
+
 $UserCheckin = $_SESSION["UserCheckin"];
 $MemberID = $UserCheckin->getMemberID();
 $FirstName = $UserCheckin->getFirstName();
@@ -23,7 +23,7 @@ $LifeGroupID = $UserCheckin->getLifeGroupID();
 $Major = "";
 $GraduationDate = "";
 
-*/
+
 $first_name_error = "";
 $last_name_error = "";
 $email_error = "";
@@ -37,7 +37,7 @@ $any_error = "";
 $opt_email_checked="";
 $opt_phone_checked="";
 
-/*
+
 if($OptText == "1"){
 	$opt_phone_checked="checked";
 }
@@ -135,7 +135,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 		Header("location: member_management.php");
 	}
 }
-*/
+
 ?>
 
 <body>
