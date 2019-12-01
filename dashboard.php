@@ -18,7 +18,7 @@
         <a class="nav-link" href="member_management.php">Member Management</a>
       </li>
 	  <li class="nav-item">
-        <a class="nav-link" href="edit_life_groups.php">Life Group Management</a>
+        <a class="nav-link" href="life_group_dashboard.php">Life Group Management</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Reports</a>
