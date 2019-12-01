@@ -2,7 +2,7 @@
 include 'header.php';
 session_verify();
 
-require_once "db_connect.php";
+require_once "phpUtil/db_connect.php";
 require_once "lifeGroupClass.php";
 
 $lifegroups = [];
@@ -13,7 +13,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 	$lifegroupid = $GroupRow['LifeGroupID'];
 	$lifegroupname = $GroupRow['LifeGroupName'];
 	$members = [];
-	
+
 	$MembersStmt = $con->prepare("SELECT * FROM members WHERE LifeGroupID = :LifeGroupID");
 	$MembersStmt->execute(array(':LifeGroupID' => $lifegroupid));
 	while($MemberRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
@@ -49,9 +49,9 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 						//loop through life groups
 						foreach($lifegroups as $group) {
 							echo "<tr>";
-							
+
 							echo "<td>" . $group->getLifeGroupName() . "</td>";
-							
+
 							$memberString = "";
 							foreach($group->getMembers() as $member) {
 								$memberString .= " " . $member;
@@ -59,7 +59,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 							echo "<td>" . $memberString . "</td>";
 
 							echo '</td>';
-							
+
 							echo "</tr>";
 						}
 					?>

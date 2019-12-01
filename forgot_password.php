@@ -1,7 +1,7 @@
 <?php
 include 'header.php';
 
-require_once "db_connect.php";
+require_once "phpUtil/db_connect.php";
 
 $email = "";
 $email_error = "";
@@ -22,11 +22,11 @@ if(isset($_POST['reset'])){
 		$subject = "Password Reset";
 		$txt = "Your new password is : ".$newpassword;
 		$headers = "From: test@test.com";
-		
+
 		$passwordStmt = $con->prepare('UPDATE admins SET password = :password WHERE email = :email');
 		$password = password_hash($newpassword, PASSWORD_DEFAULT);
 		$passwordStmt->execute(array('password'=>$password, 'email'=>$email));
-		
+
 		//TODO: Get mail server set up
 		//mail($to,$subject,$txt,$headers);
 		//Header("Location: login.php");
