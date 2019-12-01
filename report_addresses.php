@@ -1,6 +1,8 @@
 <?php
     include 'header.php';
     session_verify();
+	
+	require_once 'db_connect.php';
 
 ?>
 <body>
@@ -16,36 +18,29 @@
   <div class="row">
 
     <div class="col">
-
+		<!-- Home Addresses: Select FirstName, LastName, HomeAddress From Members Where HomeAddress Not Null -->
+		<h3>Home Address</h3>
 		<table class="table">
 			<thead class="thead-dark">
 			  <tr>
 				<th>Firstname</th>
 				<th>Lastname</th>
-				<th>Email</th>
+				<th>Home Address</th>
 			  </tr>
 			</thead>
 			<tbody>
-			  <tr>
-				<td>John</td>
-				<td>Doe</td>
-				<td>john@example.com</td>
-			  </tr>
-			  <tr>
-				<td>Mary</td>
-				<td>Moe</td>
-				<td>mary@example.com</td>
-			  </tr>
-			  <tr>
-				<td>July</td>
-				<td>Dooley</td>
-				<td>july@example.com</td>
-			  </tr>
+			<?php
+				$homeStmt = $con->prepare("Select FirstName, LastName, HomeAddress From Members Where HomeAddress IS NOT NULL");
+				$homeStmt->execute();
+				while($homeRow = $homeStmt->fetch(PDO::FETCH_ASSOC)) {
+					echo '<tr>';
+					echo '<td>'.$homeRow['FirstName'].'</td><td>'.$homeRow['LastName'].'</td><td>'.$homeRow['HomeAddress'].'</td>';
+					echo '</tr>';
+				}
+			?>
 			</tbody>
-		  </table>
-
-
-     </div>
+		</table>
+	</div>
   </div>
 </div>
 
