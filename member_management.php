@@ -178,18 +178,14 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 		<form method = "post" action = "">
 			<button type="submit" class="btn btn-primary" name="export" value="CSV Export">Download to .csv</button>
 		</form>
-	</div>
-	
-	<br>
-	<div class="row mb-2">
-		<div class="col">
-			<a href="register.php">
-			  <button type="submit" class="btn btn-primary">Add Member</button>
-			</a>
-			<a href="dashboard.php">
-				<button type="submit" class="btn btn-secondary">Back</button>
-			</a>
-		</div>
+		&nbsp;&nbsp;
+		<a href="register.php">
+		  <button type="submit" class="btn btn-primary">Add Member</button>
+		</a>
+		&nbsp;&nbsp;
+		<a href="dashboard.php">
+			<button type="submit" class="btn btn-secondary">Back</button>
+		</a>
 	</div>
 </div>
 
