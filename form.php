@@ -1,14 +1,4 @@
 <div class="container" style="margin-top:30px">
-
-	<div class="row mt-2">
-		<div class="col">
-				<a href="member_management.php">
-					<button type="submit" class="btn btn-secondary">Back</button>
-				</a>
-		</div>
-	</div>
-
-
 	<div class="row">
 		<div class="col">
 			<form action="" method="post" class="needs-validation" novalidate>

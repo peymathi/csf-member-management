@@ -3,7 +3,7 @@ include 'header.php';
 session_verify();
 
 
-require_once "phpUtil/db_connect.php";
+require_once "db_connect.php";
 $MemberID = "";
 $FirstName = "";
 $LastName = "";
@@ -113,8 +113,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 		Header("location: checkin.php");
 	}
 }
-
-
 ?>
 
 
@@ -125,7 +123,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 <div class="jumbotron text-center" style="margin-bottom:0">
   <h1>Impact Member Tracking</h1>
 </div>
-<?php include 'form.php'; ?>
+<?php 
+	include 'headerMembers.php';
+	include 'form.php'; 
+?>
 <script src="register.js"></script>
 </body>
 </html>
