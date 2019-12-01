@@ -2,7 +2,7 @@
 include 'header.php';
 session_verify();
 
-require_once "db_connect.php";
+require_once "phpUtil/db_connect.php";
 require_once "lifeGroupClass.php";
 
 $LifeGroupNameActError = "";
@@ -16,7 +16,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 	$lifegroupid = $GroupRow['LifeGroupID'];
 	$lifegroupname = $GroupRow['LifeGroupName'];
 	$members = [];
-	
+
 	$MembersStmt = $con->prepare("SELECT * FROM members WHERE LifeGroupID = :LifeGroupID");
 	$MembersStmt->execute(array(':LifeGroupID' => $lifegroupid));
 	while($MemberRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
@@ -29,7 +29,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-  
+
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <body>
@@ -37,11 +37,11 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 	<div class="jumbotron text-center" style="margin-bottom:0">
 	  <h1>Impact Member Tracking</h1>
 	</div>
-		
+
 	<?php
 			include 'headerLifeGroup.php';
 	?>
-	
+
 	<div class="container" style="margin-top:30px">
 
 	<div class="row">
@@ -58,9 +58,9 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 						//loop through life groups
 						foreach($lifegroups as $group) {
 							echo "<tr>";
-							
+
 							echo "<td>" . $group->getLifeGroupName() . "</td>";
-							
+
 							$memberString = "";
 							foreach($group->getMembers() as $member) {
 								$memberString .= " " . $member;
@@ -68,7 +68,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 							echo "<td>" . $memberString . "</td>";
 
 							echo '</td>';
-							
+
 							echo "</tr>";
 						}
 					?>
@@ -84,7 +84,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 		<form action="" method="post" class="needs-validation" novalidate>
 			  <div class="form-group">
 				<label for="life_group_name">Activate Life Group:</label>
-				<select name="life_group_id" class="custom-select">						
+				<select name="life_group_id" class="custom-select">
 					<?php
 						echo '<option value="">None</option>';
 						$LifeGroupIDStmt = $con->prepare("SELECT * FROM life_groups");
@@ -108,7 +108,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 		<form action="" method="post" class="needs-validation" novalidate>
 			  <div class="form-group">
 				<label for="life_group_name">Dectivate Life Group:</label>
-				<select name="life_group_id" class="custom-select">						
+				<select name="life_group_id" class="custom-select">
 					<?php
 						echo '<option value="">None</option>';
 						$LifeGroupIDStmt = $con->prepare("SELECT * FROM life_groups");
@@ -128,7 +128,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 			  </div>
 				<button type="submit" class="btn btn-danger">Dectivate</button>
 		</form>
-		
+
 		</div>
 	</div>
 	<div class="row mt-2">

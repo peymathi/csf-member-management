@@ -1,6 +1,6 @@
 <?php
 include 'header.php';
-require_once "db_connect.php";
+require_once "phpUtil/db_connect.php";
 
 // Verify the session
 session_verify();

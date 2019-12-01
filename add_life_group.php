@@ -2,7 +2,7 @@
 include 'header.php';
 session_verify();
 
-require_once "db_connect.php";
+require_once "phpUtil/db_connect.php";
 require_once "lifeGroupClass.php";
 
 $LifeGroupNameError = "";
@@ -15,7 +15,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 	$lifegroupid = $GroupRow['LifeGroupID'];
 	$lifegroupname = $GroupRow['LifeGroupName'];
 	$members = [];
-	
+
 	$MembersStmt = $con->prepare("SELECT * FROM members WHERE LifeGroupID = :LifeGroupID");
 	$MembersStmt->execute(array(':LifeGroupID' => $lifegroupid));
 	while($MemberRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
@@ -28,7 +28,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-  
+
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <body>
@@ -57,9 +57,9 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 						//loop through life groups
 						foreach($lifegroups as $group) {
 							echo "<tr>";
-							
+
 							echo "<td>" . $group->getLifeGroupName() . "</td>";
-							
+
 							$memberString = "";
 							foreach($group->getMembers() as $member) {
 								$memberString .= " " . $member;
@@ -67,7 +67,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 							echo "<td>" . $memberString . "</td>";
 
 							echo '</td>';
-							
+
 							echo "</tr>";
 						}
 					?>
@@ -76,11 +76,11 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col">
 		<form action="" method="post" class="needs-validation" novalidate>
-			  
+
 			  <div class="form-group">
 				<label for="life_group_name">Add Life Group:</label>
 				<input type="text" class="form-control" id="life_group_name" placeholder="Enter life group name" name="life_group_name" required>
@@ -88,7 +88,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $LifeGroupNameError; ?></span>
 			  </div>
-			  
+
 			  <button type="submit" class="btn btn-primary">Add Group</button>
 			</form>
 		</div>
