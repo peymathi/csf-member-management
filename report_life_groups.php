@@ -1,6 +1,8 @@
 <?php
     include 'header.php';
     session_verify();
+	
+	require_once 'db_connect.php';
 
 ?>
 <body>
@@ -16,35 +18,51 @@
   <div class="row">
 
     <div class="col">
-
+		<!-- Life Groups: Select FirstName, LastName, LifeGroup From Members Where Member is currently in a lifegroup -->
+		<h3>Life Groups Members</h3>
 		<table class="table">
 			<thead class="thead-dark">
 			  <tr>
 				<th>Firstname</th>
 				<th>Lastname</th>
-				<th>Email</th>
+				<th>Life Group</th>
 			  </tr>
 			</thead>
 			<tbody>
-			  <tr>
-				<td>John</td>
-				<td>Doe</td>
-				<td>john@example.com</td>
-			  </tr>
-			  <tr>
-				<td>Mary</td>
-				<td>Moe</td>
-				<td>mary@example.com</td>
-			  </tr>
-			  <tr>
-				<td>July</td>
-				<td>Dooley</td>
-				<td>july@example.com</td>
-			  </tr>
+			<?php
+				$lifeGroupStmt = $con->prepare("Select FirstName, LastName, LifeGroupID From Members Where LifeGroupID IS NOT NULL");
+				$lifeGroupStmt->execute();
+				while($lifeGroupRow = $lifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
+					echo '<tr>';
+					echo '<td>'.$lifeGroupRow['FirstName'].'</td><td>'.$lifeGroupRow['LastName'].'</td><td>'.$lifeGroupRow['LifeGroupID'].'</td>';
+					echo '</tr>';
+				}
+			?>
 			</tbody>
-		  </table>
-
-
+		</table>
+		<!-- People Not In Lifegroup: Select FirstName, LastName, Email, PhoneNumber From Members Where Member is not currently in a lifegroup -->
+		<h3>People Not In Life Group</h3>
+		<table class="table">
+			<thead class="thead-dark">
+			  <tr>
+				<th>Firstname</th>
+				<th>Lastname</th>
+				<th>Email Address</th>
+				<th>Phone Number</th>
+			  </tr>
+			</thead>
+			<tbody>
+			<?php
+				$lifeGroup2Stmt = $con->prepare("Select FirstName, LastName, EmailAddress, PhoneNumber From Members Where LifeGroupID = NULL");
+				$lifeGroup2Stmt->execute();
+				while($lifeGroup1Row = $lifeGroup2Stmt->fetch(PDO::FETCH_ASSOC)) {
+					echo '<tr>';
+					echo '<td>'.$lifeGroup1Row['FirstName'].'</td><td>'.$lifeGroup1Row['LastName'].'</td><td>'.$lifeGroup1Row['EmailAddress'].'</td><td>'.$lifeGroup1Row['PhoneNumber'].'</td>';
+					echo '</tr>';
+				}
+			?>
+			</tbody>
+		</table>
      </div>
   </div>
 </div>
