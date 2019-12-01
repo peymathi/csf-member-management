@@ -6,19 +6,16 @@ echo
 				<a class="nav-link" href="dashboard.php">Main Menu</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#">Prayer Requests</a>
+				<a class="nav-link" href="report_prayers.php">Prayer Requests</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#">Contact Emails/Texts</a>
+				<a class="nav-link" href="report_contacts.php">Contact Emails/Texts</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#">Life Groups</a>
+				<a class="nav-link" href="report_life_groups.php">Life Groups</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#">Not in Life Groups</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#">Home Addresses</a>
+				<a class="nav-link" href="report_addresses.php">Home Addresses</a>
 			</li>
 		</ul>
 	</nav>'
