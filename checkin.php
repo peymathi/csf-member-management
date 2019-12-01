@@ -3,6 +3,9 @@ include 'header.php';
 session_verify();
 require_once "db_connect.php";
 
+// Get list of lifegroups from DB
+$lifegroups = '<option>- -</option>';
+
 ?>
 
 <body>
@@ -72,6 +75,7 @@ require_once "db_connect.php";
 					<!-- Display the asklifegroups section -->
 					<div id="askLifeGroups" class="collapse">
 						<h4>Would you like to sign up for a Life Group today?</h4>
+						<br>
 						<button type="button" class="btn btn-primary" id="signUp">Sure!</button>
 						<button type="button" class="btn btn-primary" id="noThanks">No Thanks</button>
 					</div>
@@ -79,8 +83,9 @@ require_once "db_connect.php";
 					<!-- Display the showLifeGroups section -->
 					<div id="showLifeGroups" class="collapse">
 						<h4>Great! Select one of our Life Groups Below</h4>
-						<select id="selectLifeGroups">
-						</select>
+						<br>
+						<select id="selectLifeGroups" class="form-control w-50 mx-auto"><?php echo $lifegroups; ?></select>
+						<br>
 						<button type="button" class="btn btn-primary" id="signUpConfirm">Sign Me Up!</button>
 						<button type="button" class="btn btn-primary" id="decline">Not at this time</button>
 					</div>
@@ -186,6 +191,7 @@ require_once "db_connect.php";
 								</div>
 								<div class="col-8">
 									<select class="form-control inputToggle editLifeGroup" name="editLifeGroup" disabled>
+										<?php echo $lifegroups; ?>
 									</select>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editLifeGroup" name="btnEditLifeGroup">Edit</button>

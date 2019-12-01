@@ -17,6 +17,11 @@
 	}, false);
 })();
 
+function ajaxError()
+{
+		alert("Server connection failure. Please check your internet connection");
+}
+
 // First state of the modal
 function checkIn(userData)
 {
@@ -59,21 +64,19 @@ function displayLifegroups(userData)
 {
 	$("#askLifeGroups").collapse("hide");
 
-	// TODO ****************
-	// Get lifegroups from ajax call
-
-	// TODO ****************
-	// Add lifegroups to select element
-
 	$("#showLifeGroups").collapse("show");
 }
 
 // Receives the lifegroups form
 function finishLifeGroups(userData)
 {
-	// TODO ****************
-	// Receive user's choice of lifegroup
+	var lifegroup = $("#selectLifeGroups").val();
 
+	// Update user object
+	if (lifegroup != '- -')
+	{
+		userData.LifeGroup = lifegroup;
+	}
 
 	// Close the lifegroups divs
 	$("#showLifeGroups").collapse("hide");
@@ -89,19 +92,16 @@ function finishForm(userData)
 	$("#prayerRequest").collapse("hide");
 	$("#finishForm").collapse("show");
 
-	// TODO ************
+	// Get prayer request
+	userData.PrayerRequest = $("textarea[name='prayerRequestInput']").val();
+
 	// Make ajax call to push new user data to DB
-	if (userData.NewMember)
-	{
-
-	}
-
-	// TODO ******************
-	// Send the user's updated data to the DB through ajax call
-	else
-	{
-
-	}
+	$.ajax({
+		url: 'phpAjax/finishCheckIn.php',
+		method: 'POST',
+		data: userData,
+		error: function() { ajaxError(); }
+	});
 
 	// Delay for 5 seconds and then link back to original check in page
 	setTimeout(function(){
@@ -115,9 +115,6 @@ function editMember(userData)
 	$("#displayData").collapse("hide");
 	$("#editMember").collapse("show");
 
-	// TODO ***************
-	// Get the list of lifegroups through ajax call
-
 	// Fill out form elements with user info
 	$("input[name='editFirstName']").val(userData.FirstName);
 	$("input[name='editLastName']").val(userData.LastName);
@@ -126,9 +123,8 @@ function editMember(userData)
 	$("select[name='editStatus']").val(userData.Status);
 	$("input[name='editMajor']").val(userData.Major);
 
-	// TODO ***************
-	// Populate life groups select element with options for each
-	// life group.
+	// TODO ************
+	// Select user's lifegroup in select element
 
 	$("input[name='checkOptEmail']").attr("checked", userData.OptEmail);
 	$("input[name='checkOptTexts']").attr("checked", userData.OptText);
@@ -149,20 +145,9 @@ function finishEditMember(userData)
 		Status: $("select[name='editStatus']").val(),
 		Major: $("input[name='editMajor']").val(),
 		LifeGroup: $("select[name='editLifeGroup']").val(),
-		OptEmail: $("input[name='checkOptEmail']").is("checked"),
-		OptTexts: $("input[name='checkOptTexts']").is("checked")
+		OptEmail: $("input[name='checkOptEmail']").is(":checked"),
+		OptTexts: $("input[name='checkOptTexts']").is(":checked")
 	};
-
-	console.log(formResponse.FirstName);
-	console.log(formResponse.LastName);
-	console.log(formResponse.Email);
-	console.log(formResponse.Phone);
-	console.log(formResponse.Status);
-	console.log(formResponse.Major);
-	console.log(formResponse.LifeGroup);
-	console.log(formResponse.OptEmail);
-	console.log(formResponse.OptTexts);
-
 
 	// TODO************
 	// Perform ajax call to push changes to member to DB
@@ -191,19 +176,8 @@ function finishRegForm()
 			LifeGroup: "None",
 			OptEmail: $("input[name='regOptEmail']").is(':checked'),
 			OptTexts: $("input[name='regOptTexts']").is(':checked'),
-			NewMember: true,
 			PrayerRequest: ""
 	};
-
-	console.log(userData.FirstName);
-	console.log(userData.LastName);
-	console.log(userData.Email);
-	console.log(userData.Phone);
-	console.log(userData.Status);
-	console.log(userData.Major);
-	console.log(userData.LifeGroup);
-	console.log(userData.OptEmail);
-	console.log(userData.OptTexts);
 
 	// Hide registration
 	$("#registerModal").collapse("hide");
@@ -229,10 +203,9 @@ function getMember(phone)
 			Phone: "3174604323",
 			Status: "Junior",
 			Major: "Computer Science",
-			LifeGroup: "Tuesday 6:00",
+			LifeGroup: "None",
 			OptEmail: true,
 			OptText: true,
-			NewMember: false,
 			PrayerRequest: ""
 		};
 	}
