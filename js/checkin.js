@@ -17,6 +17,30 @@
 	}, false);
 })();
 
+function cleanUpPhone(phone)
+{
+
+	phone = phone.replace(/[()-]/g, "");
+	phone = phone.replace(/\s/g, "");
+	return phone;
+}
+
+function validateEmail(email)
+{
+	if (email.indexOf('@') < 0) return false;
+	else if (email.indexOf('.') < 0) return false;
+	else return true;
+}
+
+function validatePhone(phone)
+{
+	phone = cleanUpPhone(phone);
+	if (isNaN(phone)) return false;
+	else if (phone.length < 10) return false;
+	else if (phone.length > 11) return false;
+	else return true;
+}
+
 function ajaxError()
 {
 		alert("Server connection failure. Please check your internet connection");
@@ -123,8 +147,8 @@ function editMember(userData)
 	$("select[name='editStatus']").val(userData.Status);
 	$("input[name='editMajor']").val(userData.Major);
 
-	// TODO ************
 	// Select user's lifegroup in select element
+	$("select[name='editLifeGroup'] option:contains('" + userData.LifeGroup + "')").prop('selected', true);
 
 	$("input[name='checkOptEmail']").attr("checked", userData.OptEmail);
 	$("input[name='checkOptTexts']").attr("checked", userData.OptText);
@@ -133,9 +157,6 @@ function editMember(userData)
 // Function for when editing a member is finished
 function finishEditMember(userData)
 {
-	$("#editMember").collapse("hide");
-
-	// TODO ************
 	// Validate form data
 	formResponse = {
 		FirstName: $("input[name='editFirstName']").val(),
@@ -146,13 +167,64 @@ function finishEditMember(userData)
 		Major: $("input[name='editMajor']").val(),
 		LifeGroup: $("select[name='editLifeGroup']").val(),
 		OptEmail: $("input[name='checkOptEmail']").is(":checked"),
-		OptTexts: $("input[name='checkOptTexts']").is(":checked")
+		OptTexts: $("input[name='checkOptTexts']").is(":checked"),
+		Valid: true
 	};
 
-	// TODO************
-	// Perform ajax call to push changes to member to DB
+	// Clean up phone number
+	formResponse.Phone = cleanUpPhone(formResponse.Phone);
 
-	continueForm(userData);
+	if (!validateEmail(formResponse.Email))
+	{
+		$("input[name='editEmail']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+
+	if (formResponse.FirstName === '')
+	{
+		$("input[name='editFirstName']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+
+	if (formResponse.LastName === '')
+	{
+		$("input[name='editLastName']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+
+	// TODO ************
+	// Need to check if phone number is already taken
+
+	if (!validatePhone(formResponse.Phone))
+	{
+		$("input[name='editPhone']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+
+	if (formResponse.Major === '')
+	{
+		$("input[name='editMajor']").addClass('is-invalid');
+		formResponse.Valid = false;
+	}
+
+  if (formResponse.Valid)
+	{
+		$("#editMember").collapse("hide");
+		$(".is-invalid").removeClass('is-invalid');
+
+		// Update userData object after validation
+		userData.FirstName = formResponse.FirstName;
+		userData.LastName = formResponse.LastName;
+		userData.Email = formResponse.Email;
+		userData.Phone = formResponse.Phone;
+		userData.Status = formResponse.Status;
+		userData.Major = formResponse.Major;
+		userData.LifeGroup = formResponse.LifeGroup;
+		userData.OptEmail = formResponse.OptEmail;
+		userData.OptText = formResponse.OptText;
+
+		continueForm(userData);
+	}
 }
 
 // Function for registering a new member. Gets called upon clicking the register button

@@ -107,6 +107,7 @@ $lifegroups = '<option>- -</option>';
 							<h4>Select which parts you need to edit.</h4>
 						</div>
 						<br>
+						<form class='needs-validation' name='editForm'>
 						<div class="form-horizontal">
 
 							<!-- First Name -->
@@ -115,7 +116,8 @@ $lifegroups = '<option>- -</option>';
 									<label for="editFirstName" class="col-form-label">First Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editFirstName" name="editFirstName" disabled>
+									<input type="text" class="form-control inputToggle editFirstName" name="editFirstName" disabled required>
+									<div class="invalid-feedback">Must enter a first name</div>
 								</div>
 								<button type="button" class="btn-sm btn btn-secondary editToggle" id="editFirstName" name="btnEditFirstName">Edit</button>
 							</div>
@@ -126,7 +128,8 @@ $lifegroups = '<option>- -</option>';
 									<label for="editLastName" class="col-form-label">Last Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editLastName" name="editLastName" disabled>
+									<input type="text" class="form-control inputToggle editLastName" name="editLastName" disabled required>
+									<div class="invalid-feedback">Must enter a last name</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editLastName" name="btnEditLastName">Edit</button>
 							</div>
@@ -137,7 +140,8 @@ $lifegroups = '<option>- -</option>';
 									<label for="editEmail" class="col-form-label">Email</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editEmail" name="editEmail" disabled>
+									<input type="text" class="form-control inputToggle editEmail" name="editEmail" disabled required>
+									<div class="invalid-feedback" for="editEmail" name='editInvalid'>Invalid Email</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editEmail" name="btnEditEmail">Edit</button>
 							</div>
@@ -148,7 +152,8 @@ $lifegroups = '<option>- -</option>';
 									<label for="editPhone" class="col-form-label">Phone</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editPhone" name="editPhone" disabled>
+									<input type="text" class="form-control inputToggle editPhone" name="editPhone" disabled required>
+									<div class='invalid-feedback'>Invalid Phone</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editPhone" name="btnEditPhone">Edit</button>
 							</div>
@@ -159,7 +164,7 @@ $lifegroups = '<option>- -</option>';
 									<label for="editStatus" class="col-form-label">Status</label>
 								</div>
 								<div class="col-8">
-									<select class="form-control inputToggle editStatus" name="editStatus" disabled>
+									<select class="form-control inputToggle editStatus" name="editStatus" disabled required>
 										<option val="Freshman">Freshman</option>
 										<option val="Sophomore">Sophomore</option>
 										<option val="Junior">Junior</option>
@@ -169,6 +174,7 @@ $lifegroups = '<option>- -</option>';
 										<option val="Staff">Staff</option>
 										<option val="Other">Other</option>
 									</select>
+									<div class='invalid-feedback'>Must select a status</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editStatus" name="btnEditStatus">Edit</button>
 							</div>
@@ -179,7 +185,8 @@ $lifegroups = '<option>- -</option>';
 									<label for="editMajor" class="col-form-label">Major</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editMajor" name="editMajor" disabled>
+									<input type="text" class="form-control inputToggle editMajor" name="editMajor" disabled required>
+									<div class='invalid-feedback'>Must enter a major</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editMajor" name="btnEditMajor">Edit</button>
 							</div>
@@ -228,7 +235,7 @@ $lifegroups = '<option>- -</option>';
 									<label for="regFirst" class="col-form-label">First Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regFirst" placeholder="First Name">
+									<input type="text" class="form-control" name="regFirst" placeholder="First Name" required>
 								</div>
 							</div>
 
@@ -238,7 +245,7 @@ $lifegroups = '<option>- -</option>';
 									<label class="col-form-label">Last Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regLast" placeholder="Last Name">
+									<input type="text" class="form-control" name="regLast" placeholder="Last Name" required>
 								</div>
 							</div>
 
@@ -248,7 +255,7 @@ $lifegroups = '<option>- -</option>';
 									<label class="col-form-label">Email</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regEmail" placeholder="Email">
+									<input type="email" class="form-control" name="regEmail" placeholder="Email" required>
 								</div>
 							</div>
 
@@ -258,7 +265,7 @@ $lifegroups = '<option>- -</option>';
 									<label class="col-form-label">Phone Number</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regPhone" placeholder="Phone Number">
+									<input type="text" class="form-control" name="regPhone" placeholder="Phone Number" required>
 								</div>
 							</div>
 
@@ -268,7 +275,7 @@ $lifegroups = '<option>- -</option>';
 									<label class="col-form-label" for="regStatus">Status</label>
 								</div>
 								<div class="col-8">
-									<select class="form-control" name="regStatus">
+									<select class="form-control" name="regStatus" required>
 										<option val='- -'>- -</option>
 										<option val="Freshman">Freshman</option>
 										<option val="Sophomore">Sophomore</option>
@@ -288,7 +295,7 @@ $lifegroups = '<option>- -</option>';
 									<label class="col-form-label" for="regMajor">Major</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regMajor" placeholder="Major">
+									<input type="text" class="form-control" name="regMajor" placeholder="Major" required>
 								</div>
 							</div>
 
@@ -309,7 +316,7 @@ $lifegroups = '<option>- -</option>';
 							</div>
 						</div>
 					</div>
-
+				</form>
 	      </div>
 
 	      <div class="modal-footer">
