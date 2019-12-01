@@ -42,7 +42,9 @@
 *   NOW_remove()
 *
 */
-include 'db_connect.php'
+include 'db_connect.php';
+
+echo "Files have been included.\n";
 
 class db_query
 {
@@ -64,20 +66,12 @@ class db_query
     try
     {
       $this -> connection = db_connect();
-      echo "Query constructed and connected."
+      echo "Query constructed and connected.\n";
     }
-    catch
+    catch(Exception $e)
     {
-      echo "Query didn't connect to the database."
+      echo "Caught exception: ",  $e->getMessage(), "\n";
     }
-  }
-
-  //
-  // This is for destruction
-  //
-  function __destruct()
-  {
-
   }
 
   //
@@ -90,9 +84,9 @@ class db_query
     $stmt -> bindParam(1, $email);
     $stmt -> bindParam(2, $password);
 
-    $sth->execute();
+    $stmt -> execute();
 
-    $result = $sth->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if(($result != NULL || "") || ($result == false))
     {
@@ -125,7 +119,7 @@ class db_query
   // Then takes 2 arrays, one of the fields that will be changing and the second
   // of the coorisponding values that it will be changing to.
   //
-  function admin_edit(string $field, string $equals, array $changingFields, array $newValues)
+  public function admin_edit(string $field, string $equals, array $changingFields, array $newValues)
   {
     if(count($changingFields) == count($newValues))
     {
@@ -146,7 +140,7 @@ class db_query
   // Take the field of concern and what it should equal to be removed from the
   // database.
   //
-  function admin_remove(string $field, string $equals)
+  public function admin_remove(string $field, string $equals)
   {
     $stmt = $this -> connection -> prepare("DELETE FROM admins WHERE " + $field + " = " + $equals);
 
@@ -154,56 +148,74 @@ class db_query
   }
 
   //
-  function group_create()
+  public function group_create()
   {
 
   }
 
   //
-  function group_edit()
+  public function group_edit()
   {
 
   }
 
   //
-  function group_remove()
+  public function group_remove(string $field, string $equals)
   {
+    $stmt = $this -> connection -> prepare("DELETE FROM group WHERE " + $field + " = " + $equals);
 
+    $stmt -> execute();
   }
 
   // Takes the name of the life group, the weekly day of the meeting, the time
   // at the meeting, and a description of the meeting.
   //
   // NOTE: day can only be 9 chars at max
-  function life_group_create(string $name, string $day, string $time, string $location)
+  public function life_group_create(string $name, string $day, string $time, string $location)
   {
+    // TODO: make sure these are the right fields
+    $stmt = $this -> connection -> perpare("INSERT INTO lifeGroup (lifeGroupName, lifeGroupDate, lifeGroupTime, lifeGroupLocation) VALUES (?, ?, ?, ?)");
 
+    $stmt -> bindParam(1, $name);
+    $stmt -> bindParam(2, $date);
+    $stmt -> bindParam(3, $time);
+    $stmt -> bindParam(4, $location);
+
+    $stmt -> execute();
   }
 
   // Takes the field of concern and what it should be looking for in the field.
   // Then takes 2 arrays, one of the fields that will be changing and the second
   // of the coorisponding values that it will be changing to.
-  function life_group_edit(string $field, string $equals, array $changingFields, array $newValues)
+  public function life_group_edit(string $field, string $equals, array $changingFields, array $newValues)
   {
 
   }
 
   // Take the field of concern and what it should equal to be removed from the
   // database.
-  function life_group_remove(string $field, string $equals)
+  public function life_group_remove(string $field, string $equals)
   {
+    $stmt = $this -> connection -> prepare("DELETE FROM lifeGroup WHERE " + $field + " = " + $equals);
 
+    $stmt -> execute();
   }
 
   //
-  function member_check(string $number)
+  public function member_check(string $number)
   {
+    $stmt = $this -> connection -> perpare("SELECT * FROM member WHERE number = ?");
 
+    $stmt -> bindParam(1, $number);
+
+    $stmt -> execute();
+
+    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
   }
 
   // Creates a new member taking the first and last name with their number.
   // NOTE: to add other data to the create member, call member_edit
-  function member_create(string $fname, string $lname, string $number)
+  public function member_create(string $fname, string $lname, string $number)
   {
 
   }
@@ -211,17 +223,83 @@ class db_query
   // Takes the field of concern and what it should be looking for in the field.
   // Then takes 2 arrays, one of the fields that will be changing and the second
   // of the coorisponding values that it will be changing to.
-  function member_edit(string $field, string $equals, array $changingFields, array $newValues)
+  public function member_edit(string $field, string $equals, array $changingFields, array $newValues)
   {
 
   }
 
   // Take the field of concern and what it should equal to be removed from the
   // database.
-  function member_remove(string $field, string $equals)
+  public function member_remove(string $field, string $equals)
   {
+    $stmt = $this -> connection -> prepare("DELETE FROM members WHERE " + $field + " = " + $equals);
 
+    $stmt -> execute();
   }
 
+  //
+  public function get_prayer_requests()
+  {
+    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, PrayerRequest FROM members");
+
+    $stmt -> execute();
+
+    return $stmt -> fetchAll();
+  }
+
+  //
+  // Gets all the members who are opted in for email blasts
+  //
+  public function get_contact_emails()
+  {
+    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, Email FROM members WHERE OptEmail = ?");
+
+    $stmt -> bindParam(1, true);
+
+    return $stmt -> fetchAll();
+  }
+
+  //
+  // Gets all the members whos opted in for the texts blasts
+  //
+  public function get_contact_texts()
+  {
+    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, PhoneNumber FROM members WHERE OptTexts =?");
+
+    $stmt -> bindParam(1, true);
+
+    return $stmt -> fetchAll();
+  }
+
+  //
+  // Returns a list of all the members in a life group
+  //
+  public function get_members_in_lifeGroups()
+  {
+    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, LifeGroup FROM members WHERE LifeGroupID != NULL");
+
+    return $stmt -> fetchALl();
+  }
+
+  //
+  // Returns a list of all the member not in a life group
+  //
+  public function get_members_not_in_lifeGroups()
+  {
+    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, Email, PhoneNumber FROM members WHERE LifeGroupID = NULL");
+
+    return $stmt -> fetchAll();
+  }
+
+  //
+  // Gets a list of all the member's addresses that do have their addresses in
+  // the DB
+  //
+  public function get_member_addresses()
+  {
+    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, HomeAddress FROM members WHERE HomeAddress != NULL");
+
+    return $stmt -> fetchAll();
+  }
 }
- ?>
+?>

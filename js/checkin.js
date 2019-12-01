@@ -72,7 +72,8 @@ function displayLifegroups(userData)
 function finishLifeGroups(userData)
 {
 	// TODO ****************
-	// Receive user data
+	// Receive user's choice of lifegroup
+
 
 	// Close the lifegroups divs
 	$("#showLifeGroups").collapse("hide");
@@ -140,6 +141,28 @@ function finishEditMember(userData)
 
 	// TODO ************
 	// Validate form data
+	formResponse = {
+		FirstName: $("input[name='editFirstName']").val(),
+		LastName: $("input[name='editLastName']").val(),
+		Email: $("input[name='editEmail']").val(),
+		Phone: $("input[name='editPhone']").val(),
+		Status: $("select[name='editStatus']").val(),
+		Major: $("input[name='editMajor']").val(),
+		LifeGroup: $("select[name='editLifeGroup']").val(),
+		OptEmail: $("input[name='checkOptEmail']").is("checked"),
+		OptTexts: $("input[name='checkOptTexts']").is("checked")
+	};
+
+	console.log(formResponse.FirstName);
+	console.log(formResponse.LastName);
+	console.log(formResponse.Email);
+	console.log(formResponse.Phone);
+	console.log(formResponse.Status);
+	console.log(formResponse.Major);
+	console.log(formResponse.LifeGroup);
+	console.log(formResponse.OptEmail);
+	console.log(formResponse.OptTexts);
+
 
 	// TODO************
 	// Perform ajax call to push changes to member to DB

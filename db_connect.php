@@ -25,6 +25,8 @@ function db_connect($hostname = 'localhost', $username = 'root', $password = '')
   try
   {
     return new PDO("mysql:host=$hostname;dbname=csfi_db", $username, $password);
+    /* echo a message saying we have connected */
+    echo "Connected to database\n";
   }
   catch(PDOException $e)
   {
