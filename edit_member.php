@@ -3,7 +3,7 @@ include 'header.php';
 session_verify();
 
 
-require_once "db_connect.php";
+require_once "phpUtil/db_connect.php";
 
 $UserCheckin = $_SESSION["UserCheckin"];
 $MemberID = $UserCheckin->getMemberID();
