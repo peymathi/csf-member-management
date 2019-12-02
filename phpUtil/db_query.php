@@ -27,16 +27,13 @@
 *   life_group_remove(string $field, string $equals)
 *
 *   member_check(string $number)
-*   member_create(string $fname, string $lname, string $number,
-        string $email="NULL", string $address="NULL", string $major="NULL",
-        string $photoPath="NULL", string $prayerR="NULL", string $optE="false",
-        string $optT="false")
-*   TODO: member_edit(string $number, string $fname='FirstName',
-        string $lname='LastName', string $email='EmailAddress',
-        string $adrs='HomeAddress', string $number='PhoneNumber',
-        string $photoPath='PhotoPath', string $prayerR='PrayerRequest',
-        string $optE='OptEmail', string $optT='OptText')
-*   member_remove(string $field, string $equals)
+*   member_create(string $fname, string $lname, string $number, $email=null,
+        $address=null, $major=null, $photoPath=null, $prayerR=null, $optE="0",
+        $optT="0")
+*   member_edit(string $number, $fname=null, $lname=null, $numberN=null,
+        $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null,
+        $optE=null, $optT=null)
+*   member_remove(string $number)
 *
 *   TODO: member_to_life_group_create()
 *   TODO: member_to_life_group_edit()
