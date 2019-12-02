@@ -13,7 +13,9 @@
 * Methods:
 *   admin_check(string $email, string $password)
 *   admin_create(string $fname, string $lname, string $email, string $password)
-*   TODO: admin_edit()
+*   TODO: admin_edit(string $field, string $equals, string $fname='firstname',
+        string $lname='lastname', string $email='email',
+        string $password='password')
 *   admin_remove(string $field, string $equals)
 *
 *   TODO: group_check(string $name)
@@ -26,8 +28,15 @@
 *   life_group_remove(string $field, string $equals)
 *
 *   member_check(string $number)
-*   member_create(string $fname, string $lname, string $number, string $email="NULL", string $address="NULL", string $major="NULL", string $photoPath="NULL", string $prayerR="NULL", string $optE="false", string $optT="false")
-*   TODO: member_edit()
+*   member_create(string $fname, string $lname, string $number,
+        string $email="NULL", string $address="NULL", string $major="NULL",
+        string $photoPath="NULL", string $prayerR="NULL", string $optE="false",
+        string $optT="false")
+*   TODO: member_edit(string $field, string $equals, string $fname='FirstName',
+        string $lname='LastName', string $email='EmailAddress',
+        string $adrs='HomeAddress', string $number='PhoneNumber',
+        string $photoPath='PhotoPath', string $prayerR='PrayerRequest',
+        string $optE='OptEmail', string $optT='OptText')
 *   member_remove(string $field, string $equals)
 *
 *   TODO: member_to_life_group_create()
@@ -134,7 +143,7 @@ class db_query
   //
   // admin_edit
   //
-  public function admin_edit(string $field, string $equals, array $changingFields, array $newValues)
+  public function admin_edit(string $field, string $equals, string $fname='firstname', string $lname='lastname', string $email='email', string $password='password')
   {
     // Takes the field of concern and what it should equal.
     // Then takes 2 arrays, one of the fields that will be changing and the second
@@ -166,18 +175,34 @@ class db_query
     $stmt -> execute();
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   //
-  public function group_create()
-  {
+  // group
+  //
+  //////////////////////////////////////////////////////////////////////////////
 
+  //
+  // group_create
+  //
+  public function group_create(string $name)
+  {
+    $stmt = $this -> connection -> perpare("INSERT INTO groups (GroupName) VALUES (?)");
+
+    $stmt -> bindParam(1, $name);
+
+    $stmt -> execute();
   }
 
+  //
+  // group_edit
   //
   public function group_edit()
   {
 
   }
 
+  //
+  // group_remove
   //
   public function group_remove(string $field, string $equals)
   {
@@ -186,14 +211,21 @@ class db_query
     $stmt -> execute();
   }
 
-  // Takes the name of the life group, the weekly day of the meeting, the time
-  // at the meeting, and a description of the meeting.
+  //////////////////////////////////////////////////////////////////////////////
+  //
+  // life_group
+  //
+  //////////////////////////////////////////////////////////////////////////////
+
+  //
+  // life_group_create
   //
   // NOTE: day can only be 9 chars at max
   public function life_group_create(string $name, string $day, string $time, string $location)
   {
-    // TODO: make sure these are the right fields
-    $stmt = $this -> connection -> perpare("INSERT INTO lifeGroup (lifeGroupName, lifeGroupDate, lifeGroupTime, lifeGroupLocation) VALUES (?, ?, ?, ?)");
+    // Takes the name of the life group, the weekly day of the meeting, the time
+    // at the meeting, and a description of the meeting.
+    $stmt = $this -> connection -> perpare("INSERT INTO lifeGroup (LifeGroupName, LifeGroupDate, LifeGroupTime, LifeGroupLocation) VALUES (?, ?, ?, ?)");
 
     $stmt -> bindParam(1, $name);
     $stmt -> bindParam(2, $date);
@@ -203,18 +235,23 @@ class db_query
     $stmt -> execute();
   }
 
-  // Takes the field of concern and what it should be looking for in the field.
-  // Then takes 2 arrays, one of the fields that will be changing and the second
-  // of the coorisponding values that it will be changing to.
+  //
+  // life_group_edit
+  //
   public function life_group_edit(string $field, string $equals, array $changingFields, array $newValues)
   {
-
+    // Takes the field of concern and what it should be looking for in the field.
+    // Then takes 2 arrays, one of the fields that will be changing and the second
+    // of the coorisponding values that it will be changing to.
   }
 
-  // Take the field of concern and what it should equal to be removed from the
-  // database.
+  //
+  // life_group_remove
+  //
   public function life_group_remove(string $field, string $equals)
   {
+    // Take the field of concern and what it should equal to be removed from the
+    // database.
     $stmt = $this -> connection -> prepare("DELETE FROM lifeGroup WHERE " + $field + " = " + $equals);
 
     $stmt -> execute();
@@ -252,7 +289,7 @@ class db_query
   //
   // member_create
   //
-  public function member_create(string $fname, string $lname, string $number, string $email="NULL", string $address="NULL", string $major="NULL", string $photoPath="NULL", string $prayerR="NULL", string $optE="false", string $optT="false")
+  public function member_create(string $fname, string $lname, string $number, string $email="NULL", string $address="NULL", string $major="NULL", string $photoPath="NULL", string $prayerR="NULL", string $optE="0", string $optT="0")
   {
     // Creates a new member taking the first and last name with their number.
     $stmt = $this -> connection -> perpare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -271,18 +308,22 @@ class db_query
     $stmt -> execute();
   }
 
-  // Takes the field of concern and what it should be looking for in the field.
-  // Then takes 2 arrays, one of the fields that will be changing and the second
-  // of the coorisponding values that it will be changing to.
-  public function member_edit(string $field, string $equals, array $changingFields, array $newValues)
+
+  public function member_edit(string $field, string $equals, string $fname='FirstName', string $lname='LastName', string $email='EmailAddress', string $adrs='HomeAddress', string $number='PhoneNumber', string $photoPath='PhotoPath', string $prayerR='PrayerRequest', string $optE='OptEmail', string $optT='OptText')
   {
+    // Takes the field of concern and what it should be looking for in the field.
+    // Then takes 2 arrays, one of the fields that will be changing and the second
+    // of the coorisponding values that it will be changing to.
 
   }
 
-  // Take the field of concern and what it should equal to be removed from the
-  // database.
+  //
+  // member_remove
+  //
   public function member_remove(string $field, string $equals)
   {
+    // Take the field of concern and what it should equal to be removed from the
+    // database.
     $stmt = $this -> connection -> prepare("DELETE FROM members WHERE " + $field + " = " + $equals);
 
     $stmt -> execute();
