@@ -46,9 +46,10 @@
 *   TODO: member_to_NOW_edit()
 *   TODO: member_to_NOW_remove()
 *
+*   NOW_check(string $date)
 *   NOW_create(string $date)
-*   TODO: NOW_edit()
-*   TODO: NOW_remove()
+*   NOW_edit(string $dateOld, string $dateNew)
+*   NOW_remove($date)
 *
 *   get_prayer_requests()
 *   get_contact_emails()
@@ -503,6 +504,19 @@ class db_query
   //////////////////////////////////////////////////////////////////////////////
 
   //
+  // NOW_check
+  //
+  public function NOW_check(string $date)
+  {
+    $stmt = $this -> connection -> prepare("SELECT * FROM nights_of_worship WHERE NightDate = ?");
+
+    $stmt -> bindParam(1, $date);
+
+    $stmt -> execute();
+
+    return $stmt -> fetch(PDO::FETCH_ASSOC);
+  }
+  //
   // NOW_create
   //
   public function NOW_create(string $date)
@@ -510,7 +524,7 @@ class db_query
     // Expects dates to be in the YYYY-MM-DD format
     $stmt = $this -> connection -> prepare("INSERT INTO nights_of_worship (NightDate) VALUES (?)");
 
-    $stmt -> bindPara(1, $date);
+    $stmt -> bindParam(1, $date);
 
     $stmt -> execute();
   }
@@ -518,17 +532,26 @@ class db_query
   //
   // NOW_edit
   //
-  public function NOW_edit()
+  public function NOW_edit(string $dateOld, string $dateNew)
   {
+    $stmt = $this -> connection -> prepare("UPDATE nights_of_worship SET NightDate = ? WHERE NightDate = ?");
 
+    $stmt -> bindParam(1, $dateNew);
+    $stmt -> bindParam(2, $dateOld);
+
+    $stmt -> execute();
   }
 
   //
   // NOW_remove
   //
-  public function NOW_remove()
+  public function NOW_remove($date)
   {
+    $stmt = $this -> connection -> prepare("DELETE FROM nights_of_worship WHERE NightDate = ?");
 
+    $stmt -> bindParam(1, $date);
+
+    $stmt -> execute();
   }
 
   //////////////////////////////////////////////////////////////////////////////
