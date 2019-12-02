@@ -209,23 +209,55 @@ class db_query
     $stmt -> execute();
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  //
+  // member
+  //
+  //////////////////////////////////////////////////////////////////////////////
+
+  //
+  // member_check
   //
   public function member_check(string $number)
   {
-    $stmt = $this -> connection -> perpare("SELECT * FROM member WHERE number = ?");
+    $stmt = $this -> connection -> perpare("SELECT * FROM member WHERE PhoneNumber = ?");
 
     $stmt -> bindParam(1, $number);
 
     $stmt -> execute();
 
     $result = $stmt -> fetch(PDO::FETCH_ASSOC);
+
+    if(count($result) != 0) // not empty
+    {
+      return $result;
+    }
+    else
+    {
+      return false;
+    }
   }
 
-  // Creates a new member taking the first and last name with their number.
-  // NOTE: to add other data to the create member, call member_edit
-  public function member_create(string $fname, string $lname, string $number)
+  //
+  // member_create
+  //
+  public function member_create(string $fname, string $lname, string $number, string $email="NULL", string $address="NULL", string $major="NULL", string $photoPath="NULL", string $prayerR="NULL", string $optE="false", string $optT="false")
   {
+    // Creates a new member taking the first and last name with their number.
+    $stmt = $this -> connection -> perpare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
+    $stmt -> bindParam(1,$fname);
+    $stmt -> bindParam(2,$lname);
+    $stmt -> bindParam(3,$email);
+    $stmt -> bindParam(4,$address);
+    $stmt -> bindParam(5,$major);
+    $stmt -> bindParam(6,$number);
+    $stmt -> bindParam(7,$photoPath);
+    $stmt -> bindParam(8,$prayerR);
+    $stmt -> bindParam(9,$optE);
+    $stmt -> bindParam(10,$optT);
+
+    $stmt -> execute();
   }
 
   // Takes the field of concern and what it should be looking for in the field.
