@@ -63,7 +63,7 @@ class db_query
   private $query;
 
   //
-  // This is for creating the db_queue
+  // consructor
   //
   function __construct()
   {
@@ -74,7 +74,6 @@ class db_query
     try
     {
       $this -> connection = db_connect();
-      echo "Query constructed and connected.\n";
     }
     catch(Exception $e)
     {
@@ -82,11 +81,20 @@ class db_query
     }
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   //
-  // Check if the user exists and entered correct login data, then returns bool
+  //  admins
+  //
+  //////////////////////////////////////////////////////////////////////////////
+
+  //
+  // admin_check
   //
   public function admin_check(string $email, string $password)
   {
+    //
+    // Check if the user exists and entered correct login data, then returns bool
+    //
     $stmt = $this -> connection -> perpare("SELECT * FROM admins WHERE email = ? AND password = ?");
 
     $stmt -> bindParam(1, $email);
@@ -96,7 +104,7 @@ class db_query
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if(($result != NULL || "") || ($result == false))
+    if(count($result) != 0)
     {
       return true;
     }
@@ -107,11 +115,12 @@ class db_query
   }
 
   //
-  // Takes the first name, last name, email, and password and stores them in the
-  // database.
+  // admin_create
   //
   public function admin_create(string $fname, string $lname, string $email, string $password)
   {
+    // Takes the first name, last name, email, and password and stores them in the
+    // database.
     $stmt = $this -> connection -> prepare("INSERT INTO admins (firstname, lastname, email, password) VALUES (?, ?, ?, ?)");
 
     $stmt -> bindParam(1, $fname);
@@ -123,15 +132,16 @@ class db_query
   }
 
   //
-  // Takes the field of concern and what it should be looking for in the field.
-  // Then takes 2 arrays, one of the fields that will be changing and the second
-  // of the coorisponding values that it will be changing to.
+  // admin_edit
   //
   public function admin_edit(string $field, string $equals, array $changingFields, array $newValues)
   {
+    // Takes the field of concern and what it should equal.
+    // Then takes 2 arrays, one of the fields that will be changing and the second
+    // of the coorisponding values that it will be changing to.
     if(count($changingFields) == count($newValues))
     {
-      $query = "UPDATE admins SET";
+      $query = "UPDATE admins SET ";
 
       foreach($changingFields as $index => $field)
       {
@@ -145,11 +155,12 @@ class db_query
   }
 
   //
-  // Take the field of concern and what it should equal to be removed from the
-  // database.
+  // admin_remove
   //
   public function admin_remove(string $field, string $equals)
   {
+    // Take the field of concern and what it should equal to be removed from the
+    // database.
     $stmt = $this -> connection -> prepare("DELETE FROM admins WHERE " + $field + " = " + $equals);
 
     $stmt -> execute();
