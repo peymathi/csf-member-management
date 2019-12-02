@@ -13,9 +13,8 @@
 * Methods:
 *   admin_check(string $email, string $password)
 *   admin_create(string $fname, string $lname, string $email, string $password)
-*   TODO: admin_edit(string $field, string $equals, string $fname='firstname',
-        string $lname='lastname', string $email='email',
-        string $password='password')
+*   admin_edit(string $field, string $equals, $fname=null, $lname=null,
+        $email=null, $password=null)
 *   admin_remove(string $field, string $equals)
 *
 *   TODO: group_check(string $name)
@@ -215,7 +214,7 @@ class db_query
   //
   public function group_create(string $name)
   {
-    $stmt = $this -> connection -> perpare("INSERT INTO groups (GroupName) VALUES (?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO groups (GroupName) VALUES (?)");
 
     $stmt -> bindParam(1, $name);
 
@@ -254,7 +253,7 @@ class db_query
   {
     // Takes the name of the life group, the weekly day of the meeting, the time
     // at the meeting, and a description of the meeting.
-    $stmt = $this -> connection -> perpare("INSERT INTO lifeGroup (LifeGroupName, LifeGroupDate, LifeGroupTime, LifeGroupLocation) VALUES (?, ?, ?, ?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO lifeGroup (LifeGroupName, LifeGroupDate, LifeGroupTime, LifeGroupLocation) VALUES (?, ?, ?, ?)");
 
     $stmt -> bindParam(1, $name);
     $stmt -> bindParam(2, $date);
@@ -299,7 +298,7 @@ class db_query
   {
     // NOTE @COREY: Make this function return some kind of datatype with all of the
     // member's data in it. or false if no such member exists for the number
-    $stmt = $this -> connection -> perpare("SELECT * FROM member WHERE PhoneNumber = ?");
+    $stmt = $this -> connection -> prepare("SELECT * FROM members WHERE PhoneNumber = ?");
 
     $stmt -> bindParam(1, $number);
 
@@ -372,7 +371,7 @@ class db_query
   public function NOW_create(string $date)
   {
     // Expects dates to be in the YYYY-MM-DD format
-    $stmt = $this -> connection -> perpare("INSERT INTO nights_of_worship (NightDate) VALUES (?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO nights_of_worship (NightDate) VALUES (?)");
 
     $stmt -> bindPara(1, $date);
 
@@ -469,7 +468,7 @@ class db_query
     //
     // Returns a list of all people and their payer requests
     //
-    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, PrayerRequest FROM members");
+    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, PrayerRequest FROM members");
 
     $stmt -> execute();
 
@@ -484,7 +483,7 @@ class db_query
     //
     // Gets all the members who are opted in for email blasts
     //
-    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, EmailAddress FROM members WHERE OptEmail = ?");
+    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, EmailAddress FROM members WHERE OptEmail = ?");
 
     $stmt -> bindParam(1, true);
 
@@ -499,7 +498,7 @@ class db_query
     //
     // Gets all the members whos opted in for the texts blasts
     //
-    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, PhoneNumber FROM members WHERE OptTexts =?");
+    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, PhoneNumber FROM members WHERE OptTexts =?");
 
     $stmt -> bindParam(1, true);
 
@@ -514,7 +513,7 @@ class db_query
     //
     // Returns a list of all the members in a life group
     //
-    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, LifeGroup FROM members WHERE LifeGroupID != NULL");
+    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, LifeGroup FROM members WHERE LifeGroupID != NULL");
 
     return $stmt -> fetchALl();
   }
@@ -527,7 +526,7 @@ class db_query
     //
     // Returns a list of all the member not in a life group
     //
-    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, EmailAddress, PhoneNumber FROM members WHERE LifeGroupID = NULL");
+    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, EmailAddress, PhoneNumber FROM members WHERE LifeGroupID = NULL");
 
     return $stmt -> fetchAll();
   }
@@ -541,7 +540,7 @@ class db_query
     // Gets a list of all the member's addresses that do have their addresses in
     // the DB
     //
-    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, HomeAddress FROM members WHERE HomeAddress != NULL");
+    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, HomeAddress FROM members WHERE HomeAddress != NULL");
 
     return $stmt -> fetchAll();
   }
