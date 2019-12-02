@@ -268,6 +268,8 @@ class db_query
   //
   public function member_check(string $number)
   {
+    // NOTE @COREY: Make this function return some kind of datatype with all of the
+    // member's data in it. or false if no such member exists for the number
     $stmt = $this -> connection -> perpare("SELECT * FROM member WHERE PhoneNumber = ?");
 
     $stmt -> bindParam(1, $number);

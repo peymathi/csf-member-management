@@ -3,6 +3,9 @@ include 'header.php';
 session_verify();
 require_once "phpUtil/db_connect.php";
 
+// Get list of lifegroups from DB
+$lifegroups = '<option>- -</option>';
+
 ?>
 
 <body>
@@ -72,6 +75,7 @@ require_once "phpUtil/db_connect.php";
 					<!-- Display the asklifegroups section -->
 					<div id="askLifeGroups" class="collapse">
 						<h4>Would you like to sign up for a Life Group today?</h4>
+						<br>
 						<button type="button" class="btn btn-primary" id="signUp">Sure!</button>
 						<button type="button" class="btn btn-primary" id="noThanks">No Thanks</button>
 					</div>
@@ -79,8 +83,9 @@ require_once "phpUtil/db_connect.php";
 					<!-- Display the showLifeGroups section -->
 					<div id="showLifeGroups" class="collapse">
 						<h4>Great! Select one of our Life Groups Below</h4>
-						<select id="selectLifeGroups">
-						</select>
+						<br>
+						<select id="selectLifeGroups" class="form-control w-50 mx-auto"><?php echo $lifegroups; ?></select>
+						<br>
 						<button type="button" class="btn btn-primary" id="signUpConfirm">Sign Me Up!</button>
 						<button type="button" class="btn btn-primary" id="decline">Not at this time</button>
 					</div>
@@ -102,6 +107,7 @@ require_once "phpUtil/db_connect.php";
 							<h4>Select which parts you need to edit.</h4>
 						</div>
 						<br>
+						<form class='needs-validation' name='editForm'>
 						<div class="form-horizontal">
 
 							<!-- First Name -->
@@ -110,7 +116,8 @@ require_once "phpUtil/db_connect.php";
 									<label for="editFirstName" class="col-form-label">First Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editFirstName" name="editFirstName" disabled>
+									<input type="text" class="form-control inputToggle editFirstName" name="editFirstName" disabled required>
+									<div class="invalid-feedback">Must enter a first name</div>
 								</div>
 								<button type="button" class="btn-sm btn btn-secondary editToggle" id="editFirstName" name="btnEditFirstName">Edit</button>
 							</div>
@@ -121,7 +128,8 @@ require_once "phpUtil/db_connect.php";
 									<label for="editLastName" class="col-form-label">Last Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editLastName" name="editLastName" disabled>
+									<input type="text" class="form-control inputToggle editLastName" name="editLastName" disabled required>
+									<div class="invalid-feedback">Must enter a last name</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editLastName" name="btnEditLastName">Edit</button>
 							</div>
@@ -132,7 +140,8 @@ require_once "phpUtil/db_connect.php";
 									<label for="editEmail" class="col-form-label">Email</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editEmail" name="editEmail" disabled>
+									<input type="text" class="form-control inputToggle editEmail" name="editEmail" disabled required>
+									<div class="invalid-feedback" for="editEmail" name='editInvalid'>Invalid Email</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editEmail" name="btnEditEmail">Edit</button>
 							</div>
@@ -143,7 +152,8 @@ require_once "phpUtil/db_connect.php";
 									<label for="editPhone" class="col-form-label">Phone</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editPhone" name="editPhone" disabled>
+									<input type="text" class="form-control inputToggle editPhone" name="editPhone" disabled required>
+									<div class='invalid-feedback' name='editPhone'>Invalid Phone</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editPhone" name="btnEditPhone">Edit</button>
 							</div>
@@ -154,7 +164,7 @@ require_once "phpUtil/db_connect.php";
 									<label for="editStatus" class="col-form-label">Status</label>
 								</div>
 								<div class="col-8">
-									<select class="form-control inputToggle editStatus" name="editStatus" disabled>
+									<select class="form-control inputToggle editStatus" name="editStatus" disabled required>
 										<option val="Freshman">Freshman</option>
 										<option val="Sophomore">Sophomore</option>
 										<option val="Junior">Junior</option>
@@ -164,6 +174,7 @@ require_once "phpUtil/db_connect.php";
 										<option val="Staff">Staff</option>
 										<option val="Other">Other</option>
 									</select>
+									<div class='invalid-feedback'>Must select a status</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editStatus" name="btnEditStatus">Edit</button>
 							</div>
@@ -171,10 +182,11 @@ require_once "phpUtil/db_connect.php";
 							<!-- Major -->
 							<div class="form-row form-group justify-content-center">
 								<div class="col-2">
-									<label for="editMajor" class="col-form-label">Major</label>
+									<label for="editMajor" class="col-form-label">Major (or N/A)</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control inputToggle editMajor" name="editMajor" disabled>
+									<input type="text" class="form-control inputToggle editMajor" name="editMajor" disabled required>
+									<div class='invalid-feedback'>Must enter a major</div>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editMajor" name="btnEditMajor">Edit</button>
 							</div>
@@ -186,6 +198,7 @@ require_once "phpUtil/db_connect.php";
 								</div>
 								<div class="col-8">
 									<select class="form-control inputToggle editLifeGroup" name="editLifeGroup" disabled>
+										<?php echo $lifegroups; ?>
 									</select>
 								</div>
 								<button type="button" class="btn btn-sm btn-secondary editToggle" id="editLifeGroup" name="btnEditLifeGroup">Edit</button>
@@ -214,6 +227,7 @@ require_once "phpUtil/db_connect.php";
 
 					<!-- Registration Page -->
 					<div class="collapse show" id="registerModal">
+						<form class='needs-validation'>
 						<div class="form-horizontal">
 
 							<!-- First Name -->
@@ -222,7 +236,8 @@ require_once "phpUtil/db_connect.php";
 									<label for="regFirst" class="col-form-label">First Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regFirst" placeholder="First Name">
+									<input type="text" class="form-control" name="regFirst" placeholder="First Name" required>
+									<div class='invalid-feedback'>Must enter a first name</div>
 								</div>
 							</div>
 
@@ -232,7 +247,8 @@ require_once "phpUtil/db_connect.php";
 									<label class="col-form-label">Last Name</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regLast" placeholder="Last Name">
+									<input type="text" class="form-control" name="regLast" placeholder="Last Name" required>
+									<div class='invalid-feedback'>Must enter last name</div>
 								</div>
 							</div>
 
@@ -242,7 +258,8 @@ require_once "phpUtil/db_connect.php";
 									<label class="col-form-label">Email</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regEmail" placeholder="Email">
+									<input type="email" class="form-control" name="regEmail" placeholder="Email" required>
+									<div class='invalid-feedback'>Invalid Email</div>
 								</div>
 							</div>
 
@@ -252,7 +269,8 @@ require_once "phpUtil/db_connect.php";
 									<label class="col-form-label">Phone Number</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regPhone" placeholder="Phone Number">
+									<input type="text" class="form-control" name="regPhone" placeholder="Phone Number" required>
+									<div class='invalid-feedback' name='regPhone'>Invalid Phone</div>
 								</div>
 							</div>
 
@@ -262,8 +280,7 @@ require_once "phpUtil/db_connect.php";
 									<label class="col-form-label" for="regStatus">Status</label>
 								</div>
 								<div class="col-8">
-									<select class="form-control" name="regStatus">
-										<option val='- -'>- -</option>
+									<select class="form-control" name="regStatus" required>
 										<option val="Freshman">Freshman</option>
 										<option val="Sophomore">Sophomore</option>
 										<option val="Junior">Junior</option>
@@ -279,10 +296,11 @@ require_once "phpUtil/db_connect.php";
 							<!-- Major -->
 							<div class="form-row form-group justify-content-center">
 								<div class="col-2">
-									<label class="col-form-label" for="regMajor">Major</label>
+									<label class="col-form-label" for="regMajor">Major (or N/A)</label>
 								</div>
 								<div class="col-8">
-									<input type="text" class="form-control" name="regMajor" placeholder="Major">
+									<input type="text" class="form-control" name="regMajor" placeholder="Major" required>
+									<div class='invalid-feedback'>Must enter major</div>
 								</div>
 							</div>
 
@@ -302,8 +320,9 @@ require_once "phpUtil/db_connect.php";
 								<button type="button" name="register" class="btn btn-primary">Register</button>
 							</div>
 						</div>
+					</form>
 					</div>
-
+				</form>
 	      </div>
 
 	      <div class="modal-footer">
@@ -324,14 +343,12 @@ require_once "phpUtil/db_connect.php";
 <div class="container" style="margin-top:30px">
 	<div class="row">
 		<div class="col">
-			<form action="checkin.php" method="post" class="needs-validation" novalidate>
+			<form class="needs-validation" novalidate>
 			  <div class="form-group">
 					<label for="tel" required>Been here before? Enter your phone number to sign in: </label>
 					<input type="tel" class="form-control input-medium bfh-phone" id="phone" placeholder="(xxx)-xxx-xxxx" pattern="[0-9]{10}" name="phone" autocomplete="off" required>
-					<span class="form-text d-none">Oops! We don't have your phone number... Try registering below!</span>
+					<div class="invalid-feedback">Oops! We don't have your phone number... Try registering below!</div>
 					<br>
-					<div class="valid-feedback">Valid.</div>
-					<div class="invalid-feedback">Please fill out this field.</div>
 
 					<!-- Check in button opens modal -->
 					<button type="button" id="checkIn" class="btn btn-primary">Check In</button>
