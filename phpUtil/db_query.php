@@ -270,7 +270,7 @@ class db_query
   {
     // NOTE @COREY: Make this function return some kind of datatype with all of the
     // member's data in it. or false if no such member exists for the number
-    $stmt = $this -> connection -> perpare("SELECT * FROM member WHERE PhoneNumber = ?");
+    $stmt = $this -> connection -> prepare("SELECT * FROM member WHERE PhoneNumber = ?");
 
     $stmt -> bindParam(1, $number);
 
@@ -294,7 +294,7 @@ class db_query
   public function member_create(string $fname, string $lname, string $number, string $email="NULL", string $address="NULL", string $major="NULL", string $photoPath="NULL", string $prayerR="NULL", string $optE="0", string $optT="0")
   {
     // Creates a new member taking the first and last name with their number.
-    $stmt = $this -> connection -> perpare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt -> bindParam(1,$fname);
     $stmt -> bindParam(2,$lname);
