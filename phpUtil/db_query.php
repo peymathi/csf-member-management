@@ -32,7 +32,7 @@
         string $email="NULL", string $address="NULL", string $major="NULL",
         string $photoPath="NULL", string $prayerR="NULL", string $optE="false",
         string $optT="false")
-*   TODO: member_edit(string $field, string $equals, string $fname='FirstName',
+*   TODO: member_edit(string $number, string $fname='FirstName',
         string $lname='LastName', string $email='EmailAddress',
         string $adrs='HomeAddress', string $number='PhoneNumber',
         string $photoPath='PhotoPath', string $prayerR='PrayerRequest',
@@ -102,9 +102,10 @@ class db_query
   public function admin_check(string $email, string $password)
   {
     //
-    // Check if the user exists and entered correct login data, then returns bool
+    // Check if the user exists and entered correct login data, then returns
+    // array of result if found, or false
     //
-    $stmt = $this -> connection -> perpare("SELECT * FROM admins WHERE email = ? AND password = ?");
+    $stmt = $this -> connection -> prepare("SELECT * FROM admins WHERE email = ? AND password = ?");
 
     $stmt -> bindParam(1, $email);
     $stmt -> bindParam(2, $password);
@@ -115,7 +116,7 @@ class db_query
 
     if(count($result) != 0)
     {
-      return true;
+      return $result;
     }
     else
     {
@@ -138,29 +139,57 @@ class db_query
     $stmt -> bindParam(4, $password);
 
     $stmt -> execute();
+    $this -> connection -> commit();
   }
 
   //
   // admin_edit
   //
-  public function admin_edit(string $field, string $equals, string $fname='firstname', string $lname='lastname', string $email='email', string $password='password')
+  public function admin_edit(string $field, string $equals, $fname=null, $lname=null, $email=null, $password=null)
   {
-    // Takes the field of concern and what it should equal.
+    // Takes the number of the member to find in the DB.
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
-    if(count($changingFields) == count($newValues))
+    $query = "UPDATE admins SET firstname = ";
+    if($fname != null)
     {
-      $query = "UPDATE admins SET ";
-
-      foreach($changingFields as $index => $field)
-      {
-        $query .= " " + $field + " = ?,";
-      }
+      $query .= "'" . $fname . "',";
     }
     else
     {
-      trigger_error("Arrays of unequal length.");
+      $query .= "firstname, ";
     }
+    $query .= "lastname = ";
+    if($lname != null)
+    {
+      $query .= "'" . $lname . "', ";
+    }
+    else
+    {
+      $query .= "lastname, ";
+    }
+    $query .= "email = ";
+    if($email != null)
+    {
+      $query .= "'" . $email . "', ";
+    }
+    else
+    {
+      $query .= "email, ";
+    }
+    $query .= "password = ";
+    if($password != null)
+    {
+      $query .= "'" . $password . "' ";
+    }
+    else
+    {
+      $query .= "password ";
+    }
+    $query .= "WHERE " . $field . " = '" . $equals . "' ";
+    //echo $query;
+    $stmt = $this -> connection -> prepare($query);
+    $stmt -> execute();
   }
 
   //
@@ -170,8 +199,8 @@ class db_query
   {
     // Take the field of concern and what it should equal to be removed from the
     // database.
-    $stmt = $this -> connection -> prepare("DELETE FROM admins WHERE " + $field + " = " + $equals);
-
+    $stmt = $this -> connection -> prepare("DELETE FROM admins WHERE " . $field . " = '" . $equals . "'");
+    //echo "DELETE FROM admins WHERE " . $field . " = '" . $equals . "'";
     $stmt -> execute();
   }
 
