@@ -245,9 +245,20 @@ class db_query
     $stmt -> execute();
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  //
+  // "quick reports"
+  //
+  //////////////////////////////////////////////////////////////////////////////
+
+  //
+  // get_prayer_requests
   //
   public function get_prayer_requests()
   {
+    //
+    // Returns a list of all people and their payer requests
+    //
     $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, PrayerRequest FROM members");
 
     $stmt -> execute();
@@ -256,11 +267,14 @@ class db_query
   }
 
   //
-  // Gets all the members who are opted in for email blasts
+  // get_contact_emails
   //
   public function get_contact_emails()
   {
-    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, Email FROM members WHERE OptEmail = ?");
+    //
+    // Gets all the members who are opted in for email blasts
+    //
+    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, EmailAddress FROM members WHERE OptEmail = ?");
 
     $stmt -> bindParam(1, true);
 
@@ -268,10 +282,13 @@ class db_query
   }
 
   //
-  // Gets all the members whos opted in for the texts blasts
+  // get_contact_texts
   //
   public function get_contact_texts()
   {
+    //
+    // Gets all the members whos opted in for the texts blasts
+    //
     $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, PhoneNumber FROM members WHERE OptTexts =?");
 
     $stmt -> bindParam(1, true);
@@ -280,31 +297,40 @@ class db_query
   }
 
   //
-  // Returns a list of all the members in a life group
+  // get_members_in_lifeGroups
   //
   public function get_members_in_lifeGroups()
   {
+    //
+    // Returns a list of all the members in a life group
+    //
     $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, LifeGroup FROM members WHERE LifeGroupID != NULL");
 
     return $stmt -> fetchALl();
   }
 
   //
-  // Returns a list of all the member not in a life group
+  // get_members_not_in_lifeGroups
   //
   public function get_members_not_in_lifeGroups()
   {
-    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, Email, PhoneNumber FROM members WHERE LifeGroupID = NULL");
+    //
+    // Returns a list of all the member not in a life group
+    //
+    $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, EmailAddress, PhoneNumber FROM members WHERE LifeGroupID = NULL");
 
     return $stmt -> fetchAll();
   }
 
   //
-  // Gets a list of all the member's addresses that do have their addresses in
-  // the DB
+  // get_member_addresses
   //
   public function get_member_addresses()
   {
+    //
+    // Gets a list of all the member's addresses that do have their addresses in
+    // the DB
+    //
     $stmt = $this -> connection -> perpare("SELECT FirstName, LastName, HomeAddress FROM members WHERE HomeAddress != NULL");
 
     return $stmt -> fetchAll();
