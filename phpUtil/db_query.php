@@ -319,10 +319,39 @@ class db_query
   //
   // member_create
   //
-  public function member_create(string $fname, string $lname, string $number, string $email="NULL", string $address="NULL", string $major="NULL", string $photoPath="NULL", string $prayerR="NULL", string $optE="0", string $optT="0")
+  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE="0", $optT="0")
   {
     // Creates a new member taking the first and last name with their number.
-    $stmt = $this -> connection -> perpare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    if($email == null)
+    {
+      $email = "NULL";
+    }
+    if($address == null)
+    {
+      $address = "NULL";
+    }
+    if($major == null)
+    {
+      $major = "NULL";
+    }
+    if($photoPath == null)
+    {
+      $photoPath = "NULL";
+    }
+    if($prayerR == null)
+    {
+      $prayerR = "NULL";
+    }
+    if($optE == null)
+    {
+      $optE = "0";
+    }
+    if($optT == null)
+    {
+      $optT = "0";
+    }
 
     $stmt -> bindParam(1,$fname);
     $stmt -> bindParam(2,$lname);
@@ -335,26 +364,134 @@ class db_query
     $stmt -> bindParam(9,$optE);
     $stmt -> bindParam(10,$optT);
 
+    //$stmt -> debugDumpParams();
+
     $stmt -> execute();
   }
 
 
-  public function member_edit(string $field, string $equals, string $fname='FirstName', string $lname='LastName', string $email='EmailAddress', string $adrs='HomeAddress', string $number='PhoneNumber', string $photoPath='PhotoPath', string $prayerR='PrayerRequest', string $optE='OptEmail', string $optT='OptText')
+  public function member_edit(string $number, $fname=null, $lname=null, $numberN=null, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE=null, $optT=null)
   {
-    // Takes the field of concern and what it should be looking for in the field.
+    // Takes the number of the member to find in the db.
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
+    // Start + FirstName
+    $query = "UPDATE members SET FirstName = ";
+    if($fname != null)
+    {
+      $query .= "'" . $fname . "',";
+    }
+    else
+    {
+      $query .= "FirstName, ";
+    }
+    // LastName
+    $query .= "LastName = ";
+    if($lname != null)
+    {
+      $query .= "'" . $lname . "', ";
+    }
+    else
+    {
+      $query .= "LastName, ";
+    }
+    // PhoneNumber
+    $query .= "PhoneNumber = ";
+    if($numberN != null)
+    {
+      $query .= "'" . $numberN . "', ";
+    }
+    else
+    {
+      $query .= "PhoneNumber, ";
+    }
+    // EmailAddress
+    $query .= "EmailAddress = ";
+    if($email != null)
+    {
+      $query .= "'" . $email . "', ";
+    }
+    else
+    {
+      $query .= "EmailAddress, ";
+    }
+    // HomeAddress
+    $query .= "HomeAddress = ";
+    if($address != null)
+    {
+      $query .= "'" . $address . "', ";
+    }
+    else
+    {
+      $query .= "HomeAddress, ";
+    }
+    // Major
+    $query .= "Major = ";
+    if($major != null)
+    {
+      $query .= "'" . $major . "', ";
+    }
+    else
+    {
+      $query .= "Major, ";
+    }
+    // PhotoPath
+    $query .= "PhotoPath = ";
+    if($photoPath != null)
+    {
+      $query .= "'" . $photoPath . "', ";
+    }
+    else
+    {
+      $query .= "PhotoPath, ";
+    }
+    // PrayerRequest
+    $query .= "PrayerRequest = ";
+    if($prayerR != null)
+    {
+      $query .= "'" . $prayerR . "', ";
+    }
+    else
+    {
+      $query .= "PrayerRequest, ";
+    }
+    // OptEmail
+    $query .= "OptEmail = ";
+    if($optE != null)
+    {
+      $query .= "'" . $optE . "', ";
+    }
+    else
+    {
+      $query .= "OptEmail, ";
+    }
+    // OptText
+    $query .= "OptText = ";
+    if($optT != null)
+    {
+      $query .= "'" . $optT . "' ";
+    }
+    else
+    {
+      $query .= "OptText ";
+    }
 
+    $query .= "WHERE PhoneNumber = '" . $number . "' ";
+    //echo $query;
+    $stmt = $this -> connection -> prepare($query);
+    $stmt -> execute();
   }
 
   //
   // member_remove
   //
-  public function member_remove(string $field, string $equals)
+  public function member_remove(string $number)
   {
     // Take the field of concern and what it should equal to be removed from the
     // database.
-    $stmt = $this -> connection -> prepare("DELETE FROM members WHERE " + $field + " = " + $equals);
+    $stmt = $this -> connection -> prepare("DELETE FROM members WHERE PhoneNumber = ?");
+
+    $stmt -> bindParam(1, $number);
 
     $stmt -> execute();
   }
