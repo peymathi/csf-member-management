@@ -15,12 +15,22 @@ if(isset($_POST['Phone']))
   // check if we need to create a new member or edit one
   if ($dbcon->member_check($memberData['Phone']))
   {
-    $dbcon->member_edit('Phone', $memberData['Phone'], $changingValues, $memberData);
-    $dbcon->
+    $dbcon->member_edit($memberData['FirstName'], $memberData['LastName'], $memberData['Phone'], $memberData['Email'],
+     null, $memberData['Major'], $memberData['Status'], null, $memberData['PrayerRequest'], $memberData['OptEmail'], $memberData['OptTexts']);
+
+    // Add member to a lifegroup if needed
+
+    // Add member to night of worship
   }
 
   else
   {
+    $dbcon->member_create($memberData['FirstName'], $memberData['LastName'], $memberData['Phone'], $memberData['Email'],
+     null, $memberData['Major'], $memberData['Status'], null, $memberData['PrayerRequest'], $memberData['OptEmail'], $memberData['OptTexts']);
+
+    // Add member to a lifegroup if needed
+
+    // Add member to night of worship
 
   }
   */
