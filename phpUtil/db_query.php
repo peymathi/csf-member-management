@@ -22,8 +22,10 @@
 *   TODO: group_edit()
 *   group_remove(string $field, string $equals)
 *
+*   life_group_check(string $field, string $equals)
 *   life_group_create(string $name, string $day, string $time, string $location)
-*   TODO: life_group_edit()
+*   life_group_edit(string $field, string $equals, $name=null, $day=null,
+        $time=null, $location=null)
 *   life_group_remove(string $field, string $equals)
 *
 *   member_check(string $number)
@@ -244,19 +246,33 @@ class db_query
   //////////////////////////////////////////////////////////////////////////////
 
   //
+  // life_group_check
+  //
+  public function life_group_check(string $field, string $equals)
+  {
+    $stmt = $this -> connection -> prepare("SELECT * FROM life_groups WHERE " . $field . " = '" . $equals . "'");
+
+    $stmt -> execute();
+
+    return $stmt -> fetch(PDO::FETCH_ASSOC);
+  }
+
+  //
   // life_group_create
   //
-  // NOTE: day can only be 9 chars at max
+  // NOTE: day can only be 9 chars at max and time in HH:MM:SS 24hr format
   public function life_group_create(string $name, string $day, string $time, string $location)
   {
     // Takes the name of the life group, the weekly day of the meeting, the time
     // at the meeting, and a description of the meeting.
-    $stmt = $this -> connection -> prepare("INSERT INTO lifeGroup (LifeGroupName, LifeGroupDate, LifeGroupTime, LifeGroupLocation) VALUES (?, ?, ?, ?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO life_groups (LifeGroupName, LifeGroupDay, LifeGroupTime, LifeGroupLocation) VALUES (?, ?, ?, ?)");
 
     $stmt -> bindParam(1, $name);
-    $stmt -> bindParam(2, $date);
+    $stmt -> bindParam(2, $day);
     $stmt -> bindParam(3, $time);
     $stmt -> bindParam(4, $location);
+
+    $stmt -> debugDumpParams();
 
     $stmt -> execute();
   }
@@ -264,11 +280,51 @@ class db_query
   //
   // life_group_edit
   //
-  public function life_group_edit(string $field, string $equals, array $changingFields, array $newValues)
+  public function life_group_edit(string $field, string $equals, $name=null, $day=null, $time=null, $location=null)
   {
     // Takes the field of concern and what it should be looking for in the field.
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
+    $query = "UPDATE life_groups SET LifeGroupName = ";
+    if($name != null)
+    {
+      $query .= "'" . $name . "',";
+    }
+    else
+    {
+      $query .= "LifeGroupName, ";
+    }
+    $query .= "LifeGroupDay = ";
+    if($day != null)
+    {
+      $query .= "'" . $day . "', ";
+    }
+    else
+    {
+      $query .= "LifeGroupDay, ";
+    }
+    $query .= "LifeGroupTime = ";
+    if($time != null)
+    {
+      $query .= "'" . $time . "', ";
+    }
+    else
+    {
+      $query .= "LifeGroupTime, ";
+    }
+    $query .= "LifeGroupLocation = ";
+    if($location != null)
+    {
+      $query .= "'" . $location . "' ";
+    }
+    else
+    {
+      $query .= "LifeGroupLocation ";
+    }
+    $query .= "WHERE " . $field . " = '" . $equals . "' ";
+    //echo $query;
+    $stmt = $this -> connection -> prepare($query);
+    $stmt -> execute();
   }
 
   //
@@ -278,7 +334,7 @@ class db_query
   {
     // Take the field of concern and what it should equal to be removed from the
     // database.
-    $stmt = $this -> connection -> prepare("DELETE FROM lifeGroup WHERE " + $field + " = " + $equals);
+    $stmt = $this -> connection -> prepare("DELETE FROM life_groups WHERE " . $field . " = '" . $equals . "' ");
 
     $stmt -> execute();
   }
