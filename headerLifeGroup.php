@@ -5,13 +5,7 @@
 				<a class="nav-link" href="life_group_dashboard.php">Show Life Groups</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="add_life_group.php">Add Life Group</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="edit_life_group.php">Edit Life Group Name</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="toggle_life_groups.php">Toggle Life Groups</a>
+				<a class="nav-link" href="modify_life_groups.php">Modify Life Group</a>
 			</li>
 		</ul>
 	</nav>'
