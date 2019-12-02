@@ -67,14 +67,6 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 			</table>
 		</div>
 	</div>
-
-	<div class="row mt-2">
-		<div class="col">
-			<a href="dashboard.php">
-				<button type="submit" class="btn btn-secondary">Back</button>
-			</a>
-		</div>
-	</div>
 </div>
 
 
