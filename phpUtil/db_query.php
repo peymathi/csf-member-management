@@ -279,6 +279,41 @@ class db_query
 
   //////////////////////////////////////////////////////////////////////////////
   //
+  // NOW
+  //
+  //////////////////////////////////////////////////////////////////////////////
+
+  //
+  // NOW_create
+  //
+  public function NOW_create(string $date)
+  {
+    // Expects dates to be in the YYYY-MM-DD format
+    $stmt = $this -> connection -> perpare("INSERT INTO nights_of_worship (NightDate) VALUES (?)");
+
+    $stmt -> bindPara(1, $date);
+
+    $stmt -> execute();
+  }
+
+  //
+  // NOW_edit
+  //
+  public function NOW_edit()
+  {
+
+  }
+
+  //
+  // NOW_remove
+  //
+  public function NOW_remove()
+  {
+
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  //
   // member_to_life_group
   //
   //////////////////////////////////////////////////////////////////////////////
