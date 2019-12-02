@@ -41,6 +41,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 				<thead>
 					<tr>
 						<th>Life Group Name</th>
+						<th># of Members</th>
 						<th>Members</th>
 					</tr>
 				</thead>
@@ -49,17 +50,20 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 						//loop through life groups
 						foreach($lifegroups as $group) {
 							echo "<tr>";
-
 							echo "<td>" . $group->getLifeGroupName() . "</td>";
 
 							$memberString = "";
+							$counter = 0;
 							foreach($group->getMembers() as $member) {
+								$counter++;
 								$memberString .= " " . $member;
 							}
+							
+							echo "<td>" . $counter . "</td>";
+							
 							echo "<td>" . $memberString . "</td>";
 
 							echo '</td>';
-
 							echo "</tr>";
 						}
 					?>
