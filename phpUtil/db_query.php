@@ -13,38 +13,46 @@
 * Methods:
 *   admin_check(string $email, string $password)
 *   admin_create(string $fname, string $lname, string $email, string $password)
-*   admin_edit(string $field, string $equals, array $changingFields, array $newValues)
+*   TODO: admin_edit()
 *   admin_remove(string $field, string $equals)
 *
-*   group_create()
-*   group_edit()
-*   group_remove()
+*   TODO: group_check(string $name)
+*   group_create(string $name)
+*   TODO: group_edit()
+*   group_remove(string $field, string $equals)
 *
-*   life_group_create()
-*   life_group_edit()
-*   life_group_remove()
+*   life_group_create(string $name, string $day, string $time, string $location)
+*   TODO: life_group_edit()
+*   life_group_remove(string $field, string $equals)
 *
-*   member_check()
-*   member_create()
-*   member_edit()
-*   member_remove()
+*   member_check(string $number)
+*   member_create(string $fname, string $lname, string $number, string $email="NULL", string $address="NULL", string $major="NULL", string $photoPath="NULL", string $prayerR="NULL", string $optE="false", string $optT="false")
+*   TODO: member_edit()
+*   member_remove(string $field, string $equals)
 *
-*   member_to_life_group_create()
-*   member_to_life_group_edit()
-*   member_to_life_group_remove()
+*   TODO: member_to_life_group_create()
+*   TODO: member_to_life_group_edit()
+*   TODO: member_to_life_group_remove()
 *
-*   member_to_NOW_create()
-*   member_to_NOW_edit()
-*   member_to_NOW_remove()
+*   TODO: member_to_NOW_create()
+*   TODO: member_to_NOW_edit()
+*   TODO: member_to_NOW_remove()
 *
-*   NOW_create()
-*   NOW_edit()
-*   NOW_remove()
+*   NOW_create(string $date)
+*   TODO: NOW_edit()
+*   TODO: NOW_remove()
+*
+*   get_prayer_requests()
+*   get_contact_emails()
+*   get_contact_texts()
+*   TODO: get_members_in_lifeGroups()
+*   get_members_not_in_lifeGroups()
+*   get_member_addresses()
+*
+*
 *
 */
 include 'db_connect.php';
-
-echo "Files have been included.\n";
 
 class db_query
 {
