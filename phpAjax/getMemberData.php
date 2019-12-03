@@ -7,16 +7,17 @@
   {
     $dbcon = new db_query();
     $member = $dbcon->member_check($_POST['Phone']);
-    var_dump($member);
     if ($member)
     {
       //Format member to be of json userData format
       $memberJson = array();
       $memberJson['FirstName'] = $member['FirstName'];
       $memberJson['LastName'] = $member['LastName'];
-      $memberJson['Email'] = $member['EmailAddress'];
+      if($member['EmailAddress'] != null) $memberJson['Email'] = $member['EmailAddress'];
+      else $memberJson['Email'] = 'None';
       $memberJson['Phone'] = $member['PhoneNumber'];
-      $memberJson['Major'] = $member['Major'];
+      if($member['Major'] != 'NULL') $memberJson['Major'] = $member['Major'];
+      else $memberJson['Major'] = 'None';
       $memberJson['OptEmail'] = $member['OptEmail'];
       $memberJson['OptTexts'] = $member['OptText'];
       $memberID = $member['MemberID'];
@@ -42,10 +43,15 @@
       $memberJson['Status'] = $dbcon->group_check($member['GroupID']);
       $memberJson['Exists'] = True;
 
+      //Header("Content-Type: application/json", true);
       echo json_encode($memberJson);
     }
 
-    else echo json_encode(array('Exists' => False));
+    else
+    {
+      //Header("Content-Type: application/json", true);
+      echo json_encode(array('Exists' => False));
+    }
   }
   else echo 'Error';
 ?>

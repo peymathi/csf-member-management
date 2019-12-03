@@ -419,8 +419,8 @@ $(document).ready(function() {
 			url: 'phpAjax/getMemberData.php',
 			method: 'POST',
 			data: request,
-			//dataType: 'json',
-			error: function() {ajaxError();},
+			dataType: 'json',
+			error: function(e) {ajaxError();},
 			success: function(data) {
 				console.log(data);
 				userData = data;
