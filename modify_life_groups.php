@@ -18,6 +18,16 @@ if(isset($_POST['add'])) {
 	}
 }
 
+if(isset($_POST['edit'])) {
+	$lifeGroupNum = $_POST['lifeGroupNum'];
+	$lifeGroupName = trim($_POST['lifeGroupName']);
+	$lifeGroupDay = trim($_POST['lifeGroupDay']);
+	//$lifeGroupTime = trim($_POST['lifeGroupTime']);
+	$lifeGroupLocation = trim($_POST['lifeGroupLocation']);
+	$stmt = $con->prepare('UPDATE life_groups SET LifeGroupName = :LifeGroupName, LifeGroupDay = :LifeGroupDay, LifeGroupLocation = :LifeGroupLocation WHERE LifeGroupID = :LifeGroupID');
+	$stmt->execute(array('LifeGroupName' => $lifeGroupName, 'LifeGroupDay' => $lifeGroupDay, 'LifeGroupLocation' => $lifeGroupLocation, 'LifeGroupID' => $lifeGroupNum));
+}
+
 if(isset($_POST['activate'])) {
 	$lifeGroupNum = $_POST['lifeGroupNum'];
 	$stmt = $con->prepare('UPDATE life_groups SET LifeGroupActive = 1 WHERE LifeGroupID = :LifeGroupID');
@@ -70,7 +80,6 @@ if(isset($_POST['deactivate'])) {
 			<div class="col-sm-6 col-md-8">
 				<!-- Add a Life Group-->
 				<div class="row">
-				
 					<form action="" method="post">
 					<div class="col-sm-12">
 						<h4>Add Life Group</h4>
@@ -87,10 +96,6 @@ if(isset($_POST['deactivate'])) {
 								<option value="Friday">Friday</option>
 								<option value="Saturday">Saturday</option>
 							</select>
-						</div>
-					</div>
-					<div class="col-sm-12">
-						<div class="input-group mb-3">
 							Life Group Time:
 							<input type="text" class="form-control" name="lifeGroupTime">
 							Life Group Location:
@@ -120,10 +125,23 @@ if(isset($_POST['deactivate'])) {
 									}
 									?>
 								</select>
-								<input type="text" class="form-control" name="editLifeGroup">
-								<div class="input-group-append">
-									<button type="submit" class="btn btn-primary" name="edit">Edit Life Group</button>
-								</div>
+								Life Group Name:
+								<input type="text" class="form-control" name="lifeGroupName">
+								Life Group Day:
+								<select name="lifeGroupDay">
+									<option value="Sunday">Sunday</option>
+									<option value="Monday">Monday</option>
+									<option value="Tuesday">Tuesday</option>
+									<option value="Wednesday">Wednesday</option>
+									<option value="Thursday">Thursday</option>
+									<option value="Friday">Friday</option>
+									<option value="Saturday">Saturday</option>
+								</select>
+								Life Group Time:
+								<input type="text" class="form-control" name="lifeGroupTime">
+								Life Group Location:
+								<input type="text" class="form-control" name="lifeGroupLocation">
+								<button type="submit" class="btn btn-primary" name="edit">Edit Life Group</button>
 							</div>
 						</form>
 					</div>
