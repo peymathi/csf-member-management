@@ -139,7 +139,6 @@ class db_query
     $stmt -> bindParam(4, $password);
 
     $stmt -> execute();
-    $this -> connection -> commit();
   }
 
   //
@@ -667,7 +666,7 @@ class db_query
   //
   public function member_to_life_group_edit()
   {
-    
+
   }
 
   //
