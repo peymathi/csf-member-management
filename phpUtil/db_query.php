@@ -42,7 +42,8 @@
 *   TODO: member_to_life_group_edit()
 *   member_to_life_group_remove($memberID, $life_groupID)
 *
-*   TODO: member_to_NOW_create()
+*   member_to_NOW_check($memberID=null, $NOWID=null)
+*   member_to_NOW_create($memberID, $NOWID)
 *   TODO: member_to_NOW_edit()
 *   TODO: member_to_NOW_remove()
 *
@@ -114,9 +115,16 @@ class db_query
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if(count($result) != 0)
+    if($result != null)
     {
-      return $result;
+      if(count($result) != 0) // not empty
+      {
+        return $result;
+      }
+      else
+      {
+        return false;
+      }
     }
     else
     {
@@ -220,7 +228,7 @@ class db_query
 
     $stmt -> execute();
 
-    return $stmt -> fetch(PDO::FETCH_ASSOC)['GroupID'];
+    return ($stmt -> fetch(PDO::FETCH_ASSOC))['GroupID'];
   }
 
   //
@@ -374,9 +382,16 @@ class db_query
 
     $result = $stmt -> fetch(PDO::FETCH_NUM);
 
-    if(count($result) != 0) // not empty
+    if($result != null)
     {
-      return $result;
+      if(count($result) != 0) // not empty
+      {
+        return $result;
+      }
+      else
+      {
+        return false;
+      }
     }
     else
     {
