@@ -17,7 +17,7 @@
         $email=null, $password=null)
 *   admin_remove(string $field, string $equals)
 *
-*   TODO: group_check(string $name)
+*   group_check($groupID)
 *   group_create(string $name)
 *   TODO: group_edit()
 *   group_remove(string $field, string $equals)
@@ -208,6 +208,20 @@ class db_query
   // group
   //
   //////////////////////////////////////////////////////////////////////////////
+
+  //
+  // group_check
+  //
+  public function group_check($groupID)
+  {
+    $stmt = $this -> connection -> prepare("SELECT GroupName FROM groups WHERE GroupID = ?");
+
+    $stmt -> bindParam(1, $groupID);
+
+    $stmt -> execute();
+
+    return $stmt -> fetch(PDO::FETCH_ASSOC)['GroupID'];
+  }
 
   //
   // group_create
@@ -645,7 +659,7 @@ class db_query
 
     $stmt -> execute();
 
-    return $stmt -> fetch(PDO::FETCH_ASSOC);
+    return $stmt -> fetchAll(PDO::FETCH_ASSOC);
   }
 
   //
