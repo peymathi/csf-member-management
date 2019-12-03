@@ -19,33 +19,33 @@
         <div class="row">
           <div class="col-sm-12 col-md-6">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch1">
-              <label class="custom-control-label" for="customSwitch1">First Name</label>
+              <input type="checkbox" class="custom-control-input firstNameSwitch" id="firstNameSwitch">
+              <label class="custom-control-label" for="firstNameSwitch">First Name</label>
             </div>
-            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="First Name" disabled>
+            <input type="text" class="form-control" id="firstNameInput" placeholder="First Name" disabled>
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch2">
-              <label class="custom-control-label" for="customSwitch2">Last Name</label>
+              <input type="checkbox" class="custom-control-input" id="lastNameSwitch">
+              <label class="custom-control-label" for="lastNameSwitch">Last Name</label>
             </div>
-            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Last Name" disabled>
+            <input type="text" class="form-control" id="lastNameInput" placeholder="Last Name" disabled>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 col-md-6">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch3">
-              <label class="custom-control-label" for="customSwitch3">Phone Number</label>
+              <input type="checkbox" class="custom-control-input" id="phoneNumSwitch">
+              <label class="custom-control-label" for="phoneNumSwitch">Phone Number</label>
             </div>
-            <input type="tel" class="form-control" id="formGroupExampleInput" placeholder="First Name" disabled>
+            <input type="tel" class="form-control" id="phoneNumInput" placeholder="Phone Number" disabled>
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch4">
-              <label class="custom-control-label" for="customSwitch4">Eamil</label>
+              <input type="checkbox" class="custom-control-input" id="emailSwitch">
+              <label class="custom-control-label" for="emailSwitch">Email</label>
             </div>
-            <input type="text" class="form-control" id="<formGroupExampleInput></formGroupExampleInput>" placeholder="Last Name" disabled>
+            <input type="text" class="form-control" id="emailInput" placeholder="email" disabled>
           </div>
         </div>
         <div class="row">
@@ -59,6 +59,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+      $(document).ready(function() {
+        $('#firstNameSwitch').click(function() {
+            $("#firstNameInput").prop('disabled', !this.checked);
+        });
+        $('#lastNameSwitch').click(function() {
+            $("#lastNameInput").prop('disabled', !this.checked);
+        });
+        $('#phoneNumSwitch').click(function() {
+            $("#phoneNumInput").prop('disabled', !this.checked);
+        });
+        $('#emailSwitch').click(function() {
+            $("#emailInput").prop('disabled', !this.checked);
+        });
+      });
+    </script>
   </body>
 
 </html>
