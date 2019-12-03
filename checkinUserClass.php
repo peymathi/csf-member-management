@@ -14,7 +14,7 @@ class UserCheckin
     private $GroupID;
     private $LifeGroupID;
     private $GroupName;
-    private $LifeGroupIName;
+    private $LifeGroupName;
 	
 	function __construct($MemberID = "", $FirstName = "", $LastName = "", $EmailAddress = "", $HomeAddress = "", $PhoneNumber = "",$PhotoPath = "", $PrayerRequest = "", $OptEmail = 0, $OptText = 0, $GroupID = "", $LifeGroupID = "",$GroupName = "", $LifeGroupName = "")
 	{
