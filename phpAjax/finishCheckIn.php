@@ -5,7 +5,7 @@
 
 $changingValues = array('FirstName', 'LastName', 'Email', 'Phone', 'Status', 'Major', 'OptEmail', 'OptTexts');
 
-// include 'phpUtil/db_query.php';
+// include '..phpUtil/db_query.php';
 if(isset($_POST['Phone']))
 {
   /* NOTE: Uncomplete. Uncomment and finish once database transactions are done.

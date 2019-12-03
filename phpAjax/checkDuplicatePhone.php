@@ -2,7 +2,7 @@
 
 // Ajax call to check if a phone number entered within checkin page is already taken
 
-//include 'phpUtil/db_query.php';
+//include '..phpUtil/db_query.php';
 
 /* NOTE: Uncomment this once the database transactions are ready
 if (isset($_POST['Phone']))

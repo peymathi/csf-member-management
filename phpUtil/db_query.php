@@ -370,11 +370,11 @@ class db_query
 
     $stmt -> bindParam(1, $number);
 
-    $stmt -> execute();
+    $stmt -> execute(array($number));
 
-    $result = $stmt -> fetch(PDO::FETCH_NUM);
+    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
 
-    if(count($result) != 0) // not empty
+    if($result != null) // not empty
     {
       return $result;
     }
