@@ -372,7 +372,7 @@ class db_query
 
     $stmt -> execute();
 
-    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
+    $result = $stmt -> fetch(PDO::FETCH_NUM);
 
     if(count($result) != 0) // not empty
     {
@@ -703,11 +703,50 @@ class db_query
   //////////////////////////////////////////////////////////////////////////////
 
   //
+  // member_to_NOW_check
+  //
+  public function member_to_NOW_check($memberID=null, $NOWID=null)
+  {
+    $query = "SELECT * FROM member_nights_of_worship_junction WHERE ";
+    // MemberID
+    $query .= "MemberID = ";
+    if($memberID != null)
+    {
+      $query .= "'" . $memberID . "', ";
+    }
+    else
+    {
+      $query .= "MemberID, ";
+    }
+    // LifeGroupID
+    $query .= "NightID = ";
+    if($NOWID != null)
+    {
+      $query .= "'" . $NOWID . "' ";
+    }
+    else
+    {
+      $query .= "NightID ";
+    }
+
+    $stmt = $this -> connection -> prepare($query);
+
+    $stmt -> execute();
+
+    return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  //
   // member_to_NOW_create
   //
-  public function member_to_NOW_create()
+  public function member_to_NOW_create($memberID, $NOWID)
   {
+    $stmt = $this -> connection -> prepare("INSERT INTO member_nights_of_worship_junction (MemberID, NightID) VALUES (?, ?)");
 
+    $stmt -> bindParam(1, $memberID);
+    $stmt -> bindParam(2, $NOWID);
+
+    $stmt -> execute();
   }
 
   //
@@ -721,7 +760,7 @@ class db_query
   //
   // member_to_NOW_remove
   //
-  public function member_to_NOW_remove()
+  public function member_to_NOW_remove($phone, $NOWID)
   {
 
   }
