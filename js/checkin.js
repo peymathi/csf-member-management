@@ -126,6 +126,15 @@ function finishForm(userData)
 		data: userData,
 		error: function() { ajaxError(); },
 		success: function(data) {
+			// Reload the page if the exit button is clicked
+			$("button[name='modal-close']").on('click', function() {
+				location.reload();
+			});
+
+			$('body').on('click', function() {
+				location.reload();
+			});
+
 			// Delay for 5 seconds and then link back to original check in page
 			setTimeout(function(){
 				location.reload();

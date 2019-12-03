@@ -29,7 +29,8 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 
 <body>
 	<div class="jumbotron text-center" style="margin-bottom:0">
-		<h1>Impact Member Tracking</h1>
+		<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+		<h1>Life Groups</h1>
 	</div>
 	<?php
 		include 'headerLifeGroup.php';
@@ -58,9 +59,9 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 								$counter++;
 								$memberString .= " " . $member;
 							}
-							
+
 							echo "<td>" . $counter . "</td>";
-							
+
 							echo "<td>" . $memberString . "</td>";
 
 							echo '</td>';

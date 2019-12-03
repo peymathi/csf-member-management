@@ -13,7 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$MemberStmt = $con->prepare("DELETE FROM members WHERE `MemberID` = :MemberID");
 		$MemberStmt->execute(array('MemberID' => $deleteid));
 
-		
+
 	}else{
 		if(isset($_POST["editmember"])){
 			$editid =  trim($_POST["editmember"]);
@@ -70,7 +70,7 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 
 	$GroupName = "";
 	$LifeGroupName = "";
-	
+
 	$LifeGroupStmt = $con->prepare("SELECT * FROM life_groups WHERE `LifeGroupID` = :LifeGroupID");
 	$LifeGroupStmt->execute(array("LifeGroupID"=>$LifeGroupID));
 	while($LifeGroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
@@ -92,13 +92,14 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-  
+
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Impact Member Tracking</h1>
+	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+  <h1>Manage Members</h1>
 </div>
 	<?php
 		include 'headerMembers.php';
@@ -155,7 +156,7 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 								echo "<td>" . $member->getHomeAddress() . "</td>";
 								echo "<td>" . $member->getPhoneNumber() . "</td>";
 								echo "<td>" . $member->getPrayerRequest() . "</td>";
-								
+
 								if($member->getOptEmail() == "0"){
 									echo "<td>No</td>";
 								}else{
@@ -167,15 +168,15 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 								}else{
 									echo "<td>Yes</td>";
 								}
-								
+
 								echo "<td>" . $member->getGroupName() . "</td>";
 								echo "<td>" . $member->getLifeGroupName() . "</td>";
-								
+
 								echo "</tr>";
 							}
 					?>
 				</tbody>
-			</table>	
+			</table>
 		</div>
 		<form method = "post" action = "">
 			<button type="submit" class="btn btn-primary" name="export" value="CSV Export">Download to .csv</button>
@@ -191,10 +192,10 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 //export data to csv
 if(ISSET($_POST["export"])){
 	ob_end_clean();
-	
+
 	$header="";
 	$data="";
-	
+
 	$table ="members";
 	$select = "SELECT * FROM members";
 	$colNames = "DESCRIBE members";
@@ -208,7 +209,7 @@ if(ISSET($_POST["export"])){
 	}
 	while( $row = $export->fetch(PDO::FETCH_OBJ)){
 		$line = '';
-		foreach( $row as $value ){                                            
+		foreach( $row as $value ){
 			if((!isset($value)) || ($value == "")){
 				$value = ",";
 			}else{
@@ -221,7 +222,7 @@ if(ISSET($_POST["export"])){
 	}
 	$data = str_replace("\r","",$data);
 	if($data == ""){
-		$data = "\n(0) Records Found!\n";                        
+		$data = "\n(0) Records Found!\n";
 	}
 	header("Content-type: application/octet-stream");
 	header("Content-Disposition: attachment; filename=members.csv");

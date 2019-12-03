@@ -16,7 +16,7 @@ $lifegroups = '<option>- -</option>';
 	    <!-- Modal content-->
 	    <div class="modal-content">
 	      <div class="modal-header d-block">
-					<button type="button" class="close float-right" data-dismiss="modal">&times;</button>
+					<button type="button" name='modal-close' class="close float-right" data-dismiss="modal">&times;</button>
 	        <h2 class="modal-title text-center" id="modal-title"></h2>
 	      </div>
 	      <div class="modal-body text-center">
@@ -334,6 +334,7 @@ $lifegroups = '<option>- -</option>';
 	</div>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
+	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
   <h1>Night of Worship Check In</h1>
 </div>
 

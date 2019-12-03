@@ -15,32 +15,33 @@ $MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroup
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-  
+
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <body>
 
 	<div class="jumbotron text-center" style="margin-bottom:0">
-	  <h1>Impact Member Tracking</h1>
+    <img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+	  <h1>Modify Life Groups</h1>
 	</div>
-		
+
 	<?php
 			include 'headerLifeGroup.php';
 	?>
-	
+
 	<div class="container" style="margin-top:30px">
-	
+
 		<div class="row mt-3">
 			<div class="col-sm-6 col-md-4" style="padding-right:20px; border-right: 1px solid #ccc;">
 				<!-- PRINT ALL Life Groups-->
 				<h4>List of active Life Groups are:</h4>
-				<?php 
+				<?php
 				while($LifeGroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 					echo $LifeGroupRow["LifeGroupName"] . "</br>";
 				} ?>
 				</br></br>
 				<h4>List of inactive Life Groups are:</h4>
-				<?php 
+				<?php
 				while($LifeGroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 					echo $LifeGroupRow["LifeGroupName"] . "</br>";
 				} ?>
@@ -60,7 +61,7 @@ $MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroup
 						</form>
 					</div>
 				</div>
-				
+
 				<!-- Edit a Life Group-->
 				<div class="row mt-2">
 					<div class="col-sm-12">
@@ -86,7 +87,7 @@ $MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroup
 						</form>
 					</div>
 				</div>
-				
+
 				<!-- Reactivate a Life Group-->
 				<div class="row mt-2">
 					<div class="col-sm-12">
@@ -111,7 +112,7 @@ $MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroup
 						</form>
 					</div>
 				</div>
-				
+
 				<!-- Deactivate a Life Group-->
 				<div class="row mt-2">
 					<div class="col-sm-12">
@@ -135,10 +136,10 @@ $MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroup
 							</div>
 						</form>
 					</div>
-				</div>			
+				</div>
 			</div>
 		</div>
-	
+
 	</div>
 
 

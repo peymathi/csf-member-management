@@ -6,13 +6,14 @@
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
+  <img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
   <h1>Impact Member Tracking</h1>
 </div>
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="checkin.php">Student Check In</a>
+        <a class="nav-link" href="preCheckin.php">Night of Worship Check In</a>
       </li>
 	  <li class="nav-item">
         <a class="nav-link" href="member_management.php">Member Management</a>
