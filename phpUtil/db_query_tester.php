@@ -7,9 +7,9 @@ include "db_query.php";
 $query = new db_query();
 echo "the query and a connection to db was successfully created!\n";
 
-$query -> admin_create('Corey','Stockton','coreystockton4c@gmail.com','incorrect');
+$query -> admin_create('Peyton','Mathis','tuckerdooley@gmail.com',password_hash('adminadmin',PASSWORD_DEFAULT));
 
-$query -> admin_check('coreystockton4c@gmail.com','incorrect');
+//echo count($query -> admin_check('coreystockton4c@gmail.com','incorrect'));
 
 $query -> admin_edit('')
 ?>
