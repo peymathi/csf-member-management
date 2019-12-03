@@ -228,7 +228,9 @@ class db_query
 
     $stmt -> execute();
 
-    return ($stmt -> fetch(PDO::FETCH_ASSOC))['GroupID'];
+    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
+
+    return $result['GroupName'];
   }
 
   //
@@ -402,10 +404,10 @@ class db_query
   //
   // member_create
   //
-  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE="0", $optT="0")
+  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE="0", $optT="0", $groupID=null)
   {
     // Creates a new member taking the first and last name with their number.
-    $stmt = $this -> connection -> prepare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText,GroupID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if($email == null)
     {
@@ -435,6 +437,10 @@ class db_query
     {
       $optT = "0";
     }
+    if($groupID == null)
+    {
+      $groupID = "0";
+    }
 
     $stmt -> bindParam(1,$fname);
     $stmt -> bindParam(2,$lname);
@@ -446,6 +452,7 @@ class db_query
     $stmt -> bindParam(8,$prayerR);
     $stmt -> bindParam(9,$optE);
     $stmt -> bindParam(10,$optT);
+    $stmt -> bindParam(11,$groupID);
 
     //$stmt -> debugDumpParams();
 
@@ -453,7 +460,7 @@ class db_query
   }
 
 
-  public function member_edit(string $number, $fname=null, $lname=null, $numberN=null, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE=null, $optT=null)
+  public function member_edit(string $number, $fname=null, $lname=null, $numberN=null, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE=null, $optT=null, $groupID=null)
   {
     // Takes the number of the member to find in the db.
     // Then takes 2 arrays, one of the fields that will be changing and the second
@@ -552,11 +559,21 @@ class db_query
     $query .= "OptText = ";
     if($optT != null)
     {
-      $query .= "'" . $optT . "' ";
+      $query .= "'" . $optT . "', ";
     }
     else
     {
-      $query .= "OptText ";
+      $query .= "OptText, ";
+    }
+    // GroupID
+    $query .= "GroupID = ";
+    if($groupID != null)
+    {
+      $query .= "'" . $groupID . "' ";
+    }
+    else
+    {
+      $query .= "GroupID ";
     }
 
     $query .= "WHERE PhoneNumber = '" . $number . "' ";
@@ -647,7 +664,6 @@ class db_query
   //
   public function member_to_life_group_check($memberID=null, $life_groupID=null)
   {
-
     $query = "SELECT * FROM member_life_group_junction WHERE ";
     // MemberID
     $query .= "MemberID = ";
