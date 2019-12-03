@@ -9,3 +9,11 @@
 .displayData {
   font-weight: bold;
 }
+
+.filterForm {
+  margin: 10px;
+}
+
+.filterForm .row {
+  margin-top: 15px;
+}
