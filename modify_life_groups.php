@@ -5,63 +5,92 @@ session_verify();
 require_once "phpUtil/db_connect.php";
 require_once "lifeGroupClass.php";
 
-$LifeGroupNameActError = "";
-$LifeGroupNameDelError = "";
-$LifeGroupNameError = "";
 
-$LifeGroupStmt = $con->query("SELECT * FROM life_groups");
-$MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroupID");
+if(isset($_POST['add'])) {
+	$lifeGroupName = trim($_POST['lifeGroupName']);
+	$lifeGroupDay = trim($_POST['lifeGroupDay']);
+	//$lifeGroupTime = trim($_POST['lifeGroupTime']);
+	$lifeGroupLocation = trim($_POST['lifeGroupLocation']);
+	if($lifeGroupName != ""){
+		$stmt = $con->prepare('INSERT INTO life_groups (LifeGroupID, LifeGroupName, LifeGroupDay, LifeGroupTime, LifeGroupLocation, LifeGroupActive)
+		VALUES (Null, :lifeGroupName, :lifeGroupDay, "09:10:00", :lifeGroupLocation,"1")');
+		$stmt->execute(array('lifeGroupName' => $lifeGroupName, 'lifeGroupDay' => $lifeGroupDay, 'lifeGroupLocation' => $lifeGroupLocation));
+	}
+}
 
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-
+  
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <body>
 
 	<div class="jumbotron text-center" style="margin-bottom:0">
-    <img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
-	  <h1>Modify Life Groups</h1>
+	  <h1>Impact Member Tracking</h1>
 	</div>
-
+		
 	<?php
 			include 'headerLifeGroup.php';
 	?>
-
+	
 	<div class="container" style="margin-top:30px">
-
+	
 		<div class="row mt-3">
 			<div class="col-sm-6 col-md-4" style="padding-right:20px; border-right: 1px solid #ccc;">
 				<!-- PRINT ALL Life Groups-->
 				<h4>List of active Life Groups are:</h4>
-				<?php
-				while($LifeGroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
-					echo $LifeGroupRow["LifeGroupName"] . "</br>";
-				} ?>
+				<?php 
+				$LifeGroupActiveStmt = $con->query("SELECT * FROM life_groups WHERE LifeGroupActive = 1");
+				while($LifeGroupActiveRow = $LifeGroupActiveStmt->fetch(PDO::FETCH_ASSOC)) {
+					echo $LifeGroupActiveRow["LifeGroupName"] . "</br>";
+				} 
+				?>
 				</br></br>
 				<h4>List of inactive Life Groups are:</h4>
-				<?php
-				while($LifeGroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
-					echo $LifeGroupRow["LifeGroupName"] . "</br>";
-				} ?>
+				<?php 
+				$LifeGroupInactiveStmt = $con->query("SELECT * FROM life_groups WHERE LifeGroupActive = 0");
+				while($LifeGroupInactiveRow = $LifeGroupInactiveStmt->fetch(PDO::FETCH_ASSOC)) {
+					echo $LifeGroupInactiveRow["LifeGroupName"] . "</br>";
+				} 
+				?>
 			</div>
 			<div class="col-sm-6 col-md-8">
 				<!-- Add a Life Group-->
 				<div class="row">
+				
+					<form action="" method="post">
 					<div class="col-sm-12">
 						<h4>Add Life Group</h4>
-						<form action="" method="post">
-							<div class="input-group mb-3">
-								<input type="text" class="form-control" name="addLifeGroup">
-								<div class="input-group-append">
-									<button type="submit" class="btn btn-success" name="add">Add Life Group</button>
-								</div>
-							</div>
-						</form>
+						<div class="input-group mb-3">
+							Life Group Name:
+							<input type="text" class="form-control" name="lifeGroupName">
+							Life Group Day:
+							<select name="lifeGroupDay">
+								<option value="Sunday">Sunday</option>
+								<option value="Monday">Monday</option>
+								<option value="Tuesday">Tuesday</option>
+								<option value="Wednesday">Wednesday</option>
+								<option value="Thursday">Thursday</option>
+								<option value="Friday">Friday</option>
+								<option value="Saturday">Saturday</option>
+							</select>
+						</div>
 					</div>
+					<div class="col-sm-12">
+						<div class="input-group mb-3">
+							Life Group Time:
+							<input type="text" class="form-control" name="lifeGroupTime">
+							Life Group Location:
+							<input type="text" class="form-control" name="lifeGroupLocation">
+							<div class="input-group-append">
+								<button type="submit" class="btn btn-success" name="add">Add Life Group</button>
+							</div>
+						</div>
+					</div>
+					</form>
 				</div>
-
+				
 				<!-- Edit a Life Group-->
 				<div class="row mt-2">
 					<div class="col-sm-12">
@@ -87,7 +116,7 @@ $MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroup
 						</form>
 					</div>
 				</div>
-
+				
 				<!-- Reactivate a Life Group-->
 				<div class="row mt-2">
 					<div class="col-sm-12">
@@ -112,7 +141,7 @@ $MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroup
 						</form>
 					</div>
 				</div>
-
+				
 				<!-- Deactivate a Life Group-->
 				<div class="row mt-2">
 					<div class="col-sm-12">
@@ -136,10 +165,10 @@ $MembersStmt = $con->query("SELECT * FROM members WHERE LifeGroupID = :LifeGroup
 							</div>
 						</form>
 					</div>
-				</div>
+				</div>			
 			</div>
 		</div>
-
+	
 	</div>
 
 

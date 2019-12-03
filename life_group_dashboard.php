@@ -5,23 +5,6 @@ session_verify();
 require_once "phpUtil/db_connect.php";
 require_once "lifeGroupClass.php";
 
-$lifegroups = [];
-
-$LifeGroupStmt = $con->prepare("SELECT * FROM life_groups");
-$LifeGroupStmt->execute(array());
-while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
-	$lifegroupid = $GroupRow['LifeGroupID'];
-	$lifegroupname = $GroupRow['LifeGroupName'];
-	$members = [];
-
-	$MembersStmt = $con->prepare("SELECT * FROM members WHERE LifeGroupID = :LifeGroupID");
-	$MembersStmt->execute(array(':LifeGroupID' => $lifegroupid));
-	while($MemberRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
-		array_push($members, ( $MemberRow['FirstName'] . " " . $MemberRow['LastName'] ) );
-	}
-	$templifegroupobj =  new LifeGroup($lifegroupid, $lifegroupname, $members);
-	array_push($lifegroups, $templifegroupobj);
-}
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -29,8 +12,7 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 
 <body>
 	<div class="jumbotron text-center" style="margin-bottom:0">
-		<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
-		<h1>Life Groups</h1>
+		<h1>Impact Member Tracking</h1>
 	</div>
 	<?php
 		include 'headerLifeGroup.php';
@@ -42,6 +24,10 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 				<thead>
 					<tr>
 						<th>Life Group Name</th>
+						<th>Life Group Day</th>
+						<th>Life Group Time</th>
+						<th>Life Group Location</th>
+						<th>Life Group Active</th>
 						<th># of Members</th>
 						<th>Members</th>
 					</tr>
@@ -49,19 +35,30 @@ while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 				<tbody>
 					<?php
 						//loop through life groups
-						foreach($lifegroups as $group) {
+						$LifeGroupStmt = $con->query("SELECT * FROM life_groups");
+						while($GroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 							echo "<tr>";
-							echo "<td>" . $group->getLifeGroupName() . "</td>";
-
+							echo "<td>" . $GroupRow["LifeGroupName"] . "</td>";
+							
+							echo "<td>" . $GroupRow["LifeGroupDay"]. "</td>";
+							
+							echo "<td>" . $GroupRow["LifeGroupTime"]. "</td>";
+							
+							echo "<td>" . $GroupRow["LifeGroupLocation"]. "</td>";
+							
+							echo "<td>" . $GroupRow["LifeGroupActive"]. "</td>";
+							
 							$memberString = "";
 							$counter = 0;
-							foreach($group->getMembers() as $member) {
+							$MembersStmt = $con->prepare("SELECT * FROM members WHERE LifeGroupID = :LifeGroupID");
+							$MembersStmt->execute(array('LifeGroupID' => $GroupRow["LifeGroupID"]));
+							while($MemberRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 								$counter++;
-								$memberString .= " " . $member;
+								$memberString = $memberString + " " + $MemberRow['FirstName'] + " " + $MemberRow['LastName'];
 							}
-
+							
 							echo "<td>" . $counter . "</td>";
-
+							
 							echo "<td>" . $memberString . "</td>";
 
 							echo '</td>';
