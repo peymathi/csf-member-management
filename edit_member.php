@@ -141,11 +141,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
+	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
   <h1>Impact Member Tracking</h1>
 </div>
-<?php 
+<?php
 include 'headerMembers.php';
-include 'form.php'; 
+include 'form.php';
 ?>
 <script src="edit_member.js"></script>
 </body>

@@ -1,14 +1,15 @@
 <?php
     include 'header.php';
     session_verify();
-	
+
 	require_once 'phpUtil/db_connect.php';
 
 ?>
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Impact Member Tracking</h1>
+  <img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+  <h1>Life Groups Report</h1>
 </div>
 <?php
 	include 'headerReports.php';

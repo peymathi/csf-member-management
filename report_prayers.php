@@ -6,7 +6,8 @@
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Impact Member Tracking</h1>
+  <img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+  <h1>Prayer Requests</h1>
 </div>
 <?php
 	include 'headerReports.php';
