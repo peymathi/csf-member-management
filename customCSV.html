@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/custom_style.css">
+    <title>Impact: CSV</title>
+
+  </head>
+
+  <body>
+    
+    <div class="container">
+      <form action="" class="filterForm">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch1">
+              <label class="custom-control-label" for="customSwitch1">First Name</label>
+            </div>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="First Name" disabled>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch2">
+              <label class="custom-control-label" for="customSwitch2">Last Name</label>
+            </div>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Last Name" disabled>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch3">
+              <label class="custom-control-label" for="customSwitch3">Phone Number</label>
+            </div>
+            <input type="tel" class="form-control" id="formGroupExampleInput" placeholder="First Name" disabled>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch4">
+              <label class="custom-control-label" for="customSwitch4">Eamil</label>
+            </div>
+            <input type="text" class="form-control" id="<formGroupExampleInput></formGroupExampleInput>" placeholder="Last Name" disabled>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <button class="btn btn-primary" type="submit">Generate CSV</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </body>
+
+</html>
