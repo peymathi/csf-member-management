@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS `life_groups` (
   `LifeGroupDay` varchar(9) NOT NULL,
   `LifeGroupTime` time NOT NULL,
   `LifeGroupLocation` varchar(256) NOT NULL,
+  `LifeGroupActive` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`LifeGroupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
