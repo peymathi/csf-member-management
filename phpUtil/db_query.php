@@ -37,9 +37,10 @@
         $optE=null, $optT=null)
 *   member_remove(string $number)
 *
-*   TODO: member_to_life_group_create()
+*   member_to_life_group_check($memberID=null, $life_groupID=null)
+*   member_to_life_group_create($memberID, $life_groupID)
 *   TODO: member_to_life_group_edit()
-*   TODO: member_to_life_group_remove()
+*   member_to_life_group_remove($memberID, $life_groupID)
 *
 *   TODO: member_to_NOW_create()
 *   TODO: member_to_NOW_edit()
@@ -48,7 +49,7 @@
 *   NOW_check(string $date)
 *   NOW_create(string $date)
 *   NOW_edit(string $dateOld, string $dateNew)
-*   NOW_remove($date)
+*   NOW_remove(string $date)
 *
 *   get_prayer_requests()
 *   get_contact_emails()
@@ -598,7 +599,7 @@ class db_query
   //
   // NOW_remove
   //
-  public function NOW_remove($date)
+  public function NOW_remove(string $date)
   {
     $stmt = $this -> connection -> prepare("DELETE FROM nights_of_worship WHERE NightDate = ?");
 
@@ -614,11 +615,51 @@ class db_query
   //////////////////////////////////////////////////////////////////////////////
 
   //
-  // member_to_life_group_create
+  // member_to_life_group_check
   //
-  public function member_to_life_group_create()
+  public function member_to_life_group_check($memberID=null, $life_groupID=null)
   {
 
+    $query = "SELECT * FROM member_life_group_junction WHERE ";
+    // MemberID
+    $query .= "MemberID = ";
+    if($memberID != null)
+    {
+      $query .= "'" . $memberID . "', ";
+    }
+    else
+    {
+      $query .= "MemberID, ";
+    }
+    // LifeGroupID
+    $query .= "LifeGroupID = ";
+    if($life_groupID != null)
+    {
+      $query .= "'" . $life_groupID . "' ";
+    }
+    else
+    {
+      $query .= "LifeGroupID ";
+    }
+
+    $stmt = $this -> connection -> prepare($query);
+
+    $stmt -> execute();
+
+    return $stmt -> fetch(PDO::FETCH_ASSOC);
+  }
+
+  //
+  // member_to_life_group_create
+  //
+  public function member_to_life_group_create($memberID, $life_groupID)
+  {
+    $stmt = $this -> connection -> prepare("INSERT INTO member_life_group_junction (MemberID, LifeGroupID) VALUE (?, ?)");
+
+    $stmt -> bindParam(1, $memberID);
+    $stmt -> bindParam(2, $life_groupID);
+
+    $stmt -> execute();
   }
 
   //
@@ -626,15 +667,20 @@ class db_query
   //
   public function member_to_life_group_edit()
   {
-
+    
   }
 
   //
   // member_to_life_group_remove
   //
-  public function member_to_life_group_remove()
+  public function member_to_life_group_remove($memberID, $life_groupID)
   {
+    $stmt = $this -> connection -> prepare("DELETE FROM member_life_group_junction WHERE MemberID = ? AND LifeGroupID = ?");
 
+    $stmt -> bindParam(1, $memberID);
+    $stmt -> bindParam(2, $life_groupID);
+
+    $stmt -> execute();
   }
 
   //////////////////////////////////////////////////////////////////////////////
