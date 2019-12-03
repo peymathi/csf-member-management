@@ -420,9 +420,9 @@ $(document).ready(function() {
 			method: 'POST',
 			data: request,
 			dataType: 'json',
-			error: function() {ajaxError();},
+			error: function(e) {ajaxError();},
 			success: function(data) {
-
+				console.log(data);
 				userData = data;
 				// If there is a user
 				if (data.Exists)
@@ -430,28 +430,12 @@ $(document).ready(function() {
 					$("input[name='phone']").removeClass("is-invalid");
 					$("#registerModal").collapse("hide");
 
-					// NOTE *************
-					// Temporary code. Remove when data base is done
-					userData = {
-						FirstName: "Peyton",
-						LastName: "Mathis",
-						Email: "peymathi@iu.edu",
-						Phone: "3174604323",
-						Status: "Junior",
-						Major: "Computer Science",
-						LifeGroup: "None",
-						OptEmail: true,
-						OptText: true,
-						PrayerRequest: ""
-					};
-
 					checkIn(userData);
 					$("#checkInModal").modal("show");
 				}
 				else  $("input[name='phone']").addClass("is-invalid");
 			}
 		});
-
 	});
 
 	$("button[name='register']").on("click", finishRegForm);

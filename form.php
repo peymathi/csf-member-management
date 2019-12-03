@@ -32,19 +32,11 @@
 			  </div>
 			  <div class="form-group">
 				<label for="major">Major:</label>
-				<input type="text" class="form-control" id="major" value="<?php echo $Major; ?>" placeholder="Enter major" name="major" required>
+				<input type="text" class="form-control" id="major" value="<?php echo $major; ?>" placeholder="Enter major" name="major" required>
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 				<span class="help-block"><?php echo $major_error; ?></span>
-			  </div>
-			  <div class="form-group">
-				<label for="graduation_date">Graduation Date:</label>
-				<input type="text" class="form-control" id="graduation_date" value="<?php echo $GraduationDate; ?>" placeholder="Enter graduation date" name="graduation_date" required>
-				<div class="valid-feedback">Valid.</div>
-				<div class="invalid-feedback">Please fill out this field.</div>
-				<span class="help-block"><?php echo $graduation_date_error; ?></span>
-			  </div>
-			  
+			  </div>			  
 
 			  <div class="form-group">
 				<label for="group_id">Group:</label>
@@ -62,7 +54,7 @@
 						?>
 					</select>
 				</div>
-
+				<!--
 				<div class="form-group">
 				<label for="life_group_id">Life Group:</label>
 					<select name="life_group_id" class="custom-select">						
@@ -80,7 +72,7 @@
 						?>
 					</select>
 				</div>
-
+				-->
 			  <div class="form-group">
 				<label for="home_address">Home Address:</label>
 				<input type="text" class="form-control" id="home_address" value="<?php echo $HomeAddress; ?>" placeholder="Enter home address" name="home_address" required>

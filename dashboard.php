@@ -7,7 +7,7 @@
 
 <div class="jumbotron text-center" style="margin-bottom:0">
   <img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
-  <h1>Impact Member Tracking</h1>
+  <h1>Member Tracking Dashboard</h1>
 </div>
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">

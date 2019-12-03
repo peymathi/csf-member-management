@@ -228,9 +228,7 @@ class db_query
 
     $stmt -> execute();
 
-    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
-
-    return $result['GroupName'];
+    return ($stmt -> fetch(PDO::FETCH_ASSOC))['GroupName'];
   }
 
   //
@@ -380,11 +378,11 @@ class db_query
 
     $stmt -> bindParam(1, $number);
 
-    $stmt -> execute();
+    $stmt -> execute(array($number));
 
-    $result = $stmt -> fetch(PDO::FETCH_NUM);
+    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
 
-    if($result != null)
+    if($result != null) // not empty
     {
       if(count($result) != 0) // not empty
       {

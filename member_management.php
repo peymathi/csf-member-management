@@ -13,7 +13,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$MemberStmt = $con->prepare("DELETE FROM members WHERE `MemberID` = :MemberID");
 		$MemberStmt->execute(array('MemberID' => $deleteid));
 
-
 	}else{
 		if(isset($_POST["editmember"])){
 			$editid =  trim($_POST["editmember"]);
@@ -37,69 +36,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				$tempmemberobj =  new UserCheckin($MemberID, $FirstName, $LastName, $EmailAddress, $HomeAddress, $PhoneNumber, $PhotoPath, $PrayerRequest, $OptEmail, $OptText, $GroupID, $LifeGroupID);
 				$member = $tempmemberobj;
 			}
-
 			$_SESSION["UserCheckin"] = $member;
 			Header("location: edit_member.php");
 		}
-
 	}
-
-}
-
-
-
-
-
-$members = [];
-
-$MembersStmt = $con->prepare("SELECT * FROM members");
-$MembersStmt->execute(array());
-while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
-	$MemberID = $GroupRow['MemberID'];
-	$FirstName = $GroupRow['FirstName'];
-	$LastName = $GroupRow['LastName'];
-	$EmailAddress = $GroupRow['EmailAddress'];
-	$HomeAddress = $GroupRow['HomeAddress'];
-	$PhoneNumber = $GroupRow['PhoneNumber'];
-	$PhotoPath = $GroupRow['PhotoPath'];
-	$PrayerRequest = $GroupRow['PrayerRequest'];
-	$OptEmail = $GroupRow['OptEmail'];
-	$OptText = $GroupRow['OptText'];
-	$GroupID = $GroupRow['GroupID'];
-	$LifeGroupID = $GroupRow['LifeGroupID'];
-
-	$GroupName = "";
-	$LifeGroupName = "";
-
-	$LifeGroupStmt = $con->prepare("SELECT * FROM life_groups WHERE `LifeGroupID` = :LifeGroupID");
-	$LifeGroupStmt->execute(array("LifeGroupID"=>$LifeGroupID));
-	while($LifeGroupRow = $LifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
-		$LifeGroupName = $LifeGroupRow['LifeGroupName'];
-	}
-
-	$GroupStmt = $con->prepare("SELECT * FROM groups WHERE `GroupID` = :GroupID");
-	$GroupStmt->execute(array("GroupID"=>$GroupID));
-	while($GroupRow = $GroupStmt->fetch(PDO::FETCH_ASSOC)) {
-		$GroupName = $GroupRow['GroupName'];
-	}
-
-
-
-
-	$tempmemberobj =  new UserCheckin($MemberID, $FirstName, $LastName, $EmailAddress, $HomeAddress, $PhoneNumber, $PhotoPath, $PrayerRequest, $OptEmail, $OptText, $GroupID, $LifeGroupID,$GroupName,$LifeGroupName);
-	array_push($members, $tempmemberobj);
 }
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-
+  
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
-  <h1>Manage Members</h1>
+  <h1>Impact Member Tracking</h1>
 </div>
 	<?php
 		include 'headerMembers.php';
@@ -112,8 +63,6 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 			<table id="example" class="display nowrap" style="width:100%">
 				<thead>
 					<tr>
-						<th>Edit</th>
-						<th>Delete</th>
 						<th>First Name</th>
 						<th>Last Name</th>
 						<th>Email</th>
@@ -122,19 +71,49 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 						<th>Prayer</th>
 						<th>OptEmail</th>
 						<th>OptText</th>
-						<th>Group</th>
-						<th>Life Group</th>
+						<th>Group ID</th>
+						<th>Edit</th>
+						<th>Delete</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
-							//loop through life groups
-							foreach($members as $member) {
+							//loop through members
+							$MembersStmt = $con->query("SELECT * FROM members");
+							while($MembersRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 								echo "<tr>";
+								
+								echo "<td>" . $MembersRow['FirstName'] . "</td>";
+								echo "<td>" . $MembersRow['LastName'] . "</td>";
+								echo "<td>" . $MembersRow['EmailAddress'] . "</td>";
+								echo "<td>" . $MembersRow['HomeAddress'] . "</td>";
+								echo "<td>" . $MembersRow['PhoneNumber'] . "</td>";
+								echo "<td>" . $MembersRow['PrayerRequest'] . "</td>";
+								
+								if($MembersRow['OptEmail'] == "0"){
+									echo "<td>No</td>";
+								}else{
+									echo "<td>Yes</td>";
+								}
+
+								if($MembersRow['OptText'] == "0"){
+									echo "<td>No</td>";
+								}else{
+									echo "<td>Yes</td>";
+								}
+								
+								echo "<td>" ; 
+								$GroupStmt = $con->prepare("SELECT GroupName FROM groups WHERE GroupID = :GroupID");
+								$GroupStmt->execute(array('GroupID' => $MembersRow['GroupID']));
+								while($Group1Row = $GroupStmt->fetch(PDO::FETCH_ASSOC)) {
+									echo $Group1Row['GroupName'];
+								}
+								echo "</td>";
+								
 
 								echo '<td>
 								<form action="" method="post">
-								<input type="hidden" id="editmember" name="editmember" value="'. $member->getMemberID() . '">
+								<input type="hidden" id="editmember" name="editmember" value="'. $MembersRow['MemberID'] . '">
 								<button type="submit" class="btn btn-secondary">Edit</button>
 
 								</form>
@@ -142,41 +121,17 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 
 								echo '<td>
 								<form action="" method="post">
-								<input type="hidden" id="deletemember" name="deletemember" value="'. $member->getMemberID() . '">
+								<input type="hidden" id="deletemember" name="deletemember" value="'. $MembersRow['MemberID'] . '">
 								<button type="submit" class="btn btn-danger">Delete</button>
 
 								</form>
 								</td>';
-
-
-
-								echo "<td>" . $member->getFirstName() . "</td>";
-								echo "<td>" . $member->getLastName() . "</td>";
-								echo "<td>" . $member->getEmailAddress() . "</td>";
-								echo "<td>" . $member->getHomeAddress() . "</td>";
-								echo "<td>" . $member->getPhoneNumber() . "</td>";
-								echo "<td>" . $member->getPrayerRequest() . "</td>";
-
-								if($member->getOptEmail() == "0"){
-									echo "<td>No</td>";
-								}else{
-									echo "<td>Yes</td>";
-								}
-
-								if($member->getOptText() == "0"){
-									echo "<td>No</td>";
-								}else{
-									echo "<td>Yes</td>";
-								}
-
-								echo "<td>" . $member->getGroupName() . "</td>";
-								echo "<td>" . $member->getLifeGroupName() . "</td>";
-
+								
 								echo "</tr>";
 							}
 					?>
 				</tbody>
-			</table>
+			</table>	
 		</div>
 		<form method = "post" action = "">
 			<button type="submit" class="btn btn-primary" name="export" value="CSV Export">Download to .csv</button>
@@ -192,10 +147,10 @@ while($GroupRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 //export data to csv
 if(ISSET($_POST["export"])){
 	ob_end_clean();
-
+	
 	$header="";
 	$data="";
-
+	
 	$table ="members";
 	$select = "SELECT * FROM members";
 	$colNames = "DESCRIBE members";
@@ -209,7 +164,7 @@ if(ISSET($_POST["export"])){
 	}
 	while( $row = $export->fetch(PDO::FETCH_OBJ)){
 		$line = '';
-		foreach( $row as $value ){
+		foreach( $row as $value ){                                            
 			if((!isset($value)) || ($value == "")){
 				$value = ",";
 			}else{
@@ -222,7 +177,7 @@ if(ISSET($_POST["export"])){
 	}
 	$data = str_replace("\r","",$data);
 	if($data == ""){
-		$data = "\n(0) Records Found!\n";
+		$data = "\n(0) Records Found!\n";                        
 	}
 	header("Content-type: application/octet-stream");
 	header("Content-Disposition: attachment; filename=members.csv");
