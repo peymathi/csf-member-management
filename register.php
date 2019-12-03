@@ -16,16 +16,13 @@ $OptEmail = 1;
 $OptText = 1;
 $GroupID = 1;
 
-$Major = "";
-$GraduationDate = "";
+$major = "";
 
 $first_name_error = "";
 $last_name_error = "";
 $email_error = "";
 $phone_number_error = "";
-$graduation_date_error = "";
 $major_error = "";
-$life_group_error = "";
 $home_address_error = "";
 $any_error = "";
 
@@ -59,20 +56,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 	} else {
 		$PhoneNumber = trim($_POST["phone_number"]);
 	}
-	if(empty(trim($_POST["graduation_date"]))){
-		$graduation_date_error = "Must enter graduation date.";
-	} else {
-		$graduation_date = trim($_POST["graduation_date"]);
-	}
 	if(empty(trim($_POST["major"]))){
 		$major_error = "Must enter major.";
 	} else {
 		$major = trim($_POST["major"]);
-	}
-	if(empty(trim($_POST["life_group_id"]))){
-		$GroupID = null;
-	} else {
-		$GroupID = trim($_POST["life_group_id"]);
 	}
 	if(empty(trim($_POST["home_address"]))){
 		$home_address_error = "Must enter home address.";
@@ -104,13 +91,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 	}
 
 	if(empty($any_error)){
-		//UPDATE `members` SET `FirstName`=[value-2],`LastName`=[value-3],`EmailAddress`=[value-4],`HomeAddress`=[value-5],`PhoneNumber`=[value-6],
-		//`PhotoPath`=[value-7],`PrayerRequest`=[value-8],`OptEmail`=[value-9],`OptText`=[value-10],`GroupID`=[value-11] WHERE `MemberID`=[value-1];
-		$updateStmt = $con->prepare('INSERT INTO members (`MemberID`, `FirstName`, `LastName`, `EmailAddress`, `HomeAddress`, `PhoneNumber`, `PhotoPath`, `PrayerRequest`, `OptEmail`, `OptText`, `GroupID`) VALUES
-		(NULL, :FirstName, :LastName, :EmailAddress, :HomeAddress, :PhoneNumber, :PhotoPath, :PrayerRequest, :OptEmail, :OptText, :GroupID)');
+		$updateStmt = $con->prepare('INSERT INTO members (`MemberID`, `FirstName`, `LastName`, `EmailAddress`, `HomeAddress`, `PhoneNumber`, `Major`, `PhotoPath`, `PrayerRequest`, `OptEmail`, `OptText`, `GroupID`) VALUES
+		(NULL, :FirstName, :LastName, :EmailAddress, :HomeAddress, :PhoneNumber, :Major, :PhotoPath, :PrayerRequest, :OptEmail, :OptText, :GroupID)');
 		$updateStmt->execute(array('FirstName' => $FirstName, 'LastName' => $LastName, 'EmailAddress' => $Email, 'HomeAddress' => $HomeAddress,
-		'PhoneNumber' => $PhoneNumber, 'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptText, 'GroupID' => $GroupID));
-		Header("location: checkin.php");
+		'PhoneNumber' => $PhoneNumber, 'PhotoPath' => $PhotoPath,'Major' => $Major, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptText, 'GroupID' => $GroupID));
+		Header("location:member_management.php");
 	}
 }
 ?>
@@ -121,12 +106,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
-  <h1>Register Member</h1>
+  <h1>Impact Member Tracking</h1>
 </div>
-<?php
+<?php 
 	include 'headerMembers.php';
-	include 'form.php';
+	include 'form.php'; 
 ?>
 <script src="register.js"></script>
 </body>

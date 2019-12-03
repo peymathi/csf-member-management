@@ -20,15 +20,12 @@ $GroupID = $UserCheckin->getGroupID();
 $LifeGroupID = $UserCheckin->getLifeGroupID();
 
 //TODO Not default major and Graduation Date to Null
-$Major = "";
-$GraduationDate = "";
-
+$major = "";
 
 $first_name_error = "";
 $last_name_error = "";
 $email_error = "";
 $phone_number_error = "";
-$graduation_date_error = "";
 $major_error = "";
 $life_group_error = "";
 $home_address_error = "";
@@ -66,11 +63,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 	} else {
 		$PhoneNumber = trim($_POST["phone_number"]);
 	}
-	if(empty(trim($_POST["graduation_date"]))){
-		$graduation_date_error = "Must enter graduation date.";
-	} else {
-		$graduation_date = trim($_POST["graduation_date"]);
-	}
 	if(empty(trim($_POST["major"]))){
 		$major_error = "Must enter major.";
 	} else {
@@ -81,14 +73,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 		$GroupID = null;
 	} else {
 		$GroupID = trim($_POST["group_id"]);
-	}
-
-
-	if(empty(trim($_POST["life_group_id"]))){
-		//$life_group_error = "Must enter life group.";
-		$LifeGroupID = null;
-	} else {
-		$LifeGroupID = trim($_POST["life_group_id"]);
 	}
 
 	if(empty(trim($_POST["home_address"]))){
@@ -113,24 +97,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 	}
 
 
-
-
 	//if any of these errors are not empty, then don't add anything to db
 	if(
 	!empty($email_error) || !empty($first_name_error) || !empty($last_name_error) || !empty($phone_number_error) ||
-	!empty($major_error) ||	!empty($graduation_date_error) || !empty($home_address_error) || !empty($life_group_error)
+	!empty($major_error) || !empty($home_address_error) || !empty($life_group_error)
 	){
 		$any_error = "errors";
-		//$any_error = $MemberID."   : ".$FirstName." ".$LastName." ".$Email." ".$HomeAddress." ".$PhoneNumber." ".$PhotoPath." ".$PrayerRequest." ".$OptEmail." ".$OptEmail." ".$GroupID;
 	}
 
 	if(empty($any_error)){
 		//UPDATE `members` SET `FirstName`=[value-2],`LastName`=[value-3],`EmailAddress`=[value-4],`HomeAddress`=[value-5],`PhoneNumber`=[value-6],
 		//`PhotoPath`=[value-7],`PrayerRequest`=[value-8],`OptEmail`=[value-9],`OptText`=[value-10],`GroupID`=[value-11] WHERE `MemberID`=[value-1];
 		$updateStmt = $con->prepare("UPDATE members set FirstName = :FirstName, LastName = :LastName, EmailAddress = :EmailAddress, HomeAddress = :HomeAddress,
-		PhoneNumber = :PhoneNumber, PhotoPath = :PhotoPath, PrayerRequest = :PrayerRequest, OptEmail = :OptEmail, OptText = :OptText, GroupID = :GroupID, LifeGroupID = :LifeGroupID WHERE MemberID = :MemberID");
+		PhoneNumber = :PhoneNumber, Major = :Major, PhotoPath = :PhotoPath, PrayerRequest = :PrayerRequest, OptEmail = :OptEmail, OptText = :OptText, GroupID = :GroupID WHERE MemberID = :MemberID");
 		$updateStmt->execute(array('FirstName' => $FirstName, 'LastName' => $LastName, 'EmailAddress' => $Email, 'HomeAddress' => $HomeAddress,'PhoneNumber' => $PhoneNumber,
-		'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptText, 'GroupID' => $GroupID, 'LifeGroupID' => $LifeGroupID, 'MemberID' => $MemberID));
+		'Major' => $major, 'PhotoPath' => $PhotoPath, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptText, 'GroupID' => $GroupID, 'MemberID' => $MemberID));
 		$_SESSION['UserCheckin'] = Null;
 		Header("location: member_management.php");
 	}
@@ -141,12 +122,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
   <h1>Impact Member Tracking</h1>
 </div>
-<?php
+<?php 
 include 'headerMembers.php';
-include 'form.php';
+include 'form.php'; 
 ?>
 <script src="edit_member.js"></script>
 </body>
