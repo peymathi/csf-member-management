@@ -118,14 +118,20 @@ function finishForm(userData)
 
 	// Get prayer request
 	userData.PrayerRequest = $("textarea[name='prayerRequestInput']").val();
+	console.log(userData);
+	var jsonString = {json: JSON.stringify(userData)};
 
 	// Make ajax call to push new user data to DB
 	$.ajax({
 		url: 'phpAjax/finishCheckIn.php',
 		method: 'POST',
-		data: userData,
+		data: jsonString,
+		//dataType: 'json',
 		error: function() { ajaxError(); },
 		success: function(data) {
+
+			console.log(data);
+			/*
 			// Reload the page if the exit button is clicked
 			$("button[name='modal-close']").on('click', function() {
 				location.reload();
@@ -139,6 +145,7 @@ function finishForm(userData)
 			setTimeout(function(){
 				location.reload();
 			}, 5000);
+			*/
 		}
 	});
 }
@@ -299,8 +306,8 @@ function finishRegForm()
 			Status: $("select[name='regStatus']").val(),
 			Major: $("input[name='regMajor']").val(),
 			LifeGroup: "None",
-			OptEmail: $("input[name='regOptEmail']").is(':checked'),
-			OptTexts: $("input[name='regOptTexts']").is(':checked'),
+			OptEmail: ($("input[name='regOptEmail']").is(':checked')) ? 1 : 0,
+			OptTexts: ($("input[name='regOptTexts']").is(':checked')) ? 1 : 0,
 			Valid: true
 	};
 

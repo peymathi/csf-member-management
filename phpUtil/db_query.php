@@ -232,6 +232,23 @@ class db_query
   }
 
   //
+  // get_group_id
+  //
+  // returns false if no group id exists for given name
+  public function get_group_id($groupName)
+  {
+    $stmt = $this -> connection -> prepare("SELECT GroupID FROM groups WHERE GroupName = ?");
+
+    $stmt -> bindParam(1, $groupName);
+
+    $stmt -> execute();
+
+    $response = $stmt -> fetch(PDO::FETCH_NUM);
+    if (sizeof($stmt) != 0) return $response[0];
+    else return false;
+  }
+
+  //
   // group_create
   //
   public function group_create(string $name)
@@ -402,7 +419,7 @@ class db_query
   //
   // member_create
   //
-  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE="0", $optT="0", $groupID=null)
+  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE='0', $optT='0', $groupID=null)
   {
     // Creates a new member taking the first and last name with their number.
     $stmt = $this -> connection -> prepare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText,GroupID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -429,11 +446,11 @@ class db_query
     }
     if($optE == null)
     {
-      $optE = "0";
+      $optE = '0';
     }
     if($optT == null)
     {
-      $optT = "0";
+      $optT = '0';
     }
     if($groupID == null)
     {
