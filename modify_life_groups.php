@@ -18,6 +18,18 @@ if(isset($_POST['add'])) {
 	}
 }
 
+if(isset($_POST['activate'])) {
+	$lifeGroupNum = $_POST['lifeGroupNum'];
+	$stmt = $con->prepare('UPDATE life_groups SET LifeGroupActive = 1 WHERE LifeGroupID = :LifeGroupID');
+	$stmt->execute(array('LifeGroupID' => $lifeGroupNum));
+}
+
+if(isset($_POST['deactivate'])) {
+	$lifeGroupNum = $_POST['lifeGroupNum'];
+	$stmt = $con->prepare('UPDATE life_groups SET LifeGroupActive = 0 WHERE LifeGroupID = :LifeGroupID');
+	$stmt->execute(array('LifeGroupID' => $lifeGroupNum));
+}
+
 ?>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -128,7 +140,7 @@ if(isset($_POST['add'])) {
 								</div>
 								<select class="custom-select" name="lifeGroupNum">
 									<?php
-									$LifeGroup2Stmt = $con->query("SELECT * FROM life_groups ORDER BY LifeGroupName ASC");
+									$LifeGroup2Stmt = $con->query("SELECT * FROM life_groups WHERE LifeGroupActive = 0 ORDER BY LifeGroupName ASC");
 									while($row2 = $LifeGroup2Stmt->fetch(PDO::FETCH_ASSOC)) {
 										echo "<option value = '".$row2['LifeGroupID']."'>".$row2['LifeGroupName']."</option>";
 									}
@@ -153,7 +165,7 @@ if(isset($_POST['add'])) {
 								</div>
 								<select class="custom-select" name="lifeGroupNum">
 									<?php
-									$LifeGroup3Stmt = $con->query("SELECT * FROM life_groups ORDER BY LifeGroupName ASC");
+									$LifeGroup3Stmt = $con->query("SELECT * FROM life_groups WHERE LifeGroupActive = 1 ORDER BY LifeGroupName ASC");
 									while($row3 = $LifeGroup3Stmt->fetch(PDO::FETCH_ASSOC)) {
 										echo "<option value = '".$row3['LifeGroupID']."'>".$row3['LifeGroupName']."</option>";
 									}
