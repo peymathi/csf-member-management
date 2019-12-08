@@ -1,10 +1,17 @@
 <?php
 include 'header.php';
 session_verify();
-require_once "phpUtil/db_connect.php";
+require_once "phpUtil/db_query.php";
 
 // Get list of lifegroups from DB
 $lifegroups = '<option>- -</option>';
+
+$dbquery = new db_query();
+$rawLG = $dbquery->life_group_check("LifeGroupActive", 1);
+foreach($rawLG as $lifegroup)
+{
+		$lifegroups .= '<option>' . $lifegroup['LifeGroupName'] . '</option>';
+}
 
 ?>
 

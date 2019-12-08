@@ -21,7 +21,7 @@ if(isset($_POST['json']))
 
     // Add member to night of worship
 
-    echo json_encode(array('TEST' => 'TEST'));
+    echo json_encode(array('TEST' => 'TEST1'));
   }
 
   else
@@ -34,7 +34,7 @@ if(isset($_POST['json']))
 
     // Add member to night of worship
 
-    echo json_encode(array('TEST' => 'Test'));
+    echo json_encode(array('TEST' => 'Test2'));
 
   }
 }

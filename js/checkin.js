@@ -17,6 +17,9 @@
 	}, false);
 })();
 
+// Global variable to contain all data with the current user
+var userData = false;
+
 function cleanUpPhone(phone)
 {
 
@@ -47,7 +50,7 @@ function ajaxError()
 }
 
 // First state of the modal
-function checkIn(userData)
+function checkIn()
 {
 	$("#displayData").collapse("show");
 	$("#modal-title").text("Welcome Back " + userData.FirstName + "!");
@@ -59,12 +62,12 @@ function checkIn(userData)
 	$("#status").text(userData.Status);
 	$("#major").text(userData.Major);
 	$("#life-groups").text( userData.LifeGroup);
-	$("#optEmail").text((userData.OptEmail ? "Yes" : "No"));
-	$("#optText").text((userData.OptText ? "Yes" : "No"));
+	$("#optEmail").text(((userData.OptEmail === '1') ? "Yes" : "No"));
+	$("#optText").text(((userData.OptTexts === '1') ? "Yes" : "No"));
 }
 
 // Runs after user verifies their info.
-function continueForm(userData)
+function continueForm()
 {
 	// Hide the old page
 	$("#displayData").collapse("hide");
@@ -84,7 +87,7 @@ function continueForm(userData)
 }
 
 // Runs if the user chooses to view lifegroups
-function displayLifegroups(userData)
+function displayLifegroups()
 {
 	$("#askLifeGroups").collapse("hide");
 
@@ -92,7 +95,7 @@ function displayLifegroups(userData)
 }
 
 // Receives the lifegroups form
-function finishLifeGroups(userData)
+function finishLifeGroups()
 {
 	var lifegroup = $("#selectLifeGroups").val();
 
@@ -111,14 +114,13 @@ function finishLifeGroups(userData)
 }
 
 // Runs once the user has finished checking in
-function finishForm(userData)
+function finishForm()
 {
 	$("#prayerRequest").collapse("hide");
 	$("#finishForm").collapse("show");
 
 	// Get prayer request
 	userData.PrayerRequest = $("textarea[name='prayerRequestInput']").val();
-	console.log(userData);
 	var jsonString = {json: JSON.stringify(userData)};
 
 	// Make ajax call to push new user data to DB
@@ -126,12 +128,10 @@ function finishForm(userData)
 		url: 'phpAjax/finishCheckIn.php',
 		method: 'POST',
 		data: jsonString,
-		//dataType: 'json',
+		dataType: 'json',
 		error: function() { ajaxError(); },
 		success: function(data) {
 
-			console.log(data);
-			/*
 			// Reload the page if the exit button is clicked
 			$("button[name='modal-close']").on('click', function() {
 				location.reload();
@@ -145,16 +145,16 @@ function finishForm(userData)
 			setTimeout(function(){
 				location.reload();
 			}, 5000);
-			*/
 		}
 	});
 }
 
 // Function that runs when a user wants to edit info
-function editMember(userData)
+function editMember()
 {
 	$("#displayData").collapse("hide");
 	$("#editMember").collapse("show");
+	$(".is-invalid").removeClass('is-invalid');
 
 	// Fill out form elements with user info
 	$("input[name='editFirstName']").val(userData.FirstName);
@@ -166,12 +166,13 @@ function editMember(userData)
 
 	// Select user's lifegroup in select element
 	$("select[name='editLifeGroup'] option:contains('" + userData.LifeGroup + "')").prop('selected', true);
-	$("input[name='checkOptEmail']").attr("checked", userData.OptEmail);
-	$("input[name='checkOptTexts']").attr("checked", userData.OptText);
+
+	$("input[name='checkOptEmail']").attr("checked", ((userData.OptEmail === '1') ? true : false));
+	$("input[name='checkOptTexts']").attr("checked", ((userData.OptTexts === '1') ? true : false));
 }
 
 // Function for when editing a member is finished
-function finishEditMember(userData)
+function finishEditMember()
 {
 	// Validate form data
 	formResponse = {
@@ -261,10 +262,10 @@ function finishEditMember(userData)
 						userData.Status = formResponse.Status;
 						userData.Major = formResponse.Major;
 						userData.LifeGroup = formResponse.LifeGroup;
-						userData.OptEmail = formResponse.OptEmail;
-						userData.OptText = formResponse.OptText;
+						userData.OptEmail = ((formResponse.OptEmail) ? '1' : '0' );
+						userData.OptText = ((formResponse.OptText) ? '1' : '0' );
 
-						continueForm(userData);
+						continueForm();
 					}
 				}
 			});
@@ -284,8 +285,8 @@ function finishEditMember(userData)
 			userData.Status = formResponse.Status;
 			userData.Major = formResponse.Major;
 			userData.LifeGroup = formResponse.LifeGroup;
-			userData.OptEmail = formResponse.OptEmail;
-			userData.OptText = formResponse.OptText;
+			userData.OptEmail = ((formResponse.OptEmail) ? '1' : '0' );
+			userData.OptText = ((formResponse.OptText) ? '1' : '0' );
 
 			continueForm(userData);
 		}
@@ -306,8 +307,8 @@ function finishRegForm()
 			Status: $("select[name='regStatus']").val(),
 			Major: $("input[name='regMajor']").val(),
 			LifeGroup: "None",
-			OptEmail: ($("input[name='regOptEmail']").is(':checked')) ? 1 : 0,
-			OptTexts: ($("input[name='regOptTexts']").is(':checked')) ? 1 : 0,
+			OptEmail: ($("input[name='regOptEmail']").is(':checked')) ? '1' : '0',
+			OptTexts: ($("input[name='regOptTexts']").is(':checked')) ? '1' : '0',
 			Valid: true
 	};
 
@@ -371,6 +372,7 @@ function finishRegForm()
 				{
 					$("input[name='regPhone']").addClass('is-invalid');
 					$("div[name='regPhone']").text("Phone Number Already Taken");
+					return false;
 				}
 
 				// Form validated. Move on with check in
@@ -393,8 +395,7 @@ function finishRegForm()
 
 					// Hide registration
 					$("#registerModal").collapse("hide");
-
-					continueForm(userData);
+					continueForm();
 				}
 			}
 		});
@@ -402,8 +403,6 @@ function finishRegForm()
 }
 
 $(document).ready(function() {
-
-	var userData = false;
 
 	$(".editToggle").on("click", function() {
 
@@ -429,7 +428,6 @@ $(document).ready(function() {
 			dataType: 'json',
 			error: function(e) {ajaxError();},
 			success: function(data) {
-				console.log(data);
 				userData = data;
 				// If there is a user
 				if (data.Exists)
@@ -437,7 +435,7 @@ $(document).ready(function() {
 					$("input[name='phone']").removeClass("is-invalid");
 					$("#registerModal").collapse("hide");
 
-					checkIn(userData);
+					checkIn();
 					$("#checkInModal").modal("show");
 				}
 				else  $("input[name='phone']").addClass("is-invalid");
@@ -445,49 +443,52 @@ $(document).ready(function() {
 		});
 	});
 
-	$("button[name='register']").on("click", finishRegForm);
+	$("button[name='register']").on("click", function() {
+		finishRegForm();
+	});
 
 	$("#register").on("click", function() {
 		$("#displayData").collapse("hide");
 		$("#modal-title").text("Welcome to CSF Night of Worship!");
 		$("#registerModal").collapse("show");
+		$(".is-invalid").removeClass('is-invalid');
 		$("#checkInModal").modal("show");
 	});
 
 	$("#confirmInfo").on("click", function() {
-		continueForm(userData);
+		continueForm();
 	});
 
 	$("#finishPrayer").on("click", function() {
-		finishForm(userData);
+		finishForm();
 	});
 
 	$("#editMemberBtn").on("click", function() {
-		editMember(userData);
+		editMember();
 	});
 
 	$("#signUp").on("click", function () {
-		displayLifegroups(userData);
+		displayLifegroups();
 	});
 
 	$("#noThanks").on("click", function () {
-		finishLifeGroups(userData);
+		finishLifeGroups();
 	});
 
 	$("#signUpConfirm").on("click", function () {
-		finishLifeGroups(userData);
+		finishLifeGroups();
 	});
 
 	$("#decline").on("click", function() {
-		finishLifeGroups(userData);
+		finishLifeGroups();
 	});
 
 	$("#saveEditMember").on("click", function() {
-		finishEditMember(userData);
+		finishEditMember();
 	});
 
 	$("#cancelEditMember").on("click", function() {
-		continueForm(userData);
+		continueForm();
 	});
 
 	// Hide all modal body divs on modal close

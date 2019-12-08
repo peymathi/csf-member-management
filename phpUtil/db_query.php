@@ -244,7 +244,7 @@ class db_query
     $stmt -> execute();
 
     $response = $stmt -> fetch(PDO::FETCH_NUM);
-    if (sizeof($stmt) != 0) return $response[0];
+    if ($response != null) return $response[0];
     else return false;
   }
 
@@ -293,7 +293,9 @@ class db_query
 
     $stmt -> execute();
 
-    return $stmt -> fetch(PDO::FETCH_ASSOC);
+    $result = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    if ($result != null) return $result;
+    else return false;
   }
 
   //
