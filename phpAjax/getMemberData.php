@@ -21,24 +21,24 @@
       $memberJson['OptEmail'] = $member['OptEmail'];
       $memberJson['OptTexts'] = $member['OptText'];
       $memberID = $member['MemberID'];
-      $memberLifeGroups = $dbcon->member_to_life_group_check(null, $memberID);
+      $memberLifeGroups = $dbcon->member_to_life_group_check($memberID);
 
-      if (sizeof($memberLifeGroups) != 0)
+      if ($memberLifeGroups)
       {
         // Get the lifegroup name that is currently active
         foreach($memberLifeGroups as $lifegroup)
         {
           $temp = $dbcon->life_group_check('LifeGroupID', $lifegroup['LifeGroupID']);
-          if($temp['LifeGroupActive'] === 1)
+          if($temp[0]['LifeGroupActive'])
           {
-            $memberJson['LifeGroup'] = $temp['LifeGroupDay'] . ' ' . $temp['LifeGroupTime'] . ' ' . $temp['LifeGroupLocation'];
+            $memberJson['LifeGroup'] = $temp[0]['LifeGroupName'];
             break;
           }
         }
       }
-      else $memberJson['LifeGroup'] = 'None';
+      else $memberJson['LifeGroup'] = '2';
 
-      if (!isset($memberJson['LifeGroup'])) $memberJson['LifeGroup'] = 'None';
+      if (!isset($memberJson['LifeGroup'])) $memberJson['LifeGroup'] = '1';
 
       $memberJson['Status'] = $dbcon->group_check($member['GroupID']);
       $memberJson['Exists'] = True;

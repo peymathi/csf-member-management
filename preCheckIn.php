@@ -2,18 +2,29 @@
   // Page that creates a new night of worship and begins checkin process
   include 'header.php';
   session_verify();
-  require_once "phpUtil/db_connect.php";
+  require_once "phpUtil/db_query.php";
 
   // Runs if the form has been submitted
   if(isset($_POST['submitBtn']))
   {
     $date = $_POST['nowdate'];
+    $con = new db_query();
 
     // Check if night of worship with that date has already been made
-
-    // Make a night of worship with that date
-
-    Header("Location: checkin.php");
+    $result = $con->NOW_check($date);
+    if($result)
+    {
+      // Make a night of worship with that date
+      $con->NOW_create($date);
+      $_SESSION['checkinDate'] = $date;
+      Header("Location: checkin.php");
+    }
+    else
+    {
+      // Use the date entered for the night of worship
+      $_SESSION['checkinDate'] = $date;
+      Header("Location: checkin.php");
+    }
   }
 
 ?>

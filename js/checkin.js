@@ -404,6 +404,14 @@ function finishRegForm()
 
 $(document).ready(function() {
 
+	// disable enter button submitting form
+	$(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+
 	$(".editToggle").on("click", function() {
 
 		// Disable all other inputs

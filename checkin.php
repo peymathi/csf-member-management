@@ -3,11 +3,19 @@ include 'header.php';
 session_verify();
 require_once "phpUtil/db_query.php";
 
+// Check if date is set
+if(isset($_SESSION['checkinDate'])) $date = $_SESSION['checkinDate'];
+else
+{
+	Header("Location: logout.php");
+	exit;
+}
+
 // Get list of lifegroups from DB
 $lifegroups = '<option>- -</option>';
 
 $dbquery = new db_query();
-$rawLG = $dbquery->life_group_check("LifeGroupActive", 1);
+$rawLG = $dbquery->life_group_check("LifeGroupActive", '1');
 foreach($rawLG as $lifegroup)
 {
 		$lifegroups .= '<option>' . $lifegroup['LifeGroupName'] . '</option>';

@@ -630,7 +630,9 @@ class db_query
 
     $stmt -> execute();
 
-    return $stmt -> fetch(PDO::FETCH_ASSOC);
+    $response = $stmt -> fetch(PDO::FETCH_ASSOC);
+    if($response != null) return $response;
+    else return false;
   }
   //
   // NOW_create
@@ -686,17 +688,17 @@ class db_query
     $query .= "MemberID = ";
     if($memberID != null)
     {
-      $query .= "'" . $memberID . "', ";
+      $query .= "'" . $memberID . "' AND ";
     }
     else
     {
-      $query .= "MemberID, ";
+      $query .= "MemberID AND ";
     }
     // LifeGroupID
     $query .= "LifeGroupID = ";
     if($life_groupID != null)
     {
-      $query .= "'" . $life_groupID . "' ";
+      $query .= "'" . $life_groupID . "'";
     }
     else
     {
@@ -707,7 +709,9 @@ class db_query
 
     $stmt -> execute();
 
-    return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    $response = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    if($response != null) return $response;
+    else return false;
   }
 
   //
@@ -781,7 +785,9 @@ class db_query
 
     $stmt -> execute();
 
-    return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    $response = $stmt -> fetch(PDO::FETCH_ASSOC);
+    if($response != null) return $response;
+    else return false;
   }
 
   //
