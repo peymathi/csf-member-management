@@ -29,6 +29,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				$PhoneNumber = $MemberRow['PhoneNumber'];
 				$PhotoPath = $MemberRow['PhotoPath'];
 				$PrayerRequest = $MemberRow['PrayerRequest'];
+				$major = $MemberRow['Major'];
 				$OptEmail = $MemberRow['OptEmail'];
 				$OptText = $MemberRow['OptText'];
 				$GroupID = $MemberRow['GroupID'];
@@ -43,10 +44,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 }
 ?>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-  
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
@@ -59,19 +56,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	<div class="row">
 		<div class="col">
-
-			<table id="example" class="display nowrap" style="width:100%">
+			<table id="example" class="dataTable display" style="width:100%">
 				<thead>
 					<tr>
 						<th>First Name</th>
 						<th>Last Name</th>
 						<th>Email</th>
-						<th>Address</th>
+						<th>Home Address</th>
 						<th>Phone Number</th>
-						<th>Prayer</th>
-						<th>OptEmail</th>
-						<th>OptText</th>
-						<th>Group ID</th>
+						<th>Prayer Request</th>
+						<th>Major</th>
+						<th>Status</th>
 						<th>Edit</th>
 						<th>Delete</th>
 					</tr>
@@ -82,34 +77,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 							$MembersStmt = $con->query("SELECT * FROM members");
 							while($MembersRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
 								echo "<tr>";
-								
+
 								echo "<td>" . $MembersRow['FirstName'] . "</td>";
 								echo "<td>" . $MembersRow['LastName'] . "</td>";
 								echo "<td>" . $MembersRow['EmailAddress'] . "</td>";
 								echo "<td>" . $MembersRow['HomeAddress'] . "</td>";
 								echo "<td>" . $MembersRow['PhoneNumber'] . "</td>";
 								echo "<td>" . $MembersRow['PrayerRequest'] . "</td>";
-								
-								if($MembersRow['OptEmail'] == "0"){
-									echo "<td>No</td>";
-								}else{
-									echo "<td>Yes</td>";
-								}
+								echo "<td>" . $MembersRow['Major'] . "</td>";
 
-								if($MembersRow['OptText'] == "0"){
-									echo "<td>No</td>";
-								}else{
-									echo "<td>Yes</td>";
-								}
-								
-								echo "<td>" ; 
+								echo "<td>" ;
 								$GroupStmt = $con->prepare("SELECT GroupName FROM groups WHERE GroupID = :GroupID");
 								$GroupStmt->execute(array('GroupID' => $MembersRow['GroupID']));
 								while($Group1Row = $GroupStmt->fetch(PDO::FETCH_ASSOC)) {
 									echo $Group1Row['GroupName'];
 								}
 								echo "</td>";
-								
+
 
 								echo '<td>
 								<form action="" method="post">
@@ -126,12 +110,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 								</form>
 								</td>';
-								
+
 								echo "</tr>";
 							}
 					?>
 				</tbody>
-			</table>	
+			</table>
 		</div>
 		<form method = "post" action = "">
 			<button type="submit" class="btn btn-primary" name="export" value="CSV Export">Download to .csv</button>
@@ -147,10 +131,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 //export data to csv
 if(ISSET($_POST["export"])){
 	ob_end_clean();
-	
+
 	$header="";
 	$data="";
-	
+
 	$table ="members";
 	$select = "SELECT * FROM members";
 	$colNames = "DESCRIBE members";
@@ -164,7 +148,7 @@ if(ISSET($_POST["export"])){
 	}
 	while( $row = $export->fetch(PDO::FETCH_OBJ)){
 		$line = '';
-		foreach( $row as $value ){                                            
+		foreach( $row as $value ){
 			if((!isset($value)) || ($value == "")){
 				$value = ",";
 			}else{
@@ -177,7 +161,7 @@ if(ISSET($_POST["export"])){
 	}
 	$data = str_replace("\r","",$data);
 	if($data == ""){
-		$data = "\n(0) Records Found!\n";                        
+		$data = "\n(0) Records Found!\n";
 	}
 	header("Content-type: application/octet-stream");
 	header("Content-Disposition: attachment; filename=members.csv");

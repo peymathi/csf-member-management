@@ -36,9 +36,9 @@
           }
         }
       }
-      else $memberJson['LifeGroup'] = '2';
+      else $memberJson['LifeGroup'] = 'None';
 
-      if (!isset($memberJson['LifeGroup'])) $memberJson['LifeGroup'] = '1';
+      if (!isset($memberJson['LifeGroup'])) $memberJson['LifeGroup'] = 'None';
 
       $memberJson['Status'] = $dbcon->group_check($member['GroupID']);
       $memberJson['Exists'] = True;
