@@ -24,18 +24,17 @@
 		<table class="table">
 			<thead class="thead-dark">
 			  <tr>
-				<th>Firstname</th>
-				<th>Lastname</th>
+				<th>Name</th>
 				<th>Life Group</th>
 			  </tr>
 			</thead>
 			<tbody>
 			<?php
-				$lifeGroupStmt = $con->prepare("Select FirstName, LastName, LifeGroupID From Members Where LifeGroupID IS NOT NULL");
+				$lifeGroupStmt = $con->prepare("SELECT members.FirstName, members.LastName, life_groups.LifeGroupName FROM `member_life_group_junction`  INNER JOIN members ON members.MemberID = member_life_group_junction.MemberID INNER JOIN life_groups ON life_groups.LifeGroupID = member_life_group_junction.LifeGroupID");
 				$lifeGroupStmt->execute();
 				while($lifeGroupRow = $lifeGroupStmt->fetch(PDO::FETCH_ASSOC)) {
 					echo '<tr>';
-					echo '<td>'.$lifeGroupRow['FirstName'].'</td><td>'.$lifeGroupRow['LastName'].'</td><td>'.$lifeGroupRow['LifeGroupID'].'</td>';
+					echo '<td>'.$lifeGroupRow['FirstName']." ".$lifeGroupRow['LastName'].'</td><td>'.$lifeGroupRow['LifeGroupName'].'</td>';
 					echo '</tr>';
 				}
 			?>
@@ -43,32 +42,6 @@
 		</table>
 		<form method = "post" action = "">
 			<button type="submit" class="btn btn-primary" name="exportInGroup" value="CSV Export">Download to .csv</button>
-		</form>
-		<!-- People Not In Lifegroup: Select FirstName, LastName, Email, PhoneNumber From Members Where Member is not currently in a lifegroup -->
-		<h3>People Not In Life Group</h3>
-		<table class="table">
-			<thead class="thead-dark">
-			  <tr>
-				<th>Firstname</th>
-				<th>Lastname</th>
-				<th>Email Address</th>
-				<th>Phone Number</th>
-			  </tr>
-			</thead>
-			<tbody>
-			<?php
-				$lifeGroup2Stmt = $con->prepare("Select FirstName, LastName, EmailAddress, PhoneNumber From Members Where LifeGroupID = NULL");
-				$lifeGroup2Stmt->execute();
-				while($lifeGroup1Row = $lifeGroup2Stmt->fetch(PDO::FETCH_ASSOC)) {
-					echo '<tr>';
-					echo '<td>'.$lifeGroup1Row['FirstName'].'</td><td>'.$lifeGroup1Row['LastName'].'</td><td>'.$lifeGroup1Row['EmailAddress'].'</td><td>'.$lifeGroup1Row['PhoneNumber'].'</td>';
-					echo '</tr>';
-				}
-			?>
-			</tbody>
-		</table>
-		<form method = "post" action = "">
-			<button type="submit" class="btn btn-primary" name="exportNoGroup" value="CSV Export">Download to .csv</button>
 		</form>
      </div>
   </div>

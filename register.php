@@ -15,8 +15,9 @@ $PrayerRequest = "";
 $OptEmail = 1;
 $OptText = 1;
 $GroupID = 1;
+$LifeGroupID = "";
 
-$major = "";
+$Major = "";
 
 $first_name_error = "";
 $last_name_error = "";
@@ -59,7 +60,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 	if(empty(trim($_POST["major"]))){
 		$major_error = "Must enter major.";
 	} else {
-		$major = trim($_POST["major"]);
+		$Major = trim($_POST["major"]);
 	}
 	if(empty(trim($_POST["home_address"]))){
 		$home_address_error = "Must enter home address.";
@@ -81,6 +82,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 	} else {
 		$PrayerRequest = trim($_POST["prayer_request"]);
 	}
+	
+	if(empty(trim($_POST["life_group_id"]))){
+		$LifeGroupID = "";
+	}else{
+		$LifeGroupID = trim($_POST["life_group_id"]);
+	}
+	
 	//if any of these errors are not empty, then don't add anything to db
 	if(
 	!empty($email_error) || !empty($first_name_error) || !empty($last_name_error) || !empty($phone_number_error) ||
@@ -95,6 +103,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 		(NULL, :FirstName, :LastName, :EmailAddress, :HomeAddress, :PhoneNumber, :Major, :PhotoPath, :PrayerRequest, :OptEmail, :OptText, :GroupID)');
 		$updateStmt->execute(array('FirstName' => $FirstName, 'LastName' => $LastName, 'EmailAddress' => $Email, 'HomeAddress' => $HomeAddress,
 		'PhoneNumber' => $PhoneNumber, 'PhotoPath' => $PhotoPath,'Major' => $Major, 'PrayerRequest' => $PrayerRequest, 'OptEmail' => $OptEmail, 'OptText' => $OptText, 'GroupID' => $GroupID));
+		Header("location:member_management.php");
+	}
+	if(LifeGroupID != ""){
+		$update1Stmt = $con->prepare('INSERT INTO member_life_group_junction (`MemberLifeGroupID`, `MemberID`, `LifeGroupID`) VALUES (NULL, :UserID ,:LifeGroupID)');
+		$update1Stmt->execute(array('UserID' => $MemberID, 'LifeGroupID' => $LifeGroupID));
 		Header("location:member_management.php");
 	}
 }
