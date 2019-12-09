@@ -44,6 +44,15 @@
 		<form method = "post" action = "">
 			<button type="submit" class="btn btn-primary" name="exportEmail" value="CSV Export">Download to .csv</button>
 		</form>
+		<p class="lead">
+			<?php 
+				$emailStmt = $con->prepare("Select EmailAddress From Members Where OptEmail = 1");
+				$emailStmt->execute();
+				while($emailRow = $emailStmt->fetch(PDO::FETCH_ASSOC)) {
+					echo $emailRow['EmailAddress'].', ';
+				}
+			?>		
+		</p>
 		<!-- Contact Texts: Select FirstName, LastName, PhoneNumber From Members Where OptTexts = True -->
 		<h3>Opted in to Text</h3>
 		<table class="table">
