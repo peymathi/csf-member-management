@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 // Ajax call to be used in checkin form for when the check in form is finished
 // updates the user in the DB
@@ -17,9 +18,17 @@ if(isset($_POST['json']))
     $dbcon->member_edit($memberData['Phone'], $memberData['FirstName'], $memberData['LastName'], $memberData['Phone'], $memberData['Email'],
      null, $memberData['Major'], null, $memberData['PrayerRequest'], $memberData['OptEmail'], $memberData['OptTexts'], $status);
 
-    // Add member to a lifegroup if needed
-
     // Add member to night of worship
+    $nowID = ($dbcon->NOW_check($_SESSION['checkinDate']))['NightID'];
+    $memberID = ($dbcon->member_check($memberData['Phone']))['MemberID'];
+    $dbcon->member_to_NOW_create($memberID, $nowID);
+
+    // Add member to a lifegroup if needed
+    if($memberData['LifeGroup'] != "None")
+    {
+      $lg = $dbcon->life_group_check("LifeGroupName", $memberData['LifeGroup']);
+      $dbcon->member_to_life_group_create($memberID, $lg[0]['LifeGroupID']);
+    }
 
     echo json_encode(array('TEST' => 'TEST1'));
   }
@@ -30,9 +39,39 @@ if(isset($_POST['json']))
     $dbcon->member_create($memberData['FirstName'], $memberData['LastName'], $memberData['Phone'], $memberData['Email'],
      null, $memberData['Major'], null, $memberData['PrayerRequest'], $memberData['OptEmail'], $memberData['OptTexts'], $status);
 
+    // Add member to night of worship
+    $nowID = ($dbcon->NOW_check($_SESSION['checkinDate']))['NightID'];
+    $memberID = ($dbcon->member_check($memberData['Phone']))['MemberID'];
+    $dbcon->member_to_NOW_create($memberID, $nowID);
+
     // Add member to a lifegroup if needed
 
-    // Add member to night of worship
+    # Gets the list of all lifegroups the member has been in
+    $lifegroups = $dbcon->member_to_life_group_check($memberID);
+
+    # Find out if the user is in a currently active lifegroup
+    $lifegroupActive = "None";
+    foreach($lifegroups as $lifegroup)
+    {
+      $lgID = $lifegroup['LifeGroupID'];
+      $lg = $dbcon->life_group_check("LifeGroupID", $lgID);
+      if($lg[0]['LifeGroupActive']) $lifegroupActive = $lg[0];
+    }
+
+    // Check if the life group selected matches their current group
+    if($lifegroupActive != "None")
+    {
+      // Member signed up for a new life group, need to add that to db
+      if($lifegroupActive['LifeGroupName'] != $memberData['LifeGroup'])
+      {
+        $dbcon->member_to_life_group_create($memberID, $lifegroupActive["LifeGroupID"]);
+      }
+    }
+
+    else
+    {
+      $dbcon->member_to_life_group_create($memberID, $lifegroupActive['LifeGroupID']);
+    }
 
     echo json_encode(array('TEST' => 'Test2'));
 
