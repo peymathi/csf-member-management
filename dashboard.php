@@ -38,7 +38,7 @@
   <div class="row">
 
     <div class="col">
-      <table id="example" class="display nowrap" style="width:100%">
+      <table id="example" class="dataTable display" style="width:100%">
         <thead>
           <tr>
             <th>First Name</th>
@@ -47,8 +47,6 @@
             <th>Address</th>
             <th>Phone Number</th>
             <th>Prayer</th>
-            <th>OptEmail</th>
-            <th>OptText</th>
             <th>Group ID</th>
             <th>Edit</th>
             <th>Delete</th>
@@ -60,34 +58,22 @@
               $MembersStmt = $con->query("SELECT * FROM members");
               while($MembersRow = $MembersStmt->fetch(PDO::FETCH_ASSOC)) {
                 echo "<tr>";
-                
+
                 echo "<td>" . $MembersRow['FirstName'] . "</td>";
                 echo "<td>" . $MembersRow['LastName'] . "</td>";
                 echo "<td>" . $MembersRow['EmailAddress'] . "</td>";
                 echo "<td>" . $MembersRow['HomeAddress'] . "</td>";
                 echo "<td>" . $MembersRow['PhoneNumber'] . "</td>";
                 echo "<td>" . $MembersRow['PrayerRequest'] . "</td>";
-                
-                if($MembersRow['OptEmail'] == "0"){
-                  echo "<td>No</td>";
-                }else{
-                  echo "<td>Yes</td>";
-                }
 
-                if($MembersRow['OptText'] == "0"){
-                  echo "<td>No</td>";
-                }else{
-                  echo "<td>Yes</td>";
-                }
-                
-                echo "<td>" ; 
+                echo "<td>" ;
                 $GroupStmt = $con->prepare("SELECT GroupName FROM groups WHERE GroupID = :GroupID");
                 $GroupStmt->execute(array('GroupID' => $MembersRow['GroupID']));
                 while($Group1Row = $GroupStmt->fetch(PDO::FETCH_ASSOC)) {
                   echo $Group1Row['GroupName'];
                 }
                 echo "</td>";
-                
+
 
                 echo '<td>
                 <form action="" method="post">
@@ -104,12 +90,21 @@
 
                 </form>
                 </td>';
-                
+
                 echo "</tr>";
               }
           ?>
         </tbody>
       </table>
+
+      <script type="text/javascript">
+        $(document).ready(function(){
+           $('.dataTable').DataTable({
+             responsive:true
+           });
+        });
+      </script>
+
      </div>
   </div>
 </div>
