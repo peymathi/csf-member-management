@@ -24,14 +24,28 @@ session_start();
 	<link rel="stylesheet" type="text/css" href="css/custom_style.css">
 	<title>Impact:
 	<?php
+	
+	//life_group_dashboard.php, modify_life_groups.php, reports_dashboard.php, report_prayers.php
+	//report_contacts.php, report_life_groups.php, report_addresses.php
 	if(basename($_SERVER['PHP_SELF'])=="index.php") print 'Homepage';
 		else if(basename($_SERVER['PHP_SELF'])=="dashboard.php") print 'Dashboard';
+		else if(basename($_SERVER['PHP_SELF'])=="preCheckin.php") print 'Pre Check In';
 		else if(basename($_SERVER['PHP_SELF'])=="checkin.php") print 'Check In';
 		else if(basename($_SERVER['PHP_SELF'])=="login.php") print 'Log In';
 		else if(basename($_SERVER['PHP_SELF'])=="register.php") print 'Register';
 		else if(basename($_SERVER['PHP_SELF'])=="edit_member.php") print 'Edit Member';
+		else if(basename($_SERVER['PHP_SELF'])=="member_management.php") print 'Member Management';
 		else if(basename($_SERVER['PHP_SELF'])=="change_password.php") print 'Change Password';
 		else if(basename($_SERVER['PHP_SELF'])=="forgot_password.php") print 'Password Reset';
+		
+		
+		else if(basename($_SERVER['PHP_SELF'])=="life_group_dashboard.php") print 'Life Group Dashboard';
+		else if(basename($_SERVER['PHP_SELF'])=="modify_life_groups.php") print 'Modify Life Groups';
+		else if(basename($_SERVER['PHP_SELF'])=="reports_dashboard.php") print 'Reports Dashboard';
+		else if(basename($_SERVER['PHP_SELF'])=="report_prayers.php") print 'Prayers Report';
+		else if(basename($_SERVER['PHP_SELF'])=="report_contacts.php") print 'Contacts Report';
+		else if(basename($_SERVER['PHP_SELF'])=="report_life_groups.php") print 'Life Groups Report';
+		else if(basename($_SERVER['PHP_SELF'])=="report_addresses.php") print 'Addresses Report';
 	?>
 	</title>
 
