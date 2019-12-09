@@ -41,6 +41,9 @@
 			?>
 			</tbody>
 		</table>
+		<form method = "post" action = "">
+			<button type="submit" class="btn btn-primary" name="exportEmail" value="CSV Export">Download to .csv</button>
+		</form>
 		<!-- Contact Texts: Select FirstName, LastName, PhoneNumber From Members Where OptTexts = True -->
 		<h3>Opted in to Text</h3>
 		<table class="table">
@@ -63,6 +66,9 @@
 			?>
 			</tbody>
 		</table>
+		<form method = "post" action = "">
+			<button type="submit" class="btn btn-primary" name="exportText" value="CSV Export">Download to .csv</button>
+		</form>
 
      </div>
   </div>

@@ -39,6 +39,9 @@
 			?>
 			</tbody>
 		</table>
+		<form method = "post" action = "">
+			<button type="submit" class="btn btn-primary" name="exportPrayer" value="CSV Export">Download to .csv</button>
+		</form>
 
 
      </div>

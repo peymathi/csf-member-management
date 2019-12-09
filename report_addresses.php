@@ -41,6 +41,9 @@
 			?>
 			</tbody>
 		</table>
+		<form method = "post" action = "">
+			<button type="submit" class="btn btn-primary" name="exportAddress" value="CSV Export">Download to .csv</button>
+		</form>
 	</div>
   </div>
 </div>

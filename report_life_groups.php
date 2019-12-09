@@ -41,6 +41,9 @@
 			?>
 			</tbody>
 		</table>
+		<form method = "post" action = "">
+			<button type="submit" class="btn btn-primary" name="exportInGroup" value="CSV Export">Download to .csv</button>
+		</form>
 		<!-- People Not In Lifegroup: Select FirstName, LastName, Email, PhoneNumber From Members Where Member is not currently in a lifegroup -->
 		<h3>People Not In Life Group</h3>
 		<table class="table">
@@ -64,6 +67,9 @@
 			?>
 			</tbody>
 		</table>
+		<form method = "post" action = "">
+			<button type="submit" class="btn btn-primary" name="exportNoGroup" value="CSV Export">Download to .csv</button>
+		</form>
      </div>
   </div>
 </div>
