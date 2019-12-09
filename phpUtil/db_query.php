@@ -421,47 +421,47 @@ class db_query
   //
   // member_create
   //
-  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE='0', $optT='0', $groupID=null)
+  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE=0, $optT=0, $groupID=1)
   {
     // Creates a new member taking the first and last name with their number.
     $stmt = $this -> connection -> prepare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText,GroupID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if($email == null)
     {
-      $email = "NULL";
+      $email = null;
     }
     if($address == null)
     {
-      $address = "NULL";
+      $address = null;
     }
     if($major == null)
     {
-      $major = "NULL";
+      $major = null;
     }
     if($photoPath == null)
     {
-      $photoPath = "NULL";
+      $photoPath = null;
     }
     if($prayerR == null)
     {
-      $prayerR = "NULL";
+      $prayerR = null;
     }
     if($optE == null)
     {
-      $optE = '0';
+      $optE = 0;
     }
     if($optT == null)
     {
-      $optT = '0';
+      $optT = 0;
     }
     if($groupID == null)
     {
-      $groupID = "0";
+      $groupID = 1;
     }
 
-    $stmt -> bindParam(1,$fname);
-    $stmt -> bindParam(2,$lname);
-    $stmt -> bindParam(3,$email);
+    $stmt -> bindParam(1,$fname);     //first name
+    $stmt -> bindParam(2,$lname);     //last name
+    $stmt -> bindParam(3,$email);     //email
     $stmt -> bindParam(4,$address);
     $stmt -> bindParam(5,$major);
     $stmt -> bindParam(6,$number);
