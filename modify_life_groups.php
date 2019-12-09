@@ -79,56 +79,26 @@ if(isset($_POST['deactivate'])) {
 			</div>
 			<div class="col-sm-6 col-md-8">
 				<!-- Add a Life Group-->
-				<div class="row">
-					<form action="" method="post">
-					<div class="col-sm-12">
-						<h4>Add Life Group</h4>
-						<div class="input-group mb-3">
-							Life Group Name:
-							<input type="text" class="form-control" name="lifeGroupName">
-							Life Group Day:
-							<select name="lifeGroupDay">
-								<option value="Sunday">Sunday</option>
-								<option value="Monday">Monday</option>
-								<option value="Tuesday">Tuesday</option>
-								<option value="Wednesday">Wednesday</option>
-								<option value="Thursday">Thursday</option>
-								<option value="Friday">Friday</option>
-								<option value="Saturday">Saturday</option>
-							</select>
-							Life Group Time:
-							<input type="text" class="form-control" name="lifeGroupTime">
-							Life Group Location:
-							<input type="text" class="form-control" name="lifeGroupLocation">
-							<div class="input-group-append">
-								<button type="submit" class="btn btn-success" name="add">Add Life Group</button>
+				<form action="" method="post">
+						
+					<h4>Add Life Group</h4>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="input-group mb-3">
+	              <div class="input-group-prepend">
+	                <span class="input-group-text" id="basic-addon1">Life Group Name</span>
+	              </div>
+								<input type="text" class="form-control" name="lifeGroupName">
 							</div>
 						</div>
 					</div>
-					</form>
-				</div>
-				
-				<!-- Edit a Life Group-->
-				<div class="row mt-2">
-					<div class="col-sm-12">
-						<h4>Edit Life Group</h4>
-						<form action="" method="post">
+					<div class="row">
+						<div class="col-sm-12">
 							<div class="input-group mb-3">
 								<div class="input-group-prepend">
-									<label class="input-group-text" for="lifeGroupNameEdit">Life Groups</label>
+									<span class="input-group-text" id="basic-addon1">Life Group Day</span>
 								</div>
-								<select class="custom-select" name="lifeGroupNum">
-									<?php
-									$LifeGroup1Stmt = $con->query("SELECT * FROM life_groups ORDER BY LifeGroupName ASC");
-									while($row1 = $LifeGroup1Stmt->fetch(PDO::FETCH_ASSOC)) {
-										echo "<option value = '".$row1['LifeGroupID']."'>".$row1['LifeGroupName']."</option>";
-									}
-									?>
-								</select>
-								Life Group Name:
-								<input type="text" class="form-control" name="lifeGroupName">
-								Life Group Day:
-								<select name="lifeGroupDay">
+								<select name="lifeGroupDay" class="custom-select" id="inputGroupSelect01">
 									<option value="Sunday">Sunday</option>
 									<option value="Monday">Monday</option>
 									<option value="Tuesday">Tuesday</option>
@@ -137,12 +107,102 @@ if(isset($_POST['deactivate'])) {
 									<option value="Friday">Friday</option>
 									<option value="Saturday">Saturday</option>
 								</select>
-								Life Group Time:
-								<input type="text" class="form-control" name="lifeGroupTime">
-								Life Group Location:
-								<input type="text" class="form-control" name="lifeGroupLocation">
-								<button type="submit" class="btn btn-primary" name="edit">Edit Life Group</button>
 							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="input-group mb-3">
+								<div class="input-gropu-prepend">
+									<span class="input-group-text" id="basic-addon1">Life Group Time</span>
+								</div>
+								<input type="text" class="form-control" name="lifeGroupTime">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="input-group mb-3">
+								<div class="input-gropu-prepend">
+									<span class="input-group-text" id="basic-addon1">Life Group Location</span>
+								</div>
+								<input type="text" class="form-control" name="lifeGroupTime">
+							</div>
+						</div>
+					</div>
+				</form>
+				
+				<!-- Edit a Life Group-->
+				<div class="row mt-2">
+					<div class="col-sm-12">
+						<h4>Edit Life Group</h4>
+						<form action="" method="post">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="input-group mb-3">
+										<div class="input-gropu-prepend">
+											<span class="input-group-text" id="basic-addon1">Life Groups</span>
+										</div>
+										<select class="custom-select" name="lifeGroupNum" class="custom-select" id="inputGroupSelect01">
+											<?php
+											$LifeGroup1Stmt = $con->query("SELECT * FROM life_groups ORDER BY LifeGroupName ASC");
+											while($row1 = $LifeGroup1Stmt->fetch(PDO::FETCH_ASSOC)) {
+												echo "<option value = '".$row1['LifeGroupID']."'>".$row1['LifeGroupName']."</option>";
+											}
+											?>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="input-group mb-3">
+										<div class="input-gropu-prepend">
+											<span class="input-group-text" id="basic-addon1">Life Group Name</span>
+										</div>
+										<input type="text" class="form-control" name="lifeGroupName">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="input-group mb-3">
+										<div class="input-gropu-prepend">
+											<span class="input-group-text" id="basic-addon1">Life Group Day</span>
+										</div>
+										<select class="custom-select" name="lifeGroupDay" class="custom-select" id="inputGroupSelect01">
+											<option value="Sunday">Sunday</option>
+											<option value="Monday">Monday</option>
+											<option value="Tuesday">Tuesday</option>
+											<option value="Wednesday">Wednesday</option>
+											<option value="Thursday">Thursday</option>
+											<option value="Friday">Friday</option>
+											<option value="Saturday">Saturday</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="input-group mb-3">
+										<div class="input-gropu-prepend">
+											<span class="input-group-text" id="basic-addon1">Life Group Time</span>
+										</div>
+										<input type="text" class="form-control" name="lifeGroupTime">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="input-group mb-3">
+										<div class="input-gropu-prepend">
+											<span class="input-group-text" id="basic-addon1">Life Group Location</span>
+										</div>
+										<input type="text" class="form-control" name="lifeGroupLocation">
+									</div>
+								</div>
+							</div>
+							<button type="submit" class="btn btn-primary" name="edit">Edit Life Group</button>
 						</form>
 					</div>
 				</div>
