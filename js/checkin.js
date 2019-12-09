@@ -129,9 +129,8 @@ function finishForm()
 		method: 'POST',
 		data: jsonString,
 		dataType: 'json',
-		error: function() { ajaxError(); },
+		error: function(data) { ajaxError(); },
 		success: function(data) {
-
 			// Reload the page if the exit button is clicked
 			$("button[name='modal-close']").on('click', function() {
 				location.reload();
@@ -239,7 +238,7 @@ function finishEditMember()
 				method: 'POST',
 				data: request,
 				dataType: 'json',
-				error: function() {ajaxError();},
+				error: function(data) {alert(data);},
 				success: function(data) {
 
 					if (data.Exists)

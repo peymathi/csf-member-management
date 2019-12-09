@@ -12,7 +12,7 @@
 
     // Check if night of worship with that date has already been made
     $result = $con->NOW_check($date);
-    if($result)
+    if(!$result)
     {
       // Make a night of worship with that date
       $con->NOW_create($date);
