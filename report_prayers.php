@@ -1,6 +1,7 @@
 <?php
     include 'header.php';
     session_verify();
+	require_once 'phpUtil/db_connect.php';
 
 ?>
 <body>
@@ -18,32 +19,26 @@
 
     <div class="col">
 
+		<h3>Prayer Requests</h3>
 		<table class="table">
 			<thead class="thead-dark">
 			  <tr>
-				<th>Firstname</th>
-				<th>Lastname</th>
-				<th>Email</th>
+				<th>Full Name</th>
+				<th>Prayer</th>
 			  </tr>
 			</thead>
 			<tbody>
-			  <tr>
-				<td>John</td>
-				<td>Doe</td>
-				<td>john@example.com</td>
-			  </tr>
-			  <tr>
-				<td>Mary</td>
-				<td>Moe</td>
-				<td>mary@example.com</td>
-			  </tr>
-			  <tr>
-				<td>July</td>
-				<td>Dooley</td>
-				<td>july@example.com</td>
-			  </tr>
+			<?php
+				$prayerStmt = $con->prepare("Select FirstName, LastName, PrayerRequest From Members");
+				$prayerStmt->execute();
+				while($prayerRow = $prayerStmt->fetch(PDO::FETCH_ASSOC)) {
+					echo '<tr>';
+					echo '<td>'.$prayerRow['FirstName']." ".$prayerRow['LastName'].'</td><td>'.$prayerRow['PrayerRequest'].'</td>';
+					echo '</tr>';
+				}
+			?>
 			</tbody>
-		  </table>
+		</table>
 
 
      </div>
