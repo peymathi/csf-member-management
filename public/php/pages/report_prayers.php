@@ -7,7 +7,7 @@
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+  <img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="400px" height="200px">
   <h1>Prayer Requests</h1>
 </div>
 <?php

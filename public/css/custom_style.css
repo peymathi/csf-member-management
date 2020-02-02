@@ -11,6 +11,14 @@
   border: #772523;
 }
 
+a:hover {
+  color:  #772523;
+}
+
+a {
+  color: #8D2B28;
+}
+
 .btn:hover {
   background-color: #772523;
 }
