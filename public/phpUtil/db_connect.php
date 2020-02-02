@@ -1,7 +1,5 @@
 <?php
-
-// Returns the connection object to the database.
-function db_connect($hostname = 'localhost', $username = 'root', $password = '')
+function db_connect()
 {
   /*** mysql hostname ***/
   $hostname = 'localhost';
@@ -18,7 +16,7 @@ function db_connect($hostname = 'localhost', $username = 'root', $password = '')
   }
   catch(PDOException $e)
   {
-    echo $e->getMessage();
+    echo $e -> getMessage();
   }
 }
 ?>
