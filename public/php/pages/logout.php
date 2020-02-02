@@ -8,6 +8,6 @@
       $_SESSION['session'] = serialize($session);
     }
 
-    include "../pages/login.php";
+    Header("Location: login.php");
 
 ?>
