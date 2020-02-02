@@ -51,8 +51,8 @@ if(isset($_POST['forgot'])){
 
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="400px" height="200px">
-	<h1>Member Tracking</h1>
+	<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="700px" height="394px">
+	
   <p><span><?php echo $inactive; ?></p>
 </div>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">

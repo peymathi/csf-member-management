@@ -349,7 +349,8 @@ foreach($rawLG as $lifegroup)
 	</div>
 
 
-<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="400px" height="200px">
+<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="700px" height="394px">
+<br>
 <div class="jumbotron text-center" style="margin-bottom:0">
   <h1>Night of Worship Check In</h1>
 </div>

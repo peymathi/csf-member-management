@@ -44,7 +44,7 @@ if(isset($_POST['change'])){
 ?>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="400px" height="200px">
+	<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="700px" height="394px">
   <h1>Change Password</h1>
 </div>
 <div class="container" style="margin-top:30px">
