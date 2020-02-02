@@ -1,15 +1,15 @@
 <?php
 
 // Returns the connection object to the database.
-function db_connect($hostname = 'localhost', $username = 'root', $password = '')
+function db_connect()
 {
   /*** mysql hostname ***/
   $hostname = 'localhost';
   /*** mysql username ***/
   $username = 'member_data_app';
   /*** mysql password ***/
-  $filepath = "../../dbcon.txt";
-  $file = fopen($filepath);
+  $filepath = $_SERVER['DOCUMENT_ROOT'] . "/../dbcon.txt";
+  $file = fopen($filepath, 'r');
   $password = fread($file, filesize($filepath));
   $password = trim($password);
   try

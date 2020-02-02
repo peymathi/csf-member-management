@@ -1,6 +1,5 @@
 <?php
-include 'checkinUserClass.php';
-include 'phpUtil/sessionVerification.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/php/phpUtil/sessionVerification.php';
 session_start();
 ?>
 
@@ -21,8 +20,8 @@ session_start();
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 	
-	<link rel="stylesheet" type="text/css" href="css/custom_style.css">
-	<title>Impact:
+	<link rel="stylesheet" type="text/css" href="../../css/custom_style.css">
+	<title>CSF Indy
 	<?php
 	
 	//life_group_dashboard.php, modify_life_groups.php, reports_dashboard.php, report_prayers.php

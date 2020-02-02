@@ -1,9 +1,9 @@
 <?php
-include 'header.php';
+include '../phpInc/header.php';
 session_verify();
 
 
-require_once "phpUtil/db_connect.php";
+require_once "../phpUtil/db_connect.php";
 $MemberID = "";
 $FirstName = "";
 $LastName = "";
@@ -119,12 +119,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Impact Member Tracking</h1>
+  <h1>CSF Indy Sign Up</h1>
 </div>
 <?php 
-	include 'headerMembers.php';
-	include 'form.php'; 
+	include '../phpInc/headerMembers.php';
+	include '../phpInc/form.php'; 
 ?>
-<script src="register.js"></script>
+<script src="../../js/register.js"></script>
 </body>
 </html>

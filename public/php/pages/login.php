@@ -1,6 +1,7 @@
 <?php
-include 'header.php';
-require_once "phpUtil/db_connect.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/php/phpInc/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . "/php/phpUtil/db_connect.php";
+$con = db_connect();
 
 // Verify the session
 session_verify();
@@ -13,7 +14,7 @@ $email_error = "";
 $password_error = "";
 
 
-if(isset($_POST['login'])){//here after clicking submit on login page
+if(isset($_POST['login'])){
 	if(empty(trim($_POST["email"]))){
 		$email_error = "Must enter email.";
 	} else {
@@ -25,7 +26,7 @@ if(isset($_POST['login'])){//here after clicking submit on login page
 		$password = trim($_POST["password"]);
 	}
 	if(empty($email_error) && empty($password_error)){
-		$loginStmt = $con->prepare('SELECT firstname, lastname, email, password FROM admins WHERE email = :email');
+		$loginStmt = $con->prepare('SELECT password FROM admins WHERE email = :email');
 		$loginStmt->execute(array('email'=>$email));
 		$row = $loginStmt->fetch(PDO::FETCH_OBJ);
 		if($loginStmt->rowCount() != 1){
@@ -50,7 +51,7 @@ if(isset($_POST['forgot'])){
 
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+	<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
 	<h1>Member Tracking</h1>
   <p><span><?php echo $inactive; ?></p>
 </div>
@@ -79,7 +80,7 @@ if(isset($_POST['forgot'])){
 			</form>
 		</div>
 	</div>
-	<script src="login.js"></script>
+	<script src="../../js/login.js"></script>
 </div>
 </body>
 </html>

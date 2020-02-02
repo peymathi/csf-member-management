@@ -1,7 +1,7 @@
 <?php
-include 'header.php';
+include '../phpInc/header.php';
 
-require_once "phpUtil/db_connect.php";
+require_once "../phpUtil/db_connect.php";
 session_verify();
 
 $email = $new_password = $confirm_password = "";
@@ -44,7 +44,7 @@ if(isset($_POST['change'])){
 ?>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+	<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
   <h1>Change Password</h1>
 </div>
 <div class="container" style="margin-top:30px">
@@ -83,7 +83,7 @@ if(isset($_POST['change'])){
             </a>
 		</div>
 	</div>
-	<script src="change_password.js"></script>
+	<script src="../../js/change_password.js"></script>
 </div>
 </body>
 </html>

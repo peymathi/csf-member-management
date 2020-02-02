@@ -1,10 +1,10 @@
 <?php
-include 'header.php';
+include '../phpInc/header.php';
 session_verify();
 
 
-require_once "phpUtil/db_connect.php";
-require_once "checkinUserClass.php";
+require_once "../phpUtil/db_connect.php";
+require_once "../phpInc/checkinUserClass.php";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
@@ -50,7 +50,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   <h1>Impact Member Tracking</h1>
 </div>
 	<?php
-		include 'headerMembers.php';
+		include '../phpInc/headerMembers.php';
 	?>
 <div class="container" style="margin-top:30px">
 
@@ -123,7 +123,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	</div>
 </div>
 
-<script src="js/member_management.js"></script>
+<script src="../../js/member_management.js"></script>
 </body>
 </html>
 <?php

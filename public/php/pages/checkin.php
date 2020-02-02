@@ -1,7 +1,7 @@
 <?php
-include 'header.php';
+include '../phpInc/header.php';
 session_verify();
-require_once "phpUtil/db_query.php";
+require_once "../phpUtil/db_query.php";
 
 // Check if date is set
 if(isset($_SESSION['checkinDate'])) $date = $_SESSION['checkinDate'];
@@ -31,7 +31,7 @@ foreach($rawLG as $lifegroup)
 	    <!-- Modal content-->
 	    <div class="modal-content">
 	      <div class="modal-header d-block">
-					<button type="button" name='modal-close' class="close float-right" data-dismiss="modal">&times;</button>
+			<button type="button" name='modal-close' class="close float-right" data-dismiss="modal">&times;</button>
 	        <h2 class="modal-title text-center" id="modal-title"></h2>
 	      </div>
 	      <div class="modal-body text-center">
@@ -349,7 +349,7 @@ foreach($rawLG as $lifegroup)
 	</div>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+	<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
   <h1>Night of Worship Check In</h1>
 </div>
 
@@ -376,7 +376,7 @@ foreach($rawLG as $lifegroup)
 			<a href="logout.php">Logout</a>
 		</div>
 	</div>
-	<script src="js/checkin.js"></script>
+	<script src="../../js/checkin.js"></script>
 </div>
 </body>
 </html>

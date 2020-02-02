@@ -1,9 +1,9 @@
 <?php
-include 'header.php';
+include '../phpInc/header.php';
 session_verify();
 
-require_once "phpUtil/db_connect.php";
-require_once "lifeGroupClass.php";
+require_once "../phpUtil/db_connect.php";
+require_once "../phpInc/lifeGroupClass.php";
 
 
 if(isset($_POST['add'])) {
@@ -53,7 +53,7 @@ if(isset($_POST['deactivate'])) {
 	</div>
 		
 	<?php
-			include 'headerLifeGroup.php';
+			include '../phpInc/headerLifeGroup.php';
 	?>
 	
 	<div class="container" style="margin-top:30px">
@@ -262,7 +262,7 @@ if(isset($_POST['deactivate'])) {
 	</div>
 
 
-<script src="js/edit_life_groups.js"></script>
-<!--<script src="js/edit_life_groups.js"></script>-->
+<script src="../../js/edit_life_groups.js"></script>
+<!--<script src="../../js/edit_life_groups.js"></script>-->
 </body>
 </html>
