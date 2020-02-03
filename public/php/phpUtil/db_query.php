@@ -394,30 +394,33 @@ class db_query
   //
   public function member_check(string $number)
   {
-    // NOTE @COREY: Make this function return some kind of datatype with all of the
+    // This function return some kind of datatype with all of the
     // member's data in it. or false if no such member exists for the number
-    $stmt = $this -> connection -> prepare("SELECT * FROM members WHERE PhoneNumber = ?");
-
-    $stmt -> bindParam(1, $number);
-
-    $stmt -> execute(array($number));
-
-    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
-
-    if($result != null) // not empty
+    try
     {
-      if(count($result) != 0) // not empty
+      $stmt = $this -> connection -> prepare("SELECT id, first_name, last_name, email, phone_number, home_address, home_church, major, prayer_request, photo_path, opt_email, opt_text, group_id FROM members WHERE phone_number = ?");
+      $stmt -> bindParam(1, $number);
+      $stmt -> execute();
+      $result = $stmt -> fetch(PDO::FETCH_ASSOC);
+      if($result != null) // not empty
       {
-        return $result;
+        if(count($result) != 0) // not empty
+        {
+          return $result;
+        }
+        else
+        {
+          return false;
+        }
       }
       else
       {
         return false;
       }
     }
-    else
+    catch(Exception | PDOException $e)
     {
-      return false;
+      console.log('Caught exception in member_check: ' .  $e->getMessage());
     }
   }
 
@@ -427,56 +430,60 @@ class db_query
   public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE=0, $optT=0, $groupID=1)
   {
     // Creates a new member taking the first and last name with their number.
-    $stmt = $this -> connection -> prepare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText,GroupID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO members (first_name, last_name, email, home_address, major, phone_number, photo_path, prayer_request, opt_email, opt_text, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    if($email == null)
-    {
-      $email = null;
-    }
-    if($address == null)
-    {
-      $address = null;
-    }
-    if($major == null)
-    {
-      $major = null;
-    }
-    if($photoPath == null)
-    {
-      $photoPath = null;
-    }
-    if($prayerR == null)
-    {
-      $prayerR = null;
-    }
-    if($optE == null)
-    {
-      $optE = 0;
-    }
-    if($optT == null)
-    {
-      $optT = 0;
-    }
-    if($groupID == null)
-    {
-      $groupID = 1;
-    }
+      /*if($email == null)
+      {
+        $email = null;
+      }
+      if($address == null)
+      {
+        $address = null;
+      }
+      if($major == null)
+      {
+        $major = null;
+      }
+      if($photoPath == null)
+      {
+        $photoPath = null;
+      }
+      if($prayerR == null)
+      {
+        $prayerR = null;
+      }*/
+      if($optE == null)
+      {
+        $optE = 0;
+      }
+      if($optT == null)
+      {
+        $optT = 0;
+      }
+      if($groupID == null)
+      {
+        $groupID = 8;
+      }
 
-    $stmt -> bindParam(1,$fname);     //first name
-    $stmt -> bindParam(2,$lname);     //last name
-    $stmt -> bindParam(3,$email);     //email
-    $stmt -> bindParam(4,$address);
-    $stmt -> bindParam(5,$major);
-    $stmt -> bindParam(6,$number);
-    $stmt -> bindParam(7,$photoPath);
-    $stmt -> bindParam(8,$prayerR);
-    $stmt -> bindParam(9,$optE);
-    $stmt -> bindParam(10,$optT);
-    $stmt -> bindParam(11,$groupID);
-
-    //$stmt -> debugDumpParams();
-
-    $stmt -> execute();
+      $stmt -> bindParam(1, $fname);
+      $stmt -> bindParam(2, $lname);
+      $stmt -> bindParam(3, $email);
+      $stmt -> bindParam(4, $address);
+      $stmt -> bindParam(5, $major);
+      $stmt -> bindParam(6, $number);
+      $stmt -> bindParam(7, $photoPath);
+      $stmt -> bindParam(8, $prayerR);
+      $stmt -> bindParam(9, $optE);
+      $stmt -> bindParam(10, $optT);
+      $stmt -> bindParam(11, $groupID);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console.log('Caught exception in member_create: ' .  $e->getMessage());
+    }
   }
 
 
@@ -486,120 +493,127 @@ class db_query
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
     // Start + FirstName
-    $query = "UPDATE members SET FirstName = ";
-    if($fname != null)
+    try
     {
-      $query .= "'" . $fname . "',";
-    }
-    else
-    {
-      $query .= "FirstName, ";
-    }
-    // LastName
-    $query .= "LastName = ";
-    if($lname != null)
-    {
-      $query .= "'" . $lname . "', ";
-    }
-    else
-    {
-      $query .= "LastName, ";
-    }
-    // PhoneNumber
-    $query .= "PhoneNumber = ";
-    if($numberN != null)
-    {
-      $query .= "'" . $numberN . "', ";
-    }
-    else
-    {
-      $query .= "PhoneNumber, ";
-    }
-    // EmailAddress
-    $query .= "EmailAddress = ";
-    if($email != null)
-    {
-      $query .= "'" . $email . "', ";
-    }
-    else
-    {
-      $query .= "EmailAddress, ";
-    }
-    // HomeAddress
-    $query .= "HomeAddress = ";
-    if($address != null)
-    {
-      $query .= "'" . $address . "', ";
-    }
-    else
-    {
-      $query .= "HomeAddress, ";
-    }
-    // Major
-    $query .= "Major = ";
-    if($major != null)
-    {
-      $query .= "'" . $major . "', ";
-    }
-    else
-    {
-      $query .= "Major, ";
-    }
-    // PhotoPath
-    $query .= "PhotoPath = ";
-    if($photoPath != null)
-    {
-      $query .= "'" . $photoPath . "', ";
-    }
-    else
-    {
-      $query .= "PhotoPath, ";
-    }
-    // PrayerRequest
-    $query .= "PrayerRequest = ";
-    if($prayerR != null)
-    {
-      $query .= "'" . $prayerR . "', ";
-    }
-    else
-    {
-      $query .= "PrayerRequest, ";
-    }
-    // OptEmail
-    $query .= "OptEmail = ";
-    if($optE != null)
-    {
-      $query .= "'" . $optE . "', ";
-    }
-    else
-    {
-      $query .= "OptEmail, ";
-    }
-    // OptText
-    $query .= "OptText = ";
-    if($optT != null)
-    {
-      $query .= "'" . $optT . "', ";
-    }
-    else
-    {
-      $query .= "OptText, ";
-    }
-    // GroupID
-    $query .= "GroupID = ";
-    if($groupID != null)
-    {
-      $query .= "'" . $groupID . "' ";
-    }
-    else
-    {
-      $query .= "GroupID ";
-    }
+      $query = "UPDATE members SET first_name = ";
+      if($fname != null)
+      {
+        $query .= "'" . $fname . "',";
+      }
+      else
+      {
+        $query .= "first_name, ";
+      }
+      // LastName
+      $query .= "last_name = ";
+      if($lname != null)
+      {
+        $query .= "'" . $lname . "', ";
+      }
+      else
+      {
+        $query .= "last_name, ";
+      }
+      // PhoneNumber
+      $query .= "phone_number = ";
+      if($numberN != null)
+      {
+        $query .= "'" . $numberN . "', ";
+      }
+      else
+      {
+        $query .= "phone_number, ";
+      }
+      // EmailAddress
+      $query .= "email = ";
+      if($email != null)
+      {
+        $query .= "'" . $email . "', ";
+      }
+      else
+      {
+        $query .= "email, ";
+      }
+      // HomeAddress
+      $query .= "home_address = ";
+      if($address != null)
+      {
+        $query .= "'" . $address . "', ";
+      }
+      else
+      {
+        $query .= "home_address, ";
+      }
+      // Major
+      $query .= "major = ";
+      if($major != null)
+      {
+        $query .= "'" . $major . "', ";
+      }
+      else
+      {
+        $query .= "major, ";
+      }
+      // PhotoPath
+      $query .= "photo_path = ";
+      if($photoPath != null)
+      {
+        $query .= "'" . $photoPath . "', ";
+      }
+      else
+      {
+        $query .= "photo_path, ";
+      }
+      // PrayerRequest
+      $query .= "prayer_request = ";
+      if($prayerR != null)
+      {
+        $query .= "'" . $prayerR . "', ";
+      }
+      else
+      {
+        $query .= "prayer_request, ";
+      }
+      // OptEmail
+      $query .= "opt_email = ";
+      if($optE != null)
+      {
+        $query .= "'" . $optE . "', ";
+      }
+      else
+      {
+        $query .= "opt_email, ";
+      }
+      // OptText
+      $query .= "opt_text = ";
+      if($optT != null)
+      {
+        $query .= "'" . $optT . "', ";
+      }
+      else
+      {
+        $query .= "opt_text, ";
+      }
+      // GroupID
+      $query .= "group_id = ";
+      if($groupID != null)
+      {
+        $query .= "'" . $groupID . "' ";
+      }
+      else
+      {
+        $query .= "group_id ";
+      }
 
-    $query .= "WHERE PhoneNumber = '" . $number . "' ";
-    //echo $query;
-    $stmt = $this -> connection -> prepare($query);
-    $stmt -> execute();
+      $query .= "WHERE phone_number = '" . $number . "' ";
+      //echo $query;
+      $stmt = $this -> connection -> prepare($query);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console.log('Caught exception in member_edit: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -609,11 +623,16 @@ class db_query
   {
     // Take the field of concern and what it should equal to be removed from the
     // database.
-    $stmt = $this -> connection -> prepare("DELETE FROM members WHERE PhoneNumber = ?");
-
-    $stmt -> bindParam(1, $number);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("DELETE FROM members WHERE phone_number = ?");
+      $stmt -> bindParam(1, $number);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console.log('Caught exception in member_remove: ' .  $e->getMessage());
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
