@@ -21,7 +21,7 @@ function session_verify()
         $session->toggleInactive();
         $session->destroy();
         $_SESSION['session'] = serialize($session);
-        Header("Location: login.php");
+        Header("Location: ../pages/login.php");
         exit;
       }
 
@@ -42,18 +42,18 @@ function session_verify()
       case "dashboard.php":
       case "edit_member.php":
       case "register.php":
-        if ($session->getState() != Session::STATE_IN) Header("Location: login.php");
+        if ($session->getState() != Session::STATE_IN) Header("Location: ../pages/login.php");
         break;
 
       case "checkin.php":
-        if ($session->getState() === Session::STATE_OUT) Header("Location: login.php");
+        if ($session->getState() === Session::STATE_OUT) Header("Location: ../pages/login.php");
         else $session->checkIn();
         $_SESSION['session'] = serialize($session);
         break;
 
       case "login.php":
-        if ($session->getState() === Session::STATE_IN) Header("Location: dashboard.php");
-        else if ($session->getState() === Session::STATE_CHECK_IN) Header("Location: checkin.php");
+        if ($session->getState() === Session::STATE_IN) Header("Location: ../pages/dashboard.php");
+        else if ($session->getState() === Session::STATE_CHECK_IN) Header("Location: ../pages/checkin.php");
         break;
     }
 
@@ -67,7 +67,7 @@ function session_verify()
     // Check if we are already at login page
     if (basename($_SERVER['PHP_SELF']) != 'login.php')
     {
-      Header("Location: login.php");
+      Header("Location: ../pages/login.php");
       exit;
     }
   }
@@ -96,11 +96,8 @@ function authenticate()
     $session->authenticate();
     $_SESSION['session'] = serialize($session);
 
-    // DEBUG
-    echo $session->getState();
-
-    if ($session->getState() === Session::STATE_IN) Header("Location: dashboard.php");
-    else  Header ("Location: checkin.php");
+    if ($session->getState() === Session::STATE_IN) Header("Location: ../pages/dashboard.php");
+    else  Header ("Location: ../pages/checkin.php");
   }
 
   else throw "Error in session verification. Session was not initialized.";

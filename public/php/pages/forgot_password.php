@@ -1,7 +1,7 @@
 <?php
-include 'header.php';
+include '../phpInc/header.php';
 
-require_once "phpUtil/db_connect.php";
+require_once "../phpUtil/db_connect.php";
 
 $email = "";
 $email_error = "";
@@ -55,7 +55,7 @@ function randomPassword() {
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-	<img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+	<img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="700px" height="394px">
   <h1>Forgot Password</h1>
 </div>
 <div class="container" style="margin-top:30px">
@@ -75,7 +75,7 @@ function randomPassword() {
 			</form>
 		</div>
 	</div>
-	<script src="forgot_password.js"></script>
+	<script src="../../js/forgot_password.js"></script>
 </div>
 </body>
 </html>

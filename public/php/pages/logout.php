@@ -1,5 +1,5 @@
 <?php
-    include "phpUtil/sessionVerification.php";
+    include "../phpUtil/sessionVerification.php";
     session_start();
     if (isset($_SESSION['session']))
     {
@@ -8,7 +8,6 @@
       $_SESSION['session'] = serialize($session);
     }
 
-    Header("location: login.php");
+    Header("Location: login.php");
 
-    exit;
 ?>

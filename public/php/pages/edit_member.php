@@ -1,9 +1,7 @@
 <?php
-include 'header.php';
+include '../phpInc/header.php';
 session_verify();
-
-
-require_once "phpUtil/db_connect.php";
+require_once "../../phpUtil/db_connect.php";
 
 $UserCheckin = $_SESSION["UserCheckin"];
 $MemberID = $UserCheckin->getMemberID();
@@ -125,9 +123,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){//will update user info here
   <h1>Impact Member Tracking</h1>
 </div>
 <?php 
-include 'headerMembers.php';
-include 'form.php'; 
+include '../phpInc/headerMembers.php';
+include '../phpInc/form.php'; 
 ?>
-<script src="edit_member.js"></script>
+<script src="../../js/edit_member.js"></script>
 </body>
 </html>

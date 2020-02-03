@@ -1,18 +1,18 @@
 <?php
-    include 'header.php';
+    include '../phpInc/header.php';
     session_verify();
 
-	require_once 'phpUtil/db_connect.php';
+	require_once '../phpUtil/db_connect.php';
 
 ?>
 <body>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <img src="img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
+  <img src="../../../../img/logo.png" class="img-fluid" alt="Responsive image" width='200px' height='200px'>
   <h1>Home Addresses Report</h1>
 </div>
 <?php
-	include 'headerReports.php';
+	include '../phpInc/headerReports.php';
 ?>
 
 <div class="container" style="margin-top:30px">

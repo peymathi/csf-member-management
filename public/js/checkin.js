@@ -125,7 +125,7 @@ function finishForm()
 
 	// Make ajax call to push new user data to DB
 	$.ajax({
-		url: 'phpAjax/finishCheckIn.php',
+		url: '../phpAjax/finishCheckIn.php',
 		method: 'POST',
 		data: jsonString,
 		dataType: 'json',
@@ -234,7 +234,7 @@ function finishEditMember()
 			// Perform ajax call to find out if the phone number entered already exists
 			var request = {Phone: formResponse.Phone};
 			$.ajax({
-				url: 'phpAjax/checkDuplicatePhone.php',
+				url: '../phpAjax/checkDuplicatePhone.php',
 				method: 'POST',
 				data: request,
 				dataType: 'json',
@@ -361,7 +361,7 @@ function finishRegForm()
 		// Need to check if phone number is already taken
 		var request = {Phone: formResponse.Phone};
 		$.ajax({
-			url: 'phpAjax/checkDuplicatePhone.php',
+			url: '../phpAjax/checkDuplicatePhone.php',
 			method: 'POST',
 			data: request,
 			dataType: 'json',
@@ -429,7 +429,7 @@ $(document).ready(function() {
 		phone = cleanUpPhone( $("#phone").val());
 		var request = {Phone: phone};
 		$.ajax ({
-			url: 'phpAjax/getMemberData.php',
+			url: '../phpAjax/getMemberData.php',
 			method: 'POST',
 			data: request,
 			dataType: 'json',

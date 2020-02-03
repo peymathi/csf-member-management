@@ -6,8 +6,8 @@ function db_connect()
   /*** mysql username ***/
   $username = 'member_data_app';
   /*** mysql password ***/
-  $filepath = "../../dbcon.txt";
-  $file = fopen($filepath);
+  $filepath = $_SERVER['DOCUMENT_ROOT'] . "/../dbcon.txt";
+  $file = fopen($filepath, 'r');
   $password = fread($file, filesize($filepath));
   $password = trim($password);
   try

@@ -1,9 +1,9 @@
 <?php
-include 'header.php';
+include '../phpInc/header.php';
 session_verify();
 
-require_once "phpUtil/db_connect.php";
-require_once "lifeGroupClass.php";
+require_once "../phpUtil/db_connect.php";
+require_once "../phpInc/lifeGroupClass.php";
 
 ?>
 
@@ -72,7 +72,7 @@ require_once "lifeGroupClass.php";
 </div>
 
 
-<script src="js/edit_life_groups.js"></script>
-<!--<script src="js/toggle_life_groups.js"></script>-->
+<script src="../../js/edit_life_groups.js"></script>
+<!--<script src="../../js/toggle_life_groups.js"></script>-->
 </body>
 </html>
