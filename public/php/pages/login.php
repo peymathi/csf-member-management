@@ -65,14 +65,12 @@ if(isset($_POST['forgot'])){
 				<label for="email">Email:</label>
 				<input type="email" class="form-control" id="email" placeholder="Enter email" name="email" value="<?php echo $email; ?>" required>
                 <span class="help-block"><?php echo $email_error; ?></span>
-                <div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 			  </div>
 			  <div class="form-group">
 				<label for="password">Password:</label>
 				<input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
                 <span class="help-block"><?php echo $password_error; ?></span>
-                <div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Please fill out this field.</div>
 			  </div>
 			  <button type="submit" class="btn btn-primary" name="login">Log In</button>
