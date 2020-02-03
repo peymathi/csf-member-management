@@ -104,22 +104,19 @@ class db_query
   //
   public function admin_check(string $email, string $password)
   {
-    //
     // Check if the user exists and entered correct login data, then returns
-    // array of result if found, or false
-    //
-    try {
-      $stmt = $this -> connection -> prepare("SELECT email, password FROM admins WHERE email = ? AND password = ?");
+    // true if found, or false if not found
+    try
+    {
+      $stmt = $this -> connection -> prepare("SELECT email, password FROM admins WHERE email = ?");
       $stmt -> bindParam(1, $email);
-      $stmt -> bindParam(2, $password);
       $stmt -> execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       if($result != null)
       {
         if(count($result) != 0) // not empty
         {
-          $result['password']  ;
-          return $result;
+          return hash_equals($result['password'], crypt($password, $this -> salt));
         }
         else
         {
@@ -131,9 +128,9 @@ class db_query
         return false;
       }
     }
-    catch(PDOException $e)
+    catch(Exception | PDOException $e)
     {
-      echo $e -> getMessage();
+      console.log('Caught exception in admin_check: ' .  $e->getMessage());
     }
   }
 
@@ -144,14 +141,19 @@ class db_query
   {
     // Takes the first name, last name, email, and password and stores them in the
     // database.
-    $stmt = $this -> connection -> prepare("INSERT INTO admins (firstname, lastname, email, password) VALUES (?, ?, ?, ?)");
-
-    $stmt -> bindParam(1, $fname);
-    $stmt -> bindParam(2, $lname);
-    $stmt -> bindParam(3, $email);
-    $stmt -> bindParam(4, $password);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO admins (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
+      $stmt -> bindParam(1, $fname);
+      $stmt -> bindParam(2, $lname);
+      $stmt -> bindParam(3, $email);
+      $stmt -> bindParam(4, crypt($password, $this -> salt));
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console.log('Caught exception in admin_create: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -162,23 +164,23 @@ class db_query
     // Takes the number of the member to find in the DB.
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
-    $query = "UPDATE admins SET firstname = ";
+    $query = "UPDATE admins SET first_name = ";
     if($fname != null)
     {
       $query .= "'" . $fname . "',";
     }
     else
     {
-      $query .= "firstname, ";
+      $query .= "first_name, ";
     }
-    $query .= "lastname = ";
+    $query .= "last_name = ";
     if($lname != null)
     {
       $query .= "'" . $lname . "', ";
     }
     else
     {
-      $query .= "lastname, ";
+      $query .= "last_name, ";
     }
     $query .= "email = ";
     if($email != null)
@@ -212,7 +214,6 @@ class db_query
     // Take the field of concern and what it should equal to be removed from the
     // database.
     $stmt = $this -> connection -> prepare("DELETE FROM admins WHERE " . $field . " = '" . $equals . "'");
-    //echo "DELETE FROM admins WHERE " . $field . " = '" . $equals . "'";
     $stmt -> execute();
   }
 
