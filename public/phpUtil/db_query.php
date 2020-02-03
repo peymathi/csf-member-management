@@ -106,29 +106,32 @@ class db_query
     // Check if the user exists and entered correct login data, then returns
     // array of result if found, or false
     //
-    $stmt = $this -> connection -> prepare("SELECT * FROM admins WHERE email = ? AND password = ?");
-
-    $stmt -> bindParam(1, $email);
-    $stmt -> bindParam(2, $password);
-
-    $stmt -> execute();
-
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if($result != null)
-    {
-      if(count($result) != 0) // not empty
+    try {
+      $stmt = $this -> connection -> prepare("SELECT email, password FROM admins WHERE email = ? AND password = ?");
+      $stmt -> bindParam(1, $email);
+      $stmt -> bindParam(2, $password);
+      $stmt -> execute();
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      if($result != null)
       {
-        return $result;
+        if(count($result) != 0) // not empty
+        {
+          $result['password']  ;
+          return $result;
+        }
+        else
+        {
+          return false;
+        }
       }
       else
       {
         return false;
       }
     }
-    else
+    catch(PDOException $e)
     {
-      return false;
+      echo $e -> getMessage();
     }
   }
 
