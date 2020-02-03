@@ -63,6 +63,7 @@
 *
 */
 include 'db_connect.php';
+include 'get_salt.php';
 
 class db_query
 {
@@ -71,6 +72,7 @@ class db_query
   //
   private $connection;
   private $query;
+  private $salt;
 
   //
   // consructor
@@ -79,15 +81,15 @@ class db_query
   {
     // Set queue variable to an empty string
     $this -> query = "";
-
     // Setup the connection with the database
     try
     {
       $this -> connection = db_connect();
+      $this -> salt = get_salt();
     }
-    catch(Exception $e)
+    catch(Exception | PDOException $e)
     {
-      echo "Caught exception: ",  $e->getMessage(), "\n";
+      console.log('Caught exception in db_query constructor: ' .  $e->getMessage());
     }
   }
 
