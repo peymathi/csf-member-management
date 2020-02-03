@@ -228,13 +228,10 @@ class db_query
   //
   public function group_check($groupID)
   {
-    $stmt = $this -> connection -> prepare("SELECT GroupName FROM groups WHERE GroupID = ?");
-
+    $stmt = $this -> connection -> prepare("SELECT group_name FROM groups WHERE id = ?");
     $stmt -> bindParam(1, $groupID);
-
     $stmt -> execute();
-
-    return ($stmt -> fetch(PDO::FETCH_ASSOC))['GroupName'];
+    return ($stmt -> fetch(PDO::FETCH_ASSOC))['group_name'];
   }
 
   //
@@ -243,12 +240,9 @@ class db_query
   // returns false if no group id exists for given name
   public function get_group_id($groupName)
   {
-    $stmt = $this -> connection -> prepare("SELECT GroupID FROM groups WHERE GroupName = ?");
-
+    $stmt = $this -> connection -> prepare("SELECT id FROM groups WHERE group_name = ?");
     $stmt -> bindParam(1, $groupName);
-
     $stmt -> execute();
-
     $response = $stmt -> fetch(PDO::FETCH_NUM);
     if ($response != null) return $response[0];
     else return false;
@@ -259,10 +253,8 @@ class db_query
   //
   public function group_create(string $name)
   {
-    $stmt = $this -> connection -> prepare("INSERT INTO groups (GroupName) VALUES (?)");
-
+    $stmt = $this -> connection -> prepare("INSERT INTO groups (group_name) VALUES (?)");
     $stmt -> bindParam(1, $name);
-
     $stmt -> execute();
   }
 
@@ -279,8 +271,7 @@ class db_query
   //
   public function group_remove(string $field, string $equals)
   {
-    $stmt = $this -> connection -> prepare("DELETE FROM group WHERE " + $field + " = " + $equals);
-
+    $stmt = $this -> connection -> prepare("DELETE FROM groups WHERE " + $field + " = " + $equals);
     $stmt -> execute();
   }
 
