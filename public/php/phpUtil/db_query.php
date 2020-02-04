@@ -636,15 +636,19 @@ class db_query
   //
   public function NOW_check(string $date)
   {
-    $stmt = $this -> connection -> prepare("SELECT * FROM nights_of_worship WHERE NightDate = ?");
-
-    $stmt -> bindParam(1, $date);
-
-    $stmt -> execute();
-
-    $response = $stmt -> fetch(PDO::FETCH_ASSOC);
-    if($response != null) return $response;
-    else return false;
+    try
+    {
+      $stmt = $this -> connection -> prepare("SELECT id, now_date FROM nights_of_worship WHERE now_date = ?");
+      $stmt -> bindParam(1, $date);
+      $stmt -> execute();
+      $response = $stmt -> fetch(PDO::FETCH_ASSOC);
+      if($response != null) return $response;
+      else return false;
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in NOW_check: ' .  $e->getMessage());
+    }
   }
   //
   // NOW_create
@@ -652,11 +656,16 @@ class db_query
   public function NOW_create(string $date)
   {
     // Expects dates to be in the YYYY-MM-DD format
-    $stmt = $this -> connection -> prepare("INSERT INTO nights_of_worship (NightDate) VALUES (?)");
-
-    $stmt -> bindParam(1, $date);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO nights_of_worship (now_date) VALUES (?)");
+      $stmt -> bindParam(1, $date);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in NOW_create: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -664,12 +673,18 @@ class db_query
   //
   public function NOW_edit(string $dateOld, string $dateNew)
   {
-    $stmt = $this -> connection -> prepare("UPDATE nights_of_worship SET NightDate = ? WHERE NightDate = ?");
-
-    $stmt -> bindParam(1, $dateNew);
-    $stmt -> bindParam(2, $dateOld);
-
-    $stmt -> execute();
+    // Expects dates to be in the YYYY-MM-DD format
+    try
+    {
+      $stmt = $this -> connection -> prepare("UPDATE nights_of_worship SET now_date = ? WHERE now_date = ?");
+      $stmt -> bindParam(1, $dateNew);
+      $stmt -> bindParam(2, $dateOld);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in NOW_edit: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -677,11 +692,16 @@ class db_query
   //
   public function NOW_remove(string $date)
   {
-    $stmt = $this -> connection -> prepare("DELETE FROM nights_of_worship WHERE NightDate = ?");
-
-    $stmt -> bindParam(1, $date);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("DELETE FROM nights_of_worship WHERE now_date = ?");
+      $stmt -> bindParam(1, $date);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in NOW_remove: ' .  $e->getMessage());
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
