@@ -165,46 +165,53 @@ class db_query
     // Takes the number of the member to find in the DB.
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
-    $query = "UPDATE admins SET first_name = ";
-    if($fname != null)
+    try
     {
-      $query .= "'" . $fname . "',";
+      $query = "UPDATE admins SET first_name = ";
+      if($fname != null)
+      {
+        $query .= "'" . $fname . "',";
+      }
+      else
+      {
+        $query .= "first_name, ";
+      }
+      $query .= "last_name = ";
+      if($lname != null)
+      {
+        $query .= "'" . $lname . "', ";
+      }
+      else
+      {
+        $query .= "last_name, ";
+      }
+      $query .= "email = ";
+      if($email != null)
+      {
+        $query .= "'" . $email . "', ";
+      }
+      else
+      {
+        $query .= "email, ";
+      }
+      $query .= "password = ";
+      if($password != null)
+      {
+        $query .= "'" . $password . "' ";
+      }
+      else
+      {
+        $query .= "password ";
+      }
+      $query .= "WHERE " . $field . " = '" . $equals . "' ";
+      //echo $query;
+      $stmt = $this -> connection -> prepare($query);
+      $stmt -> execute();
     }
-    else
+    catch(Exception | PDOException $e)
     {
-      $query .= "first_name, ";
+      console_log('Caught exception in admin_create: ' .  $e->getMessage());
     }
-    $query .= "last_name = ";
-    if($lname != null)
-    {
-      $query .= "'" . $lname . "', ";
-    }
-    else
-    {
-      $query .= "last_name, ";
-    }
-    $query .= "email = ";
-    if($email != null)
-    {
-      $query .= "'" . $email . "', ";
-    }
-    else
-    {
-      $query .= "email, ";
-    }
-    $query .= "password = ";
-    if($password != null)
-    {
-      $query .= "'" . $password . "' ";
-    }
-    else
-    {
-      $query .= "password ";
-    }
-    $query .= "WHERE " . $field . " = '" . $equals . "' ";
-    //echo $query;
-    $stmt = $this -> connection -> prepare($query);
-    $stmt -> execute();
   }
 
   //
@@ -214,8 +221,15 @@ class db_query
   {
     // Take the field of concern and what it should equal to be removed from the
     // database.
-    $stmt = $this -> connection -> prepare("DELETE FROM admins WHERE " . $field . " = '" . $equals . "'");
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("DELETE FROM admins WHERE " . $field . " = '" . $equals . "'");
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in admin_create: ' .  $e->getMessage());
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
