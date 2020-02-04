@@ -63,6 +63,8 @@
 *
 */
 include 'db_connect.php';
+include 'get_salt.php';
+include 'console_log.php';
 
 class db_query
 {
@@ -71,6 +73,7 @@ class db_query
   //
   private $connection;
   private $query;
+  private $salt;
 
   //
   // consructor
@@ -79,15 +82,15 @@ class db_query
   {
     // Set queue variable to an empty string
     $this -> query = "";
-
     // Setup the connection with the database
     try
     {
       $this -> connection = db_connect();
+      $this -> salt = get_salt();
     }
-    catch(Exception $e)
+    catch(Exception | PDOException $e)
     {
-      echo "Caught exception: ",  $e->getMessage(), "\n";
+      console_log('Caught exception in db_query constructor: ' .  $e->getMessage());
     }
   }
 
@@ -102,33 +105,33 @@ class db_query
   //
   public function admin_check(string $email, string $password)
   {
-    //
     // Check if the user exists and entered correct login data, then returns
-    // array of result if found, or false
-    //
-    $stmt = $this -> connection -> prepare("SELECT * FROM admins WHERE email = ? AND password = ?");
-
-    $stmt -> bindParam(1, $email);
-    $stmt -> bindParam(2, $password);
-
-    $stmt -> execute();
-
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if($result != null)
+    // true if found, or false if not found
+    try
     {
-      if(count($result) != 0) // not empty
+      $stmt = $this -> connection -> prepare("SELECT email, password FROM admins WHERE email = ?");
+      $stmt -> bindParam(1, $email);
+      $stmt -> execute();
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      if($result != null)
       {
-        return $result;
+        if(count($result) != 0) // not empty
+        {
+          return hash_equals($result['password'], crypt($password, $this -> salt));
+        }
+        else
+        {
+          return false;
+        }
       }
       else
       {
         return false;
       }
     }
-    else
+    catch(Exception | PDOException $e)
     {
-      return false;
+      console_log('Caught exception in admin_check: ' .  $e->getMessage());
     }
   }
 
@@ -139,14 +142,19 @@ class db_query
   {
     // Takes the first name, last name, email, and password and stores them in the
     // database.
-    $stmt = $this -> connection -> prepare("INSERT INTO admins (firstname, lastname, email, password) VALUES (?, ?, ?, ?)");
-
-    $stmt -> bindParam(1, $fname);
-    $stmt -> bindParam(2, $lname);
-    $stmt -> bindParam(3, $email);
-    $stmt -> bindParam(4, $password);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO admins (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
+      $stmt -> bindParam(1, $fname);
+      $stmt -> bindParam(2, $lname);
+      $stmt -> bindParam(3, $email);
+      $stmt -> bindParam(4, crypt($password, $this -> salt));
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in admin_create: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -157,23 +165,23 @@ class db_query
     // Takes the number of the member to find in the DB.
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
-    $query = "UPDATE admins SET firstname = ";
+    $query = "UPDATE admins SET first_name = ";
     if($fname != null)
     {
       $query .= "'" . $fname . "',";
     }
     else
     {
-      $query .= "firstname, ";
+      $query .= "first_name, ";
     }
-    $query .= "lastname = ";
+    $query .= "last_name = ";
     if($lname != null)
     {
       $query .= "'" . $lname . "', ";
     }
     else
     {
-      $query .= "lastname, ";
+      $query .= "last_name, ";
     }
     $query .= "email = ";
     if($email != null)
@@ -207,7 +215,6 @@ class db_query
     // Take the field of concern and what it should equal to be removed from the
     // database.
     $stmt = $this -> connection -> prepare("DELETE FROM admins WHERE " . $field . " = '" . $equals . "'");
-    //echo "DELETE FROM admins WHERE " . $field . " = '" . $equals . "'";
     $stmt -> execute();
   }
 
@@ -222,13 +229,10 @@ class db_query
   //
   public function group_check($groupID)
   {
-    $stmt = $this -> connection -> prepare("SELECT GroupName FROM groups WHERE GroupID = ?");
-
+    $stmt = $this -> connection -> prepare("SELECT group_name FROM groups WHERE id = ?");
     $stmt -> bindParam(1, $groupID);
-
     $stmt -> execute();
-
-    return ($stmt -> fetch(PDO::FETCH_ASSOC))['GroupName'];
+    return ($stmt -> fetch(PDO::FETCH_ASSOC))['group_name'];
   }
 
   //
@@ -237,12 +241,9 @@ class db_query
   // returns false if no group id exists for given name
   public function get_group_id($groupName)
   {
-    $stmt = $this -> connection -> prepare("SELECT GroupID FROM groups WHERE GroupName = ?");
-
+    $stmt = $this -> connection -> prepare("SELECT id FROM groups WHERE group_name = ?");
     $stmt -> bindParam(1, $groupName);
-
     $stmt -> execute();
-
     $response = $stmt -> fetch(PDO::FETCH_NUM);
     if ($response != null) return $response[0];
     else return false;
@@ -253,10 +254,8 @@ class db_query
   //
   public function group_create(string $name)
   {
-    $stmt = $this -> connection -> prepare("INSERT INTO groups (GroupName) VALUES (?)");
-
+    $stmt = $this -> connection -> prepare("INSERT INTO groups (group_name) VALUES (?)");
     $stmt -> bindParam(1, $name);
-
     $stmt -> execute();
   }
 
@@ -273,8 +272,7 @@ class db_query
   //
   public function group_remove(string $field, string $equals)
   {
-    $stmt = $this -> connection -> prepare("DELETE FROM group WHERE " + $field + " = " + $equals);
-
+    $stmt = $this -> connection -> prepare("DELETE FROM groups WHERE " + $field + " = " + $equals);
     $stmt -> execute();
   }
 
@@ -289,10 +287,8 @@ class db_query
   //
   public function life_group_check(string $field, string $equals)
   {
-    $stmt = $this -> connection -> prepare("SELECT * FROM life_groups WHERE " . $field . " = '" . $equals . "'");
-
+    $stmt = $this -> connection -> prepare("SELECT id, life_group_name, life_group_day, life_group_time, life_group_location FROM life_groups WHERE " . $field . " = '" . $equals . "'");
     $stmt -> execute();
-
     $result = $stmt -> fetchAll(PDO::FETCH_ASSOC);
     if ($result != null) return $result;
     else return false;
@@ -306,15 +302,12 @@ class db_query
   {
     // Takes the name of the life group, the weekly day of the meeting, the time
     // at the meeting, and a description of the meeting.
-    $stmt = $this -> connection -> prepare("INSERT INTO life_groups (LifeGroupName, LifeGroupDay, LifeGroupTime, LifeGroupLocation) VALUES (?, ?, ?, ?)");
-
+    $stmt = $this -> connection -> prepare("INSERT INTO life_groups (life_group_name, life_group_day, life_group_time, life_group_location, life_group_active) VALUES (?, ?, ?, ?, ?)");
     $stmt -> bindParam(1, $name);
     $stmt -> bindParam(2, $day);
     $stmt -> bindParam(3, $time);
     $stmt -> bindParam(4, $location);
-
-    $stmt -> debugDumpParams();
-
+    $stmt -> bindParam(5, 1);
     $stmt -> execute();
   }
 
@@ -326,41 +319,41 @@ class db_query
     // Takes the field of concern and what it should be looking for in the field.
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
-    $query = "UPDATE life_groups SET LifeGroupName = ";
+    $query = "UPDATE life_groups SET life_group_name = ";
     if($name != null)
     {
       $query .= "'" . $name . "',";
     }
     else
     {
-      $query .= "LifeGroupName, ";
+      $query .= "life_group_name, ";
     }
-    $query .= "LifeGroupDay = ";
+    $query .= "life_group_day = ";
     if($day != null)
     {
       $query .= "'" . $day . "', ";
     }
     else
     {
-      $query .= "LifeGroupDay, ";
+      $query .= "life_group_day, ";
     }
-    $query .= "LifeGroupTime = ";
+    $query .= "life_group_time = ";
     if($time != null)
     {
       $query .= "'" . $time . "', ";
     }
     else
     {
-      $query .= "LifeGroupTime, ";
+      $query .= "life_group_time, ";
     }
-    $query .= "LifeGroupLocation = ";
+    $query .= "life_group_location = ";
     if($location != null)
     {
       $query .= "'" . $location . "' ";
     }
     else
     {
-      $query .= "LifeGroupLocation ";
+      $query .= "life_group_location ";
     }
     $query .= "WHERE " . $field . " = '" . $equals . "' ";
     //echo $query;
@@ -391,30 +384,33 @@ class db_query
   //
   public function member_check(string $number)
   {
-    // NOTE @COREY: Make this function return some kind of datatype with all of the
+    // This function return some kind of datatype with all of the
     // member's data in it. or false if no such member exists for the number
-    $stmt = $this -> connection -> prepare("SELECT * FROM members WHERE PhoneNumber = ?");
-
-    $stmt -> bindParam(1, $number);
-
-    $stmt -> execute(array($number));
-
-    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
-
-    if($result != null) // not empty
+    try
     {
-      if(count($result) != 0) // not empty
+      $stmt = $this -> connection -> prepare("SELECT id, first_name, last_name, email, phone_number, home_address, home_church, major, prayer_request, photo_path, opt_email, opt_text, group_id FROM members WHERE phone_number = ?");
+      $stmt -> bindParam(1, $number);
+      $stmt -> execute();
+      $result = $stmt -> fetch(PDO::FETCH_ASSOC);
+      if($result != null) // not empty
       {
-        return $result;
+        if(count($result) != 0) // not empty
+        {
+          return $result;
+        }
+        else
+        {
+          return false;
+        }
       }
       else
       {
         return false;
       }
     }
-    else
+    catch(Exception | PDOException $e)
     {
-      return false;
+      console_log('Caught exception in member_check: ' .  $e->getMessage());
     }
   }
 
@@ -424,56 +420,60 @@ class db_query
   public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE=0, $optT=0, $groupID=1)
   {
     // Creates a new member taking the first and last name with their number.
-    $stmt = $this -> connection -> prepare("INSERT INTO members (FirstName,LastName,EmailAddress,HomeAddress,Major,PhoneNumber,PhotoPath,PrayerRequest,OptEmail,OptText,GroupID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO members (first_name, last_name, email, home_address, major, phone_number, photo_path, prayer_request, opt_email, opt_text, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    if($email == null)
-    {
-      $email = null;
-    }
-    if($address == null)
-    {
-      $address = null;
-    }
-    if($major == null)
-    {
-      $major = null;
-    }
-    if($photoPath == null)
-    {
-      $photoPath = null;
-    }
-    if($prayerR == null)
-    {
-      $prayerR = null;
-    }
-    if($optE == null)
-    {
-      $optE = 0;
-    }
-    if($optT == null)
-    {
-      $optT = 0;
-    }
-    if($groupID == null)
-    {
-      $groupID = 1;
-    }
+      /*if($email == null)
+      {
+        $email = null;
+      }
+      if($address == null)
+      {
+        $address = null;
+      }
+      if($major == null)
+      {
+        $major = null;
+      }
+      if($photoPath == null)
+      {
+        $photoPath = null;
+      }
+      if($prayerR == null)
+      {
+        $prayerR = null;
+      }*/
+      if($optE == null)
+      {
+        $optE = 0;
+      }
+      if($optT == null)
+      {
+        $optT = 0;
+      }
+      if($groupID == null)
+      {
+        $groupID = 8;
+      }
 
-    $stmt -> bindParam(1,$fname);     //first name
-    $stmt -> bindParam(2,$lname);     //last name
-    $stmt -> bindParam(3,$email);     //email
-    $stmt -> bindParam(4,$address);
-    $stmt -> bindParam(5,$major);
-    $stmt -> bindParam(6,$number);
-    $stmt -> bindParam(7,$photoPath);
-    $stmt -> bindParam(8,$prayerR);
-    $stmt -> bindParam(9,$optE);
-    $stmt -> bindParam(10,$optT);
-    $stmt -> bindParam(11,$groupID);
-
-    //$stmt -> debugDumpParams();
-
-    $stmt -> execute();
+      $stmt -> bindParam(1, $fname);
+      $stmt -> bindParam(2, $lname);
+      $stmt -> bindParam(3, $email);
+      $stmt -> bindParam(4, $address);
+      $stmt -> bindParam(5, $major);
+      $stmt -> bindParam(6, $number);
+      $stmt -> bindParam(7, $photoPath);
+      $stmt -> bindParam(8, $prayerR);
+      $stmt -> bindParam(9, $optE);
+      $stmt -> bindParam(10, $optT);
+      $stmt -> bindParam(11, $groupID);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in member_create: ' .  $e->getMessage());
+    }
   }
 
 
@@ -483,120 +483,127 @@ class db_query
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
     // Start + FirstName
-    $query = "UPDATE members SET FirstName = ";
-    if($fname != null)
+    try
     {
-      $query .= "'" . $fname . "',";
-    }
-    else
-    {
-      $query .= "FirstName, ";
-    }
-    // LastName
-    $query .= "LastName = ";
-    if($lname != null)
-    {
-      $query .= "'" . $lname . "', ";
-    }
-    else
-    {
-      $query .= "LastName, ";
-    }
-    // PhoneNumber
-    $query .= "PhoneNumber = ";
-    if($numberN != null)
-    {
-      $query .= "'" . $numberN . "', ";
-    }
-    else
-    {
-      $query .= "PhoneNumber, ";
-    }
-    // EmailAddress
-    $query .= "EmailAddress = ";
-    if($email != null)
-    {
-      $query .= "'" . $email . "', ";
-    }
-    else
-    {
-      $query .= "EmailAddress, ";
-    }
-    // HomeAddress
-    $query .= "HomeAddress = ";
-    if($address != null)
-    {
-      $query .= "'" . $address . "', ";
-    }
-    else
-    {
-      $query .= "HomeAddress, ";
-    }
-    // Major
-    $query .= "Major = ";
-    if($major != null)
-    {
-      $query .= "'" . $major . "', ";
-    }
-    else
-    {
-      $query .= "Major, ";
-    }
-    // PhotoPath
-    $query .= "PhotoPath = ";
-    if($photoPath != null)
-    {
-      $query .= "'" . $photoPath . "', ";
-    }
-    else
-    {
-      $query .= "PhotoPath, ";
-    }
-    // PrayerRequest
-    $query .= "PrayerRequest = ";
-    if($prayerR != null)
-    {
-      $query .= "'" . $prayerR . "', ";
-    }
-    else
-    {
-      $query .= "PrayerRequest, ";
-    }
-    // OptEmail
-    $query .= "OptEmail = ";
-    if($optE != null)
-    {
-      $query .= "'" . $optE . "', ";
-    }
-    else
-    {
-      $query .= "OptEmail, ";
-    }
-    // OptText
-    $query .= "OptText = ";
-    if($optT != null)
-    {
-      $query .= "'" . $optT . "', ";
-    }
-    else
-    {
-      $query .= "OptText, ";
-    }
-    // GroupID
-    $query .= "GroupID = ";
-    if($groupID != null)
-    {
-      $query .= "'" . $groupID . "' ";
-    }
-    else
-    {
-      $query .= "GroupID ";
-    }
+      $query = "UPDATE members SET first_name = ";
+      if($fname != null)
+      {
+        $query .= "'" . $fname . "',";
+      }
+      else
+      {
+        $query .= "first_name, ";
+      }
+      // LastName
+      $query .= "last_name = ";
+      if($lname != null)
+      {
+        $query .= "'" . $lname . "', ";
+      }
+      else
+      {
+        $query .= "last_name, ";
+      }
+      // PhoneNumber
+      $query .= "phone_number = ";
+      if($numberN != null)
+      {
+        $query .= "'" . $numberN . "', ";
+      }
+      else
+      {
+        $query .= "phone_number, ";
+      }
+      // EmailAddress
+      $query .= "email = ";
+      if($email != null)
+      {
+        $query .= "'" . $email . "', ";
+      }
+      else
+      {
+        $query .= "email, ";
+      }
+      // HomeAddress
+      $query .= "home_address = ";
+      if($address != null)
+      {
+        $query .= "'" . $address . "', ";
+      }
+      else
+      {
+        $query .= "home_address, ";
+      }
+      // Major
+      $query .= "major = ";
+      if($major != null)
+      {
+        $query .= "'" . $major . "', ";
+      }
+      else
+      {
+        $query .= "major, ";
+      }
+      // PhotoPath
+      $query .= "photo_path = ";
+      if($photoPath != null)
+      {
+        $query .= "'" . $photoPath . "', ";
+      }
+      else
+      {
+        $query .= "photo_path, ";
+      }
+      // PrayerRequest
+      $query .= "prayer_request = ";
+      if($prayerR != null)
+      {
+        $query .= "'" . $prayerR . "', ";
+      }
+      else
+      {
+        $query .= "prayer_request, ";
+      }
+      // OptEmail
+      $query .= "opt_email = ";
+      if($optE != null)
+      {
+        $query .= "'" . $optE . "', ";
+      }
+      else
+      {
+        $query .= "opt_email, ";
+      }
+      // OptText
+      $query .= "opt_text = ";
+      if($optT != null)
+      {
+        $query .= "'" . $optT . "', ";
+      }
+      else
+      {
+        $query .= "opt_text, ";
+      }
+      // GroupID
+      $query .= "group_id = ";
+      if($groupID != null)
+      {
+        $query .= "'" . $groupID . "' ";
+      }
+      else
+      {
+        $query .= "group_id ";
+      }
 
-    $query .= "WHERE PhoneNumber = '" . $number . "' ";
-    //echo $query;
-    $stmt = $this -> connection -> prepare($query);
-    $stmt -> execute();
+      $query .= "WHERE phone_number = '" . $number . "' ";
+      //echo $query;
+      $stmt = $this -> connection -> prepare($query);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in member_edit: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -606,11 +613,16 @@ class db_query
   {
     // Take the field of concern and what it should equal to be removed from the
     // database.
-    $stmt = $this -> connection -> prepare("DELETE FROM members WHERE PhoneNumber = ?");
-
-    $stmt -> bindParam(1, $number);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("DELETE FROM members WHERE phone_number = ?");
+      $stmt -> bindParam(1, $number);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in member_remove: ' .  $e->getMessage());
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -624,15 +636,19 @@ class db_query
   //
   public function NOW_check(string $date)
   {
-    $stmt = $this -> connection -> prepare("SELECT * FROM nights_of_worship WHERE NightDate = ?");
-
-    $stmt -> bindParam(1, $date);
-
-    $stmt -> execute();
-
-    $response = $stmt -> fetch(PDO::FETCH_ASSOC);
-    if($response != null) return $response;
-    else return false;
+    try
+    {
+      $stmt = $this -> connection -> prepare("SELECT id, now_date FROM nights_of_worship WHERE now_date = ?");
+      $stmt -> bindParam(1, $date);
+      $stmt -> execute();
+      $response = $stmt -> fetch(PDO::FETCH_ASSOC);
+      if($response != null) return $response;
+      else return false;
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in NOW_check: ' .  $e->getMessage());
+    }
   }
   //
   // NOW_create
@@ -640,11 +656,16 @@ class db_query
   public function NOW_create(string $date)
   {
     // Expects dates to be in the YYYY-MM-DD format
-    $stmt = $this -> connection -> prepare("INSERT INTO nights_of_worship (NightDate) VALUES (?)");
-
-    $stmt -> bindParam(1, $date);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO nights_of_worship (now_date) VALUES (?)");
+      $stmt -> bindParam(1, $date);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in NOW_create: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -652,12 +673,18 @@ class db_query
   //
   public function NOW_edit(string $dateOld, string $dateNew)
   {
-    $stmt = $this -> connection -> prepare("UPDATE nights_of_worship SET NightDate = ? WHERE NightDate = ?");
-
-    $stmt -> bindParam(1, $dateNew);
-    $stmt -> bindParam(2, $dateOld);
-
-    $stmt -> execute();
+    // Expects dates to be in the YYYY-MM-DD format
+    try
+    {
+      $stmt = $this -> connection -> prepare("UPDATE nights_of_worship SET now_date = ? WHERE now_date = ?");
+      $stmt -> bindParam(1, $dateNew);
+      $stmt -> bindParam(2, $dateOld);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in NOW_edit: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -665,11 +692,16 @@ class db_query
   //
   public function NOW_remove(string $date)
   {
-    $stmt = $this -> connection -> prepare("DELETE FROM nights_of_worship WHERE NightDate = ?");
-
-    $stmt -> bindParam(1, $date);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("DELETE FROM nights_of_worship WHERE now_date = ?");
+      $stmt -> bindParam(1, $date);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in NOW_remove: ' .  $e->getMessage());
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -683,35 +715,39 @@ class db_query
   //
   public function member_to_life_group_check($memberID=null, $life_groupID=null)
   {
-    $query = "SELECT * FROM member_life_group_junction WHERE ";
-    // MemberID
-    $query .= "MemberID = ";
-    if($memberID != null)
+    try
     {
-      $query .= "'" . $memberID . "' AND ";
+      $query = "SELECT id, member_id, life_group_id FROM member_life_group_junction WHERE ";
+      // MemberID
+      $query .= "member_id = ";
+      if($memberID != null)
+      {
+        $query .= "'" . $memberID . "' AND ";
+      }
+      else
+      {
+        $query .= "member_id AND ";
+      }
+      // LifeGroupID
+      $query .= "life_group_id = ";
+      if($life_groupID != null)
+      {
+        $query .= "'" . $life_groupID . "'";
+      }
+      else
+      {
+        $query .= "life_group_id ";
+      }
+      $stmt = $this -> connection -> prepare($query);
+      $stmt -> execute();
+      $response = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+      if($response != null) return $response;
+      else return false;
     }
-    else
+    catch(Exception | PDOException $e)
     {
-      $query .= "MemberID AND ";
+      console_log('Caught exception in member_to_life_group_check: ' .  $e->getMessage());
     }
-    // LifeGroupID
-    $query .= "LifeGroupID = ";
-    if($life_groupID != null)
-    {
-      $query .= "'" . $life_groupID . "'";
-    }
-    else
-    {
-      $query .= "LifeGroupID ";
-    }
-
-    $stmt = $this -> connection -> prepare($query);
-
-    $stmt -> execute();
-
-    $response = $stmt -> fetchAll(PDO::FETCH_ASSOC);
-    if($response != null) return $response;
-    else return false;
   }
 
   //
@@ -719,12 +755,17 @@ class db_query
   //
   public function member_to_life_group_create($memberID, $life_groupID)
   {
-    $stmt = $this -> connection -> prepare("INSERT INTO member_life_group_junction (MemberID, LifeGroupID) VALUE (?, ?)");
-
-    $stmt -> bindParam(1, $memberID);
-    $stmt -> bindParam(2, $life_groupID);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO member_life_group_junction (member_id, life_group_id) VALUE (?, ?)");
+      $stmt -> bindParam(1, $memberID);
+      $stmt -> bindParam(2, $life_groupID);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in member_to_life_group_create: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -740,11 +781,9 @@ class db_query
   //
   public function member_to_life_group_remove($memberID, $life_groupID)
   {
-    $stmt = $this -> connection -> prepare("DELETE FROM member_life_group_junction WHERE MemberID = ? AND LifeGroupID = ?");
-
+    $stmt = $this -> connection -> prepare("DELETE FROM member_life_group_junction WHERE member_id = ? AND life_group_id = ?");
     $stmt -> bindParam(1, $memberID);
     $stmt -> bindParam(2, $life_groupID);
-
     $stmt -> execute();
   }
 
@@ -761,30 +800,28 @@ class db_query
   {
     $query = "SELECT * FROM member_nights_of_worship_junction WHERE ";
     // MemberID
-    $query .= "MemberID = ";
+    $query .= "member_id = ";
     if($memberID != null)
     {
       $query .= "'" . $memberID . "', ";
     }
     else
     {
-      $query .= "MemberID, ";
+      $query .= "member_id, ";
     }
     // LifeGroupID
-    $query .= "NightID = ";
+    $query .= "now_id = ";
     if($NOWID != null)
     {
       $query .= "'" . $NOWID . "' ";
     }
     else
     {
-      $query .= "NightID ";
+      $query .= "now_id ";
     }
 
     $stmt = $this -> connection -> prepare($query);
-
     $stmt -> execute();
-
     $response = $stmt -> fetch(PDO::FETCH_ASSOC);
     if($response != null) return $response;
     else return false;
@@ -795,7 +832,7 @@ class db_query
   //
   public function member_to_NOW_create($memberID, $NOWID)
   {
-    $stmt = $this -> connection -> prepare("INSERT INTO member_nights_of_worship_junction (MemberID, NightID) VALUES (?, ?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO member_nights_of_worship_junction (member_id, now_id) VALUES (?, ?)");
 
     $stmt -> bindParam(1, $memberID);
     $stmt -> bindParam(2, $NOWID);
@@ -830,13 +867,9 @@ class db_query
   //
   public function get_prayer_requests()
   {
-    //
     // Returns a list of all people and their payer requests
-    //
-    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, PrayerRequest FROM members");
-
+    $stmt = $this -> connection -> prepare("SELECT first_name, last_name, prayer_request FROM members");
     $stmt -> execute();
-
     return $stmt -> fetchAll();
   }
 
@@ -845,13 +878,9 @@ class db_query
   //
   public function get_contact_emails()
   {
-    //
     // Gets all the members who are opted in for email blasts
-    //
-    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, EmailAddress FROM members WHERE OptEmail = ?");
-
-    $stmt -> bindParam(1, true);
-
+    $stmt = $this -> connection -> prepare("SELECT first_name, last_name, email FROM members WHERE opt_email = ?");
+    $stmt -> bindParam(1, 1);
     return $stmt -> fetchAll();
   }
 
@@ -860,13 +889,9 @@ class db_query
   //
   public function get_contact_texts()
   {
-    //
     // Gets all the members whos opted in for the texts blasts
-    //
-    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, PhoneNumber FROM members WHERE OptTexts =?");
-
-    $stmt -> bindParam(1, true);
-
+    $stmt = $this -> connection -> prepare("SELECT first_name, last_name, phone_number FROM members WHERE opt_text = ?");
+    $stmt -> bindParam(1, 1);
     return $stmt -> fetchAll();
   }
 
@@ -875,12 +900,9 @@ class db_query
   //
   public function get_members_in_lifeGroups()
   {
-    //
     // Returns a list of all the members in a life group
-    //
-    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, LifeGroup FROM members WHERE LifeGroupID != NULL");
-
-    return $stmt -> fetchALl();
+    $stmt = $this -> connection -> prepare("SELECT id, member_id, life_group_id FROM member_life_group_junction");
+    return $stmt -> fetchAll();
   }
 
   //
@@ -892,7 +914,6 @@ class db_query
     // Returns a list of all the member not in a life group
     //
     $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, EmailAddress, PhoneNumber FROM members WHERE LifeGroupID = NULL");
-
     return $stmt -> fetchAll();
   }
 
@@ -906,7 +927,6 @@ class db_query
     // the DB
     //
     $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, HomeAddress FROM members WHERE HomeAddress != NULL");
-
     return $stmt -> fetchAll();
   }
 }
