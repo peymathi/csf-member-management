@@ -64,6 +64,7 @@
 */
 include 'db_connect.php';
 include 'get_salt.php';
+include 'console_log.php';
 
 class db_query
 {
@@ -89,7 +90,7 @@ class db_query
     }
     catch(Exception | PDOException $e)
     {
-      console.log('Caught exception in db_query constructor: ' .  $e->getMessage());
+      console_log('Caught exception in db_query constructor: ' .  $e->getMessage());
     }
   }
 
@@ -130,7 +131,7 @@ class db_query
     }
     catch(Exception | PDOException $e)
     {
-      console.log('Caught exception in admin_check: ' .  $e->getMessage());
+      console_log('Caught exception in admin_check: ' .  $e->getMessage());
     }
   }
 
@@ -152,7 +153,7 @@ class db_query
     }
     catch(Exception | PDOException $e)
     {
-      console.log('Caught exception in admin_create: ' .  $e->getMessage());
+      console_log('Caught exception in admin_create: ' .  $e->getMessage());
     }
   }
 
@@ -414,7 +415,7 @@ class db_query
     }
     catch(Exception | PDOException $e)
     {
-      console.log('Caught exception in member_check: ' .  $e->getMessage());
+      console_log('Caught exception in member_check: ' .  $e->getMessage());
     }
   }
 
@@ -476,7 +477,7 @@ class db_query
     }
     catch(Exception | PDOException $e)
     {
-      console.log('Caught exception in member_create: ' .  $e->getMessage());
+      console_log('Caught exception in member_create: ' .  $e->getMessage());
     }
   }
 
@@ -606,7 +607,7 @@ class db_query
     }
     catch(Exception | PDOException $e)
     {
-      console.log('Caught exception in member_edit: ' .  $e->getMessage());
+      console_log('Caught exception in member_edit: ' .  $e->getMessage());
     }
   }
 
@@ -625,7 +626,7 @@ class db_query
     }
     catch(Exception | PDOException $e)
     {
-      console.log('Caught exception in member_remove: ' .  $e->getMessage());
+      console_log('Caught exception in member_remove: ' .  $e->getMessage());
     }
   }
 
