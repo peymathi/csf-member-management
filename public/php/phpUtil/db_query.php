@@ -715,35 +715,39 @@ class db_query
   //
   public function member_to_life_group_check($memberID=null, $life_groupID=null)
   {
-    $query = "SELECT * FROM member_life_group_junction WHERE ";
-    // MemberID
-    $query .= "MemberID = ";
-    if($memberID != null)
+    try
     {
-      $query .= "'" . $memberID . "' AND ";
+      $query = "SELECT id, member_id, life_group_id FROM member_life_group_junction WHERE ";
+      // MemberID
+      $query .= "member_id = ";
+      if($memberID != null)
+      {
+        $query .= "'" . $memberID . "' AND ";
+      }
+      else
+      {
+        $query .= "member_id AND ";
+      }
+      // LifeGroupID
+      $query .= "life_group_id = ";
+      if($life_groupID != null)
+      {
+        $query .= "'" . $life_groupID . "'";
+      }
+      else
+      {
+        $query .= "life_group_id ";
+      }
+      $stmt = $this -> connection -> prepare($query);
+      $stmt -> execute();
+      $response = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+      if($response != null) return $response;
+      else return false;
     }
-    else
+    catch(Exception | PDOException $e)
     {
-      $query .= "MemberID AND ";
+      console_log('Caught exception in member_to_life_group_check: ' .  $e->getMessage());
     }
-    // LifeGroupID
-    $query .= "LifeGroupID = ";
-    if($life_groupID != null)
-    {
-      $query .= "'" . $life_groupID . "'";
-    }
-    else
-    {
-      $query .= "LifeGroupID ";
-    }
-
-    $stmt = $this -> connection -> prepare($query);
-
-    $stmt -> execute();
-
-    $response = $stmt -> fetchAll(PDO::FETCH_ASSOC);
-    if($response != null) return $response;
-    else return false;
   }
 
   //
@@ -751,12 +755,17 @@ class db_query
   //
   public function member_to_life_group_create($memberID, $life_groupID)
   {
-    $stmt = $this -> connection -> prepare("INSERT INTO member_life_group_junction (MemberID, LifeGroupID) VALUE (?, ?)");
-
-    $stmt -> bindParam(1, $memberID);
-    $stmt -> bindParam(2, $life_groupID);
-
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO member_life_group_junction (member_id, life_group_id) VALUE (?, ?)");
+      $stmt -> bindParam(1, $memberID);
+      $stmt -> bindParam(2, $life_groupID);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      console_log('Caught exception in member_to_life_group_create: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -772,11 +781,9 @@ class db_query
   //
   public function member_to_life_group_remove($memberID, $life_groupID)
   {
-    $stmt = $this -> connection -> prepare("DELETE FROM member_life_group_junction WHERE MemberID = ? AND LifeGroupID = ?");
-
+    $stmt = $this -> connection -> prepare("DELETE FROM member_life_group_junction WHERE member_id = ? AND life_group_id = ?");
     $stmt -> bindParam(1, $memberID);
     $stmt -> bindParam(2, $life_groupID);
-
     $stmt -> execute();
   }
 
@@ -793,30 +800,28 @@ class db_query
   {
     $query = "SELECT * FROM member_nights_of_worship_junction WHERE ";
     // MemberID
-    $query .= "MemberID = ";
+    $query .= "member_id = ";
     if($memberID != null)
     {
       $query .= "'" . $memberID . "', ";
     }
     else
     {
-      $query .= "MemberID, ";
+      $query .= "member_id, ";
     }
     // LifeGroupID
-    $query .= "NightID = ";
+    $query .= "now_id = ";
     if($NOWID != null)
     {
       $query .= "'" . $NOWID . "' ";
     }
     else
     {
-      $query .= "NightID ";
+      $query .= "now_id ";
     }
 
     $stmt = $this -> connection -> prepare($query);
-
     $stmt -> execute();
-
     $response = $stmt -> fetch(PDO::FETCH_ASSOC);
     if($response != null) return $response;
     else return false;
@@ -827,7 +832,7 @@ class db_query
   //
   public function member_to_NOW_create($memberID, $NOWID)
   {
-    $stmt = $this -> connection -> prepare("INSERT INTO member_nights_of_worship_junction (MemberID, NightID) VALUES (?, ?)");
+    $stmt = $this -> connection -> prepare("INSERT INTO member_nights_of_worship_junction (member_id, now_id) VALUES (?, ?)");
 
     $stmt -> bindParam(1, $memberID);
     $stmt -> bindParam(2, $NOWID);
@@ -862,13 +867,9 @@ class db_query
   //
   public function get_prayer_requests()
   {
-    //
     // Returns a list of all people and their payer requests
-    //
-    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, PrayerRequest FROM members");
-
+    $stmt = $this -> connection -> prepare("SELECT first_name, last_name, prayer_request FROM members");
     $stmt -> execute();
-
     return $stmt -> fetchAll();
   }
 
@@ -877,13 +878,9 @@ class db_query
   //
   public function get_contact_emails()
   {
-    //
     // Gets all the members who are opted in for email blasts
-    //
-    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, EmailAddress FROM members WHERE OptEmail = ?");
-
-    $stmt -> bindParam(1, true);
-
+    $stmt = $this -> connection -> prepare("SELECT first_name, last_name, email FROM members WHERE opt_email = ?");
+    $stmt -> bindParam(1, 1);
     return $stmt -> fetchAll();
   }
 
@@ -892,13 +889,9 @@ class db_query
   //
   public function get_contact_texts()
   {
-    //
     // Gets all the members whos opted in for the texts blasts
-    //
-    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, PhoneNumber FROM members WHERE OptTexts =?");
-
-    $stmt -> bindParam(1, true);
-
+    $stmt = $this -> connection -> prepare("SELECT first_name, last_name, phone_number FROM members WHERE opt_text = ?");
+    $stmt -> bindParam(1, 1);
     return $stmt -> fetchAll();
   }
 
@@ -907,12 +900,9 @@ class db_query
   //
   public function get_members_in_lifeGroups()
   {
-    //
     // Returns a list of all the members in a life group
-    //
-    $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, LifeGroup FROM members WHERE LifeGroupID != NULL");
-
-    return $stmt -> fetchALl();
+    $stmt = $this -> connection -> prepare("SELECT id, member_id, life_group_id FROM member_life_group_junction");
+    return $stmt -> fetchAll();
   }
 
   //
@@ -924,7 +914,6 @@ class db_query
     // Returns a list of all the member not in a life group
     //
     $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, EmailAddress, PhoneNumber FROM members WHERE LifeGroupID = NULL");
-
     return $stmt -> fetchAll();
   }
 
@@ -938,7 +927,6 @@ class db_query
     // the DB
     //
     $stmt = $this -> connection -> prepare("SELECT FirstName, LastName, HomeAddress FROM members WHERE HomeAddress != NULL");
-
     return $stmt -> fetchAll();
   }
 }
