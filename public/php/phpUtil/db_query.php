@@ -287,10 +287,8 @@ class db_query
   //
   public function life_group_check(string $field, string $equals)
   {
-    $stmt = $this -> connection -> prepare("SELECT * FROM life_groups WHERE " . $field . " = '" . $equals . "'");
-
+    $stmt = $this -> connection -> prepare("SELECT id, life_group_name, life_group_day, life_group_time, life_group_location FROM life_groups WHERE " . $field . " = '" . $equals . "'");
     $stmt -> execute();
-
     $result = $stmt -> fetchAll(PDO::FETCH_ASSOC);
     if ($result != null) return $result;
     else return false;
@@ -304,15 +302,12 @@ class db_query
   {
     // Takes the name of the life group, the weekly day of the meeting, the time
     // at the meeting, and a description of the meeting.
-    $stmt = $this -> connection -> prepare("INSERT INTO life_groups (LifeGroupName, LifeGroupDay, LifeGroupTime, LifeGroupLocation) VALUES (?, ?, ?, ?)");
-
+    $stmt = $this -> connection -> prepare("INSERT INTO life_groups (life_group_name, life_group_day, life_group_time, life_group_location, life_group_active) VALUES (?, ?, ?, ?, ?)");
     $stmt -> bindParam(1, $name);
     $stmt -> bindParam(2, $day);
     $stmt -> bindParam(3, $time);
     $stmt -> bindParam(4, $location);
-
-    $stmt -> debugDumpParams();
-
+    $stmt -> bindParam(5, 1);
     $stmt -> execute();
   }
 
@@ -324,41 +319,41 @@ class db_query
     // Takes the field of concern and what it should be looking for in the field.
     // Then takes 2 arrays, one of the fields that will be changing and the second
     // of the coorisponding values that it will be changing to.
-    $query = "UPDATE life_groups SET LifeGroupName = ";
+    $query = "UPDATE life_groups SET life_group_name = ";
     if($name != null)
     {
       $query .= "'" . $name . "',";
     }
     else
     {
-      $query .= "LifeGroupName, ";
+      $query .= "life_group_name, ";
     }
-    $query .= "LifeGroupDay = ";
+    $query .= "life_group_day = ";
     if($day != null)
     {
       $query .= "'" . $day . "', ";
     }
     else
     {
-      $query .= "LifeGroupDay, ";
+      $query .= "life_group_day, ";
     }
-    $query .= "LifeGroupTime = ";
+    $query .= "life_group_time = ";
     if($time != null)
     {
       $query .= "'" . $time . "', ";
     }
     else
     {
-      $query .= "LifeGroupTime, ";
+      $query .= "life_group_time, ";
     }
-    $query .= "LifeGroupLocation = ";
+    $query .= "life_group_location = ";
     if($location != null)
     {
       $query .= "'" . $location . "' ";
     }
     else
     {
-      $query .= "LifeGroupLocation ";
+      $query .= "life_group_location ";
     }
     $query .= "WHERE " . $field . " = '" . $equals . "' ";
     //echo $query;
