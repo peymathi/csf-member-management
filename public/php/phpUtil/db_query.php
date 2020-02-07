@@ -480,7 +480,7 @@ class db_query
     // Check for bad keys
     foreach($args as $key => $val)
     {
-      if (!in_array($key, VALID_KEYS)) throw db_query_exception("Bad key in array arg passed to member_create");
+      if (!in_array($key, VALID_KEYS)) throw new db_query_exception("Bad key in array arg passed to member_create");
     }
 
     // Creates a new member taking the first and last name with their number.
@@ -496,9 +496,9 @@ class db_query
       $stmt = $this -> connection -> prepare($sql);
 
       // Set Defaults
-      if(!isset($args['FirstName'])) throw db_query_exception("Missing FirstName on member_create");
-      if(!isset($args['LastName'])) throw db_query_exception("Missing LastName on member_create");
-      if(!isset($args['PhoneNumber'])) throw db_query_exception("Missing PhoneNumber on member_create");
+      if(!isset($args['FirstName'])) throw new db_query_exception("Missing FirstName on member_create");
+      if(!isset($args['LastName'])) throw new db_query_exception("Missing LastName on member_create");
+      if(!isset($args['PhoneNumber'])) throw new db_query_exception("Missing PhoneNumber on member_create");
       if(!isset($args['Email'])) $email = null;
       if(!isset($args['HomeAddress'])) $address = null;
       if(!isset($args['Church'])) $church = null;
