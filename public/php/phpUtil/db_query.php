@@ -463,7 +463,7 @@ class db_query
   /*
   // member_create
   //
-  // Accepted key names are: FirstName, LastName, PhoneNumber, Email, Address, Church, 
+  // Accepted key names are: FirstName, LastName, PhoneNumber, Email, Address, Church,
   // Major, PhotoPath, PrayerRequest, OptEmail, OptText, GroupID
   //
   // FirstName, LastName, and PhoneNumber are required. All other keys are optional.
@@ -474,54 +474,54 @@ class db_query
   */
   public function member_create(array $args)
   {
-    define("VALID_KEYS", ["FirstName", "LastName", "PhoneNumber",  
+    define("VALID_KEYS", ["FirstName", "LastName", "PhoneNumber",
     "Email", "HomeAddress", "Church", "Major", "PhotoPath", "PrayerRequest", "OptEmail", "OptText", "GroupID"]);
 
     // Check for bad keys
     foreach($args as $key => $val)
     {
-      if (!in_array($key, VALID_KEYS)) throw new db_query_exception("Bad key in array arg passed to member_create");
+      if (!in_array($key, VALID_KEYS)) throw db_query_exception("Bad key in array arg passed to member_create");
     }
 
     // Creates a new member taking the first and last name with their number.
     try
     {
       $sql = "
-      INSERT INTO members 
-      (first_name, last_name, email, home_address, home_church, 
-      major, phone_number, photo_path, prayer_request, opt_email, opt_text, group_id) 
+      INSERT INTO members
+      (first_name, last_name, email, home_address, home_church,
+      major, phone_number, photo_path, prayer_request, opt_email, opt_text, group_id)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ";
 
       $stmt = $this -> connection -> prepare($sql);
 
       // Set Defaults
-      if(!isset($args['FirstName'])) throw new db_query_exception("Missing FirstName on member_create");
-      if(!isset($args['LastName'])) throw new db_query_exception("Missing LastName on member_create");
-      if(!isset($args['PhoneNumber'])) throw new db_query_exception("Missing PhoneNumber on member_create");
-      if(!isset($args['Email'])) $args['Email'] = null;
-      if(!isset($args['HomeAddress'])) $args['HomeAddress'] = null;
-      if(!isset($args['Church'])) $args['Church'] = null;
-      if(!isset($args['Major'])) $args['Major'] = null;
-      if(!isset($args['PhotoPath'])) $args['PhotoPath'] = null;
-      if(!isset($args['PrayerRequest'])) $args['PrayerRequest'] = null;
-      if(!isset($args['OptEmail'])) $args['OptEmail'] = 0;
-      if(!isset($args['OptText'])) $args['OptText'] = 0;
-      if(!isset($args['GroupID'])) $args['GroupID'] = 8;
+      if(!isset($args['FirstName'])) throw db_query_exception("Missing FirstName on member_create");
+      if(!isset($args['LastName'])) throw db_query_exception("Missing LastName on member_create");
+      if(!isset($args['PhoneNumber'])) throw db_query_exception("Missing PhoneNumber on member_create");
+      if(!isset($args['Email'])) $email = null;
+      if(!isset($args['HomeAddress'])) $address = null;
+      if(!isset($args['Church'])) $church = null;
+      if(!isset($args['Major'])) $major = null;
+      if(!isset($args['PhotoPath'])) $photoPath = null;
+      if(!isset($args['PrayerRequest'])) $prayerR = null;
+      if(!isset($args['OptEmail'])) $optE = 0;
+      if(!isset($args['OptText'])) $optT = 0;
+      if(!isset($args['GroupID'])) $groupID = 8;
 
       // Bind parameters and exe query
-      $stmt -> bindParam(1, $args['FirstName']);
-      $stmt -> bindParam(2, $args['LastName']);
-      $stmt -> bindParam(3, $args['Email']);
-      $stmt -> bindParam(4, $args['HomeAddress']);
-      $stmt -> bindParam(5, $args['Church']);
-      $stmt -> bindParam(6, $args['Major']);
-      $stmt -> bindParam(7, $args['PhoneNumber']);
-      $stmt -> bindParam(8, $args['PhotoPath']);
-      $stmt -> bindParam(9, $args['PrayerRequest']);
-      $stmt -> bindParam(10, $args['OptEmail']);
-      $stmt -> bindParam(11, $args['OptText']);
-      $stmt -> bindParam(12, $args['GroupID']);
+      $stmt -> bindParam(1, $fname);
+      $stmt -> bindParam(2, $lname);
+      $stmt -> bindParam(3, $email);
+      $stmt -> bindParam(4, $address);
+      $stmt -> bindParam(5, $church);
+      $stmt -> bindParam(6, $major);
+      $stmt -> bindParam(7, $number);
+      $stmt -> bindParam(8, $photoPath);
+      $stmt -> bindParam(9, $prayerR);
+      $stmt -> bindParam(10, $optE);
+      $stmt -> bindParam(11, $optT);
+      $stmt -> bindParam(12, $groupID);
       $stmt -> execute();
     }
 
@@ -531,134 +531,64 @@ class db_query
     }
   }
 
-
-  public function member_edit(string $number, $fname=null, $lname=null, $numberN=null, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE=null, $optT=null, $groupID=null)
+  // Takes the number of the member to find in the db.
+  // Then takes 2 arrays, one of the fields that will be changing and the second
+  // of the coorisponding values that it will be changing to.
+  public function member_edit(string $number, array $args)
   {
-    // Takes the number of the member to find in the db.
-    // Then takes 2 arrays, one of the fields that will be changing and the second
-    // of the coorisponding values that it will be changing to.
-    // Start + FirstName
+    define("VALID_KEYS", ["FirstName", "LastName", "PhoneNumber",
+    "Email", "HomeAddress", "Church", "Major", "PhotoPath", "PrayerRequest", "OptEmail", "OptText", "GroupID"]);
+
+    // Check for bad keys
+    foreach($args as $key => $val)
+    {
+      if (!in_array($key, VALID_KEYS)) throw db_query_exception("Bad key in array arg passed to member_create");
+    }
+
     try
     {
-      $query = "UPDATE members SET first_name = ";
-      if($fname != null)
-      {
-        $query .= "'" . $fname . "',";
-      }
-      else
-      {
-        $query .= "first_name, ";
-      }
-      // LastName
-      $query .= "last_name = ";
-      if($lname != null)
-      {
-        $query .= "'" . $lname . "', ";
-      }
-      else
-      {
-        $query .= "last_name, ";
-      }
-      // PhoneNumber
-      $query .= "phone_number = ";
-      if($numberN != null)
-      {
-        $query .= "'" . $numberN . "', ";
-      }
-      else
-      {
-        $query .= "phone_number, ";
-      }
-      // EmailAddress
-      $query .= "email = ";
-      if($email != null)
-      {
-        $query .= "'" . $email . "', ";
-      }
-      else
-      {
-        $query .= "email, ";
-      }
-      // HomeAddress
-      $query .= "home_address = ";
-      if($address != null)
-      {
-        $query .= "'" . $address . "', ";
-      }
-      else
-      {
-        $query .= "home_address, ";
-      }
-      // Major
-      $query .= "major = ";
-      if($major != null)
-      {
-        $query .= "'" . $major . "', ";
-      }
-      else
-      {
-        $query .= "major, ";
-      }
-      // PhotoPath
-      $query .= "photo_path = ";
-      if($photoPath != null)
-      {
-        $query .= "'" . $photoPath . "', ";
-      }
-      else
-      {
-        $query .= "photo_path, ";
-      }
-      // PrayerRequest
-      $query .= "prayer_request = ";
-      if($prayerR != null)
-      {
-        $query .= "'" . $prayerR . "', ";
-      }
-      else
-      {
-        $query .= "prayer_request, ";
-      }
-      // OptEmail
-      $query .= "opt_email = ";
-      if($optE != null)
-      {
-        $query .= "'" . $optE . "', ";
-      }
-      else
-      {
-        $query .= "opt_email, ";
-      }
-      // OptText
-      $query .= "opt_text = ";
-      if($optT != null)
-      {
-        $query .= "'" . $optT . "', ";
-      }
-      else
-      {
-        $query .= "opt_text, ";
-      }
-      // GroupID
-      $query .= "group_id = ";
-      if($groupID != null)
-      {
-        $query .= "'" . $groupID . "' ";
-      }
-      else
-      {
-        $query .= "group_id ";
-      }
+      $sql = "
+      UPDATE members
+      SET
+      ";
 
-      $query .= "WHERE phone_number = '" . $number . "' ";
-      //echo $query;
-      $stmt = $this -> connection -> prepare($query);
+      // Set Defaults
+      if(isset($args['FirstName']))     $sql .= "first_name = :first_name ";
+      if(isset($args['LastName']))      $sql .= "last_name = :last_name ";
+      if(isset($args['PhoneNumber']))   $sql .= "phone_number = :phone_number ";
+      if(isset($args['Email']))         $sql .= "email = :email ";
+      if(isset($args['HomeAddress']))   $sql .= "home_address = :home_address ";
+      if(isset($args['Church']))        $sql .= "home_church = :home_church ";
+      if(isset($args['Major']))         $sql .= "major = :major ";
+      if(isset($args['PhotoPath']))     $sql .= "photo_path = :photo_path ";
+      if(isset($args['PrayerRequest'])) $sql .= "prayer_request = :prayer_request ";
+      if(isset($args['OptEmail']))      $sql .= "opt_email = :opt_email ";
+      if(isset($args['OptText']))       $sql .= "opt_text = :opt_text ";
+      if(isset($args['GroupID']))       $sql .= "group_id = :group_id ";
+
+      $sql .= "WHERE phone_number = :old_phone_number";
+
+      $stmt = $this -> connection -> prepare($sql);
+
+      // Bind needed parameters and exe query
+      if(isset($args['FirstName']))     $stmt -> bindParam(':first_name', $args['FirstName']);
+      if(isset($args['LastName']))      $stmt -> bindParam(':last_name', $args['LastName']);
+      if(isset($args['PhoneNumber']))   $stmt -> bindParam(':phone_number', $args['PhoneNumber']);
+      if(isset($args['Email']))         $stmt -> bindParam(':email', $args['Email']);
+      if(isset($args['HomeAddress']))   $stmt -> bindParam(':home_address', $args['HomeAddress']);
+      if(isset($args['Church']))        $stmt -> bindParam(':home_church', $args['Church']);
+      if(isset($args['Major']))         $stmt -> bindParam(':major', $args['Major']);
+      if(isset($args['PhotoPath']))     $stmt -> bindParam(':photo_path', $args['PhotoPath']);
+      if(isset($args['PrayerRequest'])) $stmt -> bindParam(':prayer_request', $args['PrayerRequest']);
+      if(isset($args['OptEmail']))      $stmt -> bindParam(':opt_email', $args['OptEmail']);
+      if(isset($args['OptText']))       $stmt -> bindParam(':opt_text', $args['OptText']);
+      if(isset($args['GroupID']))       $stmt -> bindParam(':group_id', $args['GroupID']);
+      $stmt -> bindParam(':old_phone_number', $number);
       $stmt -> execute();
     }
     catch(Exception | PDOException $e)
     {
-      echo 'Caught exception in member_edit: ' .  $e->getMessage();
-      console_log('Caught exception in member_edit: ' .  $e->getMessage());
+      error_log('Caught exception in member_create: ' .  $e->getMessage() . '\n', 3, $_SERVER['DOCUMENT_ROOT'] . "/../logs/phperr.log");
     }
   }
 
