@@ -11,16 +11,16 @@
     {
       //Format member to be of json userData format
       $memberJson = array();
-      $memberJson['FirstName'] = $member['FirstName'];
-      $memberJson['LastName'] = $member['LastName'];
-      if($member['EmailAddress'] != null) $memberJson['Email'] = $member['EmailAddress'];
+      $memberJson['FirstName'] = $member['first_name'];
+      $memberJson['LastName'] = $member['last_name'];
+      if($member['email'] != null) $memberJson['Email'] = $member['email'];
       else $memberJson['Email'] = 'None';
-      $memberJson['Phone'] = $member['PhoneNumber'];
-      if($member['Major'] != 'NULL') $memberJson['Major'] = $member['Major'];
+      $memberJson['Phone'] = $member['phone_number'];
+      if($member['Major'] != 'NULL') $memberJson['Major'] = $member['major'];
       else $memberJson['Major'] = 'None';
-      $memberJson['OptEmail'] = $member['OptEmail'];
-      $memberJson['OptTexts'] = $member['OptText'];
-      $memberID = $member['MemberID'];
+      $memberJson['OptEmail'] = $member['opt_email'];
+      $memberJson['OptTexts'] = $member['opt_text'];
+      $memberID = $member['id'];
       $memberLifeGroups = $dbcon->member_to_life_group_check($memberID);
 
       if ($memberLifeGroups)
@@ -28,10 +28,10 @@
         // Get the lifegroup name that is currently active
         foreach($memberLifeGroups as $lifegroup)
         {
-          $temp = $dbcon->life_group_check('LifeGroupID', $lifegroup['LifeGroupID']);
-          if($temp[0]['LifeGroupActive'])
+          $temp = $dbcon->life_group_check('id', $lifegroup['LifeGroupID']);
+          if($temp[0]['life_group_active'])
           {
-            $memberJson['LifeGroup'] = $temp[0]['LifeGroupName'];
+            $memberJson['LifeGroup'] = $temp[0]['life_group_name'];
             break;
           }
         }

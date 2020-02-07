@@ -19,8 +19,8 @@ if(isset($_POST['json']))
      null, $memberData['Major'], null, $memberData['PrayerRequest'], $memberData['OptEmail'], $memberData['OptTexts'], $status);
 
     // Add member to night of worship
-    $nowID = ($dbcon->NOW_check($_SESSION['checkinDate']))['NightID'];
-    $memberID = ($dbcon->member_check($memberData['Phone']))['MemberID'];
+    $nowID = ($dbcon->NOW_check($_SESSION['checkinDate']))['id'];
+    $memberID = ($dbcon->member_check($memberData['Phone']))['id'];
     $dbcon->member_to_NOW_create($memberID, $nowID);
 
     // Add member to life group if needed
@@ -40,8 +40,8 @@ if(isset($_POST['json']))
         foreach($lifegroups as $lifegroup)
         {
           $lgID = $lifegroup['LifeGroupID'];
-          $lg = $dbcon->life_group_check("LifeGroupID", $lgID);
-          if($lg[0]['LifeGroupActive']) $lifegroupActive = $lg[0];
+          $lg = $dbcon->life_group_check("id", $lgID);
+          if($lg[0]['life_group_active']) $lifegroupActive = $lg[0];
         }
 
         // Check if the life group selected matches their current group
@@ -50,20 +50,20 @@ if(isset($_POST['json']))
           // Member signed up for a new life group, need to add that to db
           if($lifegroupActive['LifeGroupName'] != $memberData['LifeGroup'])
           {
-            $lg = $dbcon->life_group_check("LifeGroupName", $memberData['LifeGroup']);
-            $dbcon->member_to_life_group_create($memberID, $lg[0]['LifeGroupID']);
+            $lg = $dbcon->life_group_check("life_group_name", $memberData['LifeGroup']);
+            $dbcon->member_to_life_group_create($memberID, $lg[0]['id']);
           }
         }
         else
         {
-          $lg = $dbcon->life_group_check("LifeGroupName", $memberData['LifeGroup']);
-          $dbcon->member_to_life_group_create($memberID, $lg[0]['LifeGroupID']);
+          $lg = $dbcon->life_group_check("life_group_name", $memberData['LifeGroup']);
+          $dbcon->member_to_life_group_create($memberID, $lg[0]['id']);
         }
       }
       else
       {
-        $lg = $dbcon->life_group_check("LifeGroupName", $memberData['LifeGroup']);
-        $dbcon->member_to_life_group_create($memberID, $lg[0]['LifeGroupID']);
+        $lg = $dbcon->life_group_check("life_group_name", $memberData['LifeGroup']);
+        $dbcon->member_to_life_group_create($memberID, $lg[0]['id']);
       }
     } // NOTE END REWORK
 
@@ -86,15 +86,15 @@ if(isset($_POST['json']))
     $dbcon->member_create($args);
 
      // Add member to night of worship
-     $nowID = ($dbcon->NOW_check($_SESSION['checkinDate']))['night_id'];
-     $memberID = ($dbcon->member_check($args['PhoneNumber']))['member_id'];
+     $nowID = ($dbcon->NOW_check($_SESSION['checkinDate']))['id'];
+     $memberID = ($dbcon->member_check($memberData['Phone']))['id'];
      $dbcon->member_to_NOW_create($memberID, $nowID);
 
     // Add member to a lifegroup if needed
     if($memberData['LifeGroup'] != "None")
     {
-      $lg = $dbcon->life_group_check("LifeGroupName", $memberData['LifeGroup']);
-      $dbcon->member_to_life_group_create($memberID, $lg[0]['LifeGroupID']);
+      $lg = $dbcon->life_group_check("life_group_name", $memberData['LifeGroup']);
+      $dbcon->member_to_life_group_create($memberID, $lg[0]['id']);
     }
 
     #

@@ -15,10 +15,10 @@ else
 $lifegroups = '<option>- -</option>';
 
 $dbquery = new db_query();
-$rawLG = $dbquery->life_group_check("LifeGroupActive", '1');
+$rawLG = $dbquery->life_group_check("life_group_active", '1');
 foreach($rawLG as $lifegroup)
 {
-		$lifegroups .= '<option>' . $lifegroup['LifeGroupName'] . '</option>';
+		$lifegroups .= '<option>' . $lifegroup['life_group_name'] . '</option>';
 }
 
 ?>
