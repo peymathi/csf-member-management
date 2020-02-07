@@ -118,6 +118,7 @@ class db_query
       {
         if(count($result) != 0) // not empty
         {
+          echo "true";
           return hash_equals($result['password'], crypt($password, $this -> salt));
         }
         else
@@ -134,6 +135,7 @@ class db_query
     {
       echo 'Caught exception in admin_check: ' .  $e->getMessage();
       console_log('Caught exception in admin_check: ' .  $e->getMessage());
+      return false;
     }
   }
 
@@ -306,11 +308,19 @@ class db_query
   //
   public function life_group_check(string $field, string $equals)
   {
-    $stmt = $this -> connection -> prepare("SELECT id, life_group_name, life_group_day, life_group_time, life_group_location FROM life_groups WHERE " . $field . " = '" . $equals . "'");
-    $stmt -> execute();
-    $result = $stmt -> fetchAll(PDO::FETCH_ASSOC);
-    if ($result != null) return $result;
-    else return false;
+    try
+    {
+      $stmt = $this -> connection -> prepare("SELECT id, life_group_name, life_group_day, life_group_time, life_group_location FROM life_groups WHERE " . $field . " = '" . $equals . "'");
+      $stmt -> execute();
+      $result = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+      if ($result != null) return $result;
+      else return false;
+    }
+    catch(Exception | PDOException $e)
+    {
+      echo 'Caught exception in life_group_check: ' .  $e->getMessage();
+      console_log('Caught exception in life_group_check: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -321,13 +331,21 @@ class db_query
   {
     // Takes the name of the life group, the weekly day of the meeting, the time
     // at the meeting, and a description of the meeting.
-    $stmt = $this -> connection -> prepare("INSERT INTO life_groups (life_group_name, life_group_day, life_group_time, life_group_location, life_group_active) VALUES (?, ?, ?, ?, ?)");
-    $stmt -> bindParam(1, $name);
-    $stmt -> bindParam(2, $day);
-    $stmt -> bindParam(3, $time);
-    $stmt -> bindParam(4, $location);
-    $stmt -> bindParam(5, 1);
-    $stmt -> execute();
+    try
+    {
+      $stmt = $this -> connection -> prepare("INSERT INTO life_groups (life_group_name, life_group_day, life_group_time, life_group_location, life_group_active) VALUES (?, ?, ?, ?, ?)");
+      $stmt -> bindParam(1, $name);
+      $stmt -> bindParam(2, $day);
+      $stmt -> bindParam(3, $time);
+      $stmt -> bindParam(4, $location);
+      $stmt -> bindValue(5, 1);
+      $stmt -> execute();
+    }
+    catch(Exception | PDOException $e)
+    {
+      echo 'Caught exception in life_group_create: ' .  $e->getMessage();
+      console_log('Caught exception in life_group_create: ' .  $e->getMessage());
+    }
   }
 
   //
@@ -437,12 +455,12 @@ class db_query
   //
   // member_create
   //
-  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $major=null, $photoPath=null, $prayerR=null, $optE=0, $optT=0, $groupID=1)
+  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $church=null, $major=null, $photoPath=null, $prayerR=null, $optE=0, $optT=0, $groupID=8)
   {
     // Creates a new member taking the first and last name with their number.
     try
     {
-      $stmt = $this -> connection -> prepare("INSERT INTO members (first_name, last_name, email, home_address, major, phone_number, photo_path, prayer_request, opt_email, opt_text, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      $stmt = $this -> connection -> prepare("INSERT INTO members (first_name, last_name, email, home_address, home_church, major, phone_number, photo_path, prayer_request, opt_email, opt_text, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
       /*if($email == null)
       {
@@ -481,13 +499,14 @@ class db_query
       $stmt -> bindParam(2, $lname);
       $stmt -> bindParam(3, $email);
       $stmt -> bindParam(4, $address);
-      $stmt -> bindParam(5, $major);
-      $stmt -> bindParam(6, $number);
-      $stmt -> bindParam(7, $photoPath);
-      $stmt -> bindParam(8, $prayerR);
-      $stmt -> bindParam(9, $optE);
-      $stmt -> bindParam(10, $optT);
-      $stmt -> bindParam(11, $groupID);
+      $stmt -> bindParam(5, $church);
+      $stmt -> bindParam(6, $major);
+      $stmt -> bindParam(7, $number);
+      $stmt -> bindParam(8, $photoPath);
+      $stmt -> bindParam(9, $prayerR);
+      $stmt -> bindParam(10, $optE);
+      $stmt -> bindParam(11, $optT);
+      $stmt -> bindParam(12, $groupID);
       $stmt -> execute();
     }
     catch(Exception | PDOException $e)

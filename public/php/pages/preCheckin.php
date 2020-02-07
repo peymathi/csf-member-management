@@ -32,7 +32,6 @@
 <body>
 <div class="jumbotron text-center" style="margin-bottom:0">
   <img src="../../img/logo.png" class="img-fluid" alt="Responsive image" width="700px" height="394px">
-  <h1>Night of Worship Check In</h1> <!--Add title to ../phpInc/header.php as well for tab name-->
 </div>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
   <ul class="navbar-nav">

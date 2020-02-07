@@ -356,24 +356,29 @@ foreach($rawLG as $lifegroup)
 </nav>
 
 <div class="container" style="margin-top:30px">
-	<div class="row">
-		<div class="col">
-			<form class="needs-validation" novalidate>
-			  <div class="form-group">
+	<div class="form-group">
+		<form class="needs-validation" novalidate>
+		<div class="row">
+			  <div class="col-xl">
 					<label for="tel" required>Been here before? Enter your phone number to sign in: </label>
 					<input type="tel" class="form-control input-medium bfh-phone" id="phone" placeholder="(xxx)-xxx-xxxx" pattern="[0-9]{10}" name="phone" autocomplete="off" required>
 					<div class="invalid-feedback">Oops! We don't have your phone number... Try registering below!</div>
 					<br>
-
-					<!-- Check in button opens modal -->
-					<button type="button" id="checkIn" class="btn btn-primary">Check In</button>
-
-					<!-- Register button opens registration modal -->
-					<button type="button" id="register" class="btn btn-primary">First Time? Register Here!</button>
 			  </div>
-			</form>
-			<a href="logout.php">Logout</a>
 		</div>
+		<div class="row">
+			<div class="col-xl-8 col-lg-7 col-md-6 col-sm-8 col-8">
+				<!-- Check in button opens modal -->
+				<button type="button" id="checkIn" class="btn btn-primary">Check In</button>
+
+				<!-- Register button opens registration modal -->
+				<button type="button" id="register" class="btn btn-primary">First Time? Register Here!</button>
+			</div>
+			<div class="col-xl-4 col-lg-5 col-md-6 col-sm-4 col-4 text-right">
+				<a href="logout.php">Logout</a>
+			</div>
+		</div>
+		</form>
 	</div>
 	<script src="../../js/checkin.js"></script>
 </div>
