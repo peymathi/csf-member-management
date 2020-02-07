@@ -499,29 +499,29 @@ class db_query
       if(!isset($args['FirstName'])) throw new db_query_exception("Missing FirstName on member_create");
       if(!isset($args['LastName'])) throw new db_query_exception("Missing LastName on member_create");
       if(!isset($args['PhoneNumber'])) throw new db_query_exception("Missing PhoneNumber on member_create");
-      if(!isset($args['Email'])) $email = null;
-      if(!isset($args['HomeAddress'])) $address = null;
-      if(!isset($args['Church'])) $church = null;
-      if(!isset($args['Major'])) $major = null;
-      if(!isset($args['PhotoPath'])) $photoPath = null;
-      if(!isset($args['PrayerRequest'])) $prayerR = null;
-      if(!isset($args['OptEmail'])) $optE = 0;
-      if(!isset($args['OptText'])) $optT = 0;
-      if(!isset($args['GroupID'])) $groupID = 8;
+      if(!isset($args['Email'])) $args['Email'] = null;
+      if(!isset($args['HomeAddress'])) $args['HomeAddress'] = null;
+      if(!isset($args['Church'])) $args['Church'] = null;
+      if(!isset($args['Major'])) $args['Major'] = null;
+      if(!isset($args['PhotoPath'])) $args['PhotoPath'] = null;
+      if(!isset($args['PrayerRequest'])) $args['PrayerRequest'] = null;
+      if(!isset($args['OptEmail'])) $args['OptEmail'] = 0;
+      if(!isset($args['OptText'])) $args['OptText'] = 0;
+      if(!isset($args['GroupID'])) $args['GroupID'] = 8;
 
       // Bind parameters and exe query
-      $stmt -> bindParam(1, $fname);
-      $stmt -> bindParam(2, $lname);
-      $stmt -> bindParam(3, $email);
-      $stmt -> bindParam(4, $address);
-      $stmt -> bindParam(5, $church);
-      $stmt -> bindParam(6, $major);
-      $stmt -> bindParam(7, $number);
-      $stmt -> bindParam(8, $photoPath);
-      $stmt -> bindParam(9, $prayerR);
-      $stmt -> bindParam(10, $optE);
-      $stmt -> bindParam(11, $optT);
-      $stmt -> bindParam(12, $groupID);
+      $stmt -> bindParam(1, $args['FirstName']);
+      $stmt -> bindParam(2, $args['LastName']);
+      $stmt -> bindParam(3, $args['Email']);
+      $stmt -> bindParam(4, $args['HomeAddress']);
+      $stmt -> bindParam(5, $args['Church']);
+      $stmt -> bindParam(6, $args['Major']);
+      $stmt -> bindParam(7, $args['PhoneNumber']);
+      $stmt -> bindParam(8, $args['PhotoPath']);
+      $stmt -> bindParam(9, $args['PrayerRequest']);
+      $stmt -> bindParam(10, $args['OptEmail']);
+      $stmt -> bindParam(11, $args['OptText']);
+      $stmt -> bindParam(12, $args['GroupID']);
       $stmt -> execute();
     }
 
