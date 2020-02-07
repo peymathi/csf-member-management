@@ -67,19 +67,27 @@ if(isset($_POST['json']))
       }
     } // NOTE END REWORK
 
-    echo json_encode(array('TEST' => 'TEST1'));
+    echo 'Success';
   }
 
   // Member does not exist yet, need to make new member
   else
   {
-    $status = $dbcon->get_group_id($memberData['Status']);
-    $dbcon->member_create($memberData['FirstName'], $memberData['LastName'], $memberData['Phone'], $memberData['Email'],
-     null, $memberData['Major'], null, $memberData['PrayerRequest'], $memberData['OptEmail'], $memberData['OptTexts'], $status);
+    $args['FirstName'] = $memberData['FirstName'];
+    $args['LastName'] = $memberData['LastName'];
+    $args['PhoneNumer'] = $memberData['Phone'];
+    $args['Email'] = $memberData['Email'];
+    $args['Major'] = $memberData['Major'];
+    $args['PrayerRequest'] = $memberData['PrayerRequest'];
+    $args['OptEmail'] = $memberData['OptEmail'];
+    $args['OptTexts'] = $memberData['OptTexts'];
+    $args['GroupID'] = $dbcon->get_group_id($memberData['Status']);
+
+    $dbcon->member_create($args);
 
      // Add member to night of worship
-     $nowID = ($dbcon->NOW_check($_SESSION['checkinDate']))['NightID'];
-     $memberID = ($dbcon->member_check($memberData['Phone']))['MemberID'];
+     $nowID = ($dbcon->NOW_check($_SESSION['checkinDate']))['night_id'];
+     $memberID = ($dbcon->member_check($args['PhoneNumber']))['member_id'];
      $dbcon->member_to_NOW_create($memberID, $nowID);
 
     // Add member to a lifegroup if needed
@@ -97,8 +105,7 @@ if(isset($_POST['json']))
       error_log('Key: ' . $key . ' => Value: ' . $value . "\n", 3, $_SERVER['DOCUMENT_ROOT'] . "/../debug.log");
     }
 
-    echo json_encode(array('TEST' => 'Test2'));
-
+    echo 'Success';
   }
 }
 else echo 'Error';

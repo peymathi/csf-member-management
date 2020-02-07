@@ -132,9 +132,11 @@ function finishForm()
 		url: '../phpAjax/finishCheckIn.php',
 		method: 'POST',
 		data: jsonString,
-		dataType: 'json',
 		error: function(data) { ajaxError(); },
 		success: function(data) {
+			// DEBUG
+			console.log(data);
+			
 			// Reload the page if the exit button is clicked
 			$("button[name='modal-close']").on('click', function() {
 				location.reload();
