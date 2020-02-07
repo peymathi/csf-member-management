@@ -11,7 +11,7 @@ if(isset($_POST['json']))
 
   $dbcon = new db_query();
 
-  // check if we need to create a new member or edit one
+  // If the member already exists
   if ($dbcon->member_check($memberData['Phone']))
   {
     $status = $dbcon->get_group_id($memberData['Status']);
@@ -70,6 +70,7 @@ if(isset($_POST['json']))
     echo json_encode(array('TEST' => 'TEST1'));
   }
 
+  // Member does not exist yet, need to make new member
   else
   {
     $status = $dbcon->get_group_id($memberData['Status']);
@@ -86,6 +87,14 @@ if(isset($_POST['json']))
     {
       $lg = $dbcon->life_group_check("life_group_name", $memberData['LifeGroup']);
       $dbcon->member_to_life_group_create($memberID, $lg[0]['id']);
+    }
+
+    #
+    # DEBUG
+    #
+    foreach($memberData as $key => $value)
+    {
+      error_log('Key: ' . $key . ' => Value: ' . $value . "\n", 3, $_SERVER['DOCUMENT_ROOT'] . "/../debug.log");
     }
 
     echo json_encode(array('TEST' => 'Test2'));

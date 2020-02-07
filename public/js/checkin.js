@@ -121,6 +121,10 @@ function finishForm()
 
 	// Get prayer request
 	userData.PrayerRequest = $("textarea[name='prayerRequestInput']").val();
+	
+	// Set userData to None if empty
+	if (userData.PrayerRequest === "") userData.PrayerRequest = "None";
+
 	var jsonString = {json: JSON.stringify(userData)};
 
 	// Make ajax call to push new user data to DB

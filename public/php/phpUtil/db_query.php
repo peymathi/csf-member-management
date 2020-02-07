@@ -66,6 +66,14 @@ include 'db_connect.php';
 include 'get_salt.php';
 include 'console_log.php';
 
+class db_query_exception extends Exception
+{
+  public function __construct(string $message = "")
+  {
+    parent::__construct("DB_Query Exception: " . $message);
+  }
+}
+
 class db_query
 {
   //
@@ -452,49 +460,56 @@ class db_query
     }
   }
 
-  //
+  /*
   // member_create
   //
-  public function member_create(string $fname, string $lname, string $number, $email=null, $address=null, $church=null, $major=null, $photoPath=null, $prayerR=null, $optE=0, $optT=0, $groupID=8)
+  // Accepted key names are: FirstName, LastName, PhoneNumber, Email, Address, Church, 
+  // Major, PhotoPath, PrayerRequest, OptEmail, OptText, GroupID
+  //
+  // FirstName, LastName, and PhoneNumber are required. All other keys are optional.
+  // OptEmail and OptText default to False, GroupID defaults to 8 (other), and all other keys default to
+  // null.
+  //
+  // Adding a key to array that does not belong throws exception.
+  */
+  public function member_create(array $args)
   {
+    define("VALID_KEYS", ["FirstName", "LastName", "PhoneNumber",  
+    "Email", "HomeAddress", "Church", "Major", "PhotoPath", "PrayerRequest", "OptEmail", "OptText", "GroupID"]);
+
+    // Check for bad keys
+    foreach($args as $key => $val)
+    {
+      if (!in_array($key, VALID_KEYS)) throw db_query_exception("Bad key in array arg passed to member_create");
+    }
+
     // Creates a new member taking the first and last name with their number.
     try
     {
-      $stmt = $this -> connection -> prepare("INSERT INTO members (first_name, last_name, email, home_address, home_church, major, phone_number, photo_path, prayer_request, opt_email, opt_text, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      $sql = "
+      INSERT INTO members 
+      (first_name, last_name, email, home_address, home_church, 
+      major, phone_number, photo_path, prayer_request, opt_email, opt_text, group_id) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ";
 
-      /*if($email == null)
-      {
-        $email = null;
-      }
-      if($address == null)
-      {
-        $address = null;
-      }
-      if($major == null)
-      {
-        $major = null;
-      }
-      if($photoPath == null)
-      {
-        $photoPath = null;
-      }
-      if($prayerR == null)
-      {
-        $prayerR = null;
-      }*/
-      if($optE == null)
-      {
-        $optE = 0;
-      }
-      if($optT == null)
-      {
-        $optT = 0;
-      }
-      if($groupID == null)
-      {
-        $groupID = 8;
-      }
+      $stmt = $this -> connection -> prepare($sql);
 
+      // Set Defaults
+      if(!isset($args['FirstName'])) throw db_query_exception("Missing FirstName on member_create");
+      if(!isset($args['LastName'])) throw db_query_exception("Missing LastName on member_create");
+      if(!isset($args['PhoneNumber'])) throw db_query_exception("Missing PhoneNumber on member_create");
+      if(!isset($args['Email'])) $email = null;
+      if(!isset($args['HomeAddress'])) $address = null;
+      if(!isset($args['Church'])) $church = null;
+      if(!isset($args['Major'])) $major = null;
+      if(!isset($args['PhotoPath'])) $photoPath = null;
+      if(!isset($args['PrayerRequest'])) $prayerR = null;
+      if(!isset($args['OptEmail'])) $optE = 0;
+      if(!isset($args['OptText'])) $optT = 0;
+      if(!isset($args['GroupID'])) $groupID = 8;
+
+      // Bind parameters and exe query
       $stmt -> bindParam(1, $fname);
       $stmt -> bindParam(2, $lname);
       $stmt -> bindParam(3, $email);
@@ -509,10 +524,10 @@ class db_query
       $stmt -> bindParam(12, $groupID);
       $stmt -> execute();
     }
+
     catch(Exception | PDOException $e)
     {
-      echo 'Caught exception in member_create: ' .  $e->getMessage();
-      console_log('Caught exception in member_create: ' .  $e->getMessage());
+      error_log('Caught exception in member_create: ' .  $e->getMessage() . '\n', 3, $_SERVER['DOCUMENT_ROOT'] . "/../logs/phperr.log");
     }
   }
 
@@ -972,4 +987,5 @@ class db_query
     return $stmt -> fetchAll();
   }
 }
+
 ?>
