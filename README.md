@@ -14,3 +14,7 @@ Login information
 Night of Worship Check-in Page
 -------------------------------------
 CSF's largest event is their monthly Night's of Worship. These events have very high attendance and bring in many new members. Before this application, CSF used Google Forms for data collection during these events. Now with this website, they have a more custom and interactive form to Night of Worship data.
+
+Project Postponed due to COVID-19
+-------------------------------------
+UPDATE: As of March 2020, this project has been temporarily postponed because it is not longer needed at the moment due to COVID-19.
