@@ -1,0 +1,5 @@
+dbcon.txt
+salt.txt
+logs/
+.htaccess
+public/db_query_tester.php

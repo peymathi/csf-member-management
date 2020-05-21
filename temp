@@ -1,0 +1,12 @@
+Things that don't work:
+
+New Members
+======================
+1. Adding new member to night of worship
+2. Empty prayer requests
+3. Groups not being put in correctly
+4. Reading any data from DB on entering exists phone number
+
+Existing Members
+======================
+1. 

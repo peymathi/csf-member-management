@@ -1,0 +1,36 @@
+.checkin-opt-checkbox {
+  -ms-transform: scale(1.6); /* IE */
+  -moz-transform: scale(1.6); /* FF */
+  -webkit-transform: scale(1.6); /* Safari and Chrome */
+  -o-transform: scale(1.6); /* Opera */
+  transform: scale(1.6);
+}
+
+.btn {
+  background-color: #8D2B28;
+  border: #772523;
+}
+
+a:hover {
+  color:  #772523;
+}
+
+a {
+  color: #8D2B28;
+}
+
+.btn:hover {
+  background-color: #772523;
+}
+
+.displayData {
+  font-weight: bold;
+}
+
+.filterForm {
+  margin: 10px;
+}
+
+.filterForm .row {
+  margin-top: 15px;
+}
