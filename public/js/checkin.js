@@ -121,16 +121,22 @@ function finishForm()
 
 	// Get prayer request
 	userData.PrayerRequest = $("textarea[name='prayerRequestInput']").val();
+	
+	// Set userData to None if empty
+	if (userData.PrayerRequest === "") userData.PrayerRequest = "None";
+
 	var jsonString = {json: JSON.stringify(userData)};
 
 	// Make ajax call to push new user data to DB
 	$.ajax({
-		url: 'phpAjax/finishCheckIn.php',
+		url: '../phpAjax/finishCheckIn.php',
 		method: 'POST',
 		data: jsonString,
-		dataType: 'json',
 		error: function(data) { ajaxError(); },
 		success: function(data) {
+			// DEBUG
+			console.log(data);
+			
 			// Reload the page if the exit button is clicked
 			$("button[name='modal-close']").on('click', function() {
 				location.reload();
@@ -234,7 +240,7 @@ function finishEditMember()
 			// Perform ajax call to find out if the phone number entered already exists
 			var request = {Phone: formResponse.Phone};
 			$.ajax({
-				url: 'phpAjax/checkDuplicatePhone.php',
+				url: '../phpAjax/checkDuplicatePhone.php',
 				method: 'POST',
 				data: request,
 				dataType: 'json',
@@ -361,7 +367,7 @@ function finishRegForm()
 		// Need to check if phone number is already taken
 		var request = {Phone: formResponse.Phone};
 		$.ajax({
-			url: 'phpAjax/checkDuplicatePhone.php',
+			url: '../phpAjax/checkDuplicatePhone.php',
 			method: 'POST',
 			data: request,
 			dataType: 'json',
@@ -429,7 +435,7 @@ $(document).ready(function() {
 		phone = cleanUpPhone( $("#phone").val());
 		var request = {Phone: phone};
 		$.ajax ({
-			url: 'phpAjax/getMemberData.php',
+			url: '../phpAjax/getMemberData.php',
 			method: 'POST',
 			data: request,
 			dataType: 'json',
