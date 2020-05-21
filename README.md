@@ -4,13 +4,6 @@ Member Data Management System
 
  This site was built by Peyton Mathis and Corey Stockton.
 
-Public Access
-----------------
-
- [Public version of the site here.](https://member-data-management.pub.peytonmathis.com)
- 
- Don't worry, this public version does not contain any personal information, and the database is backed up and restored periodically so anyone can conduct any database operations they want without doing harm.
-
 Login information
 -------------------
 
